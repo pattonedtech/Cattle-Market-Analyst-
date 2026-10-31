@@ -277,6 +277,86 @@ def parse_fallon():
     return []
 
 
+def parse_willcox():
+    archive_url = "https://test.willcoxlivestockauction.com/market-report/"
+    pages = [archive_url]
+    report_pages = []
+    try:
+        soup = BeautifulSoup(fetch(archive_url).text, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = urljoin(archive_url, a["href"])
+            label = a.get_text(" ", strip=True).lower()
+            if "page/2" in href or label in ("2", "next", "older posts"):
+                if href not in pages:
+                    pages.append(href)
+        for page_url in pages:
+            page = BeautifulSoup(fetch(page_url).text, "html.parser")
+            for a in page.find_all("a", href=True):
+                href = urljoin(page_url, a["href"])
+                if "/20" in href and "market-report-" in href and href not in report_pages:
+                    report_pages.append(href)
+    except Exception as e:
+        print(f"Willcox archive index failed: {e}", file=sys.stderr)
+    records, cow_records = [], []
+    for page_url in (report_pages[:100] if needs_backfill() else report_pages[:1]):
+        try:
+            page = BeautifulSoup(fetch(page_url).text, "html.parser")
+            pdf_url = None
+            for a in page.find_all("a", href=True):
+                href = urljoin(page_url, a["href"])
+                if ".pdf" in href.lower() and "market-report" in href.lower():
+                    pdf_url = href
+                    break
+            if not pdf_url:
+                continue
+            text = pdf_text(pdf_url)
+            date = parse_date(text[:500]) or parse_date(page.get_text(" ", strip=True))
+            if not date:
+                continue
+            feeder_section = False
+            cow_section = False
+            for line in text.splitlines():
+                line = " ".join(line.split())
+                upper = line.upper()
+                if "STEERS" in upper and "HEIFERS" in upper:
+                    feeder_section, cow_section = True, False
+                    continue
+                if "BRED COWS" in upper and "PAIRS" in upper:
+                    cow_section, feeder_section = True, False
+                    continue
+                if "AUCTION SUMMARY" in upper:
+                    feeder_section = cow_section = False
+                if feeder_section:
+                    lot_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+(\d{3,4})\s+\$([\d,]+(?:\.\d{1,2})?)")
+                    lots = list(lot_re.finditer(line))
+                    for n, m in enumerate(lots):
+                        head, desc, wt, price = m.groups()
+                        sex = "Steer" if n == 0 else ("Heifer" if n == 1 else "Unknown")
+                        if sex == "Unknown":
+                            continue
+                        records.append(record(date, "Willcox Livestock Auction", "Arizona",
+                                              "Feeder steer" if sex == "Steer" else "Feeder heifer",
+                                              sex, desc, float(wt), float(price.replace(",", "")), int(head),
+                                              "Willcox Livestock Auction", pdf_url, "auction_lot_average",
+                                              sale_type="Live auction", notes=f"Published lot description: {desc}"))
+                elif cow_section:
+                    cow_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+\$([\d,]+(?:\.\d{1,2})?)")
+                    lots = list(cow_re.finditer(line))
+                    for n, m in enumerate(lots):
+                        head, desc, price = m.groups()
+                        cow_records.append({
+                            "id": stable_id("willcox", date, n, desc, price, pdf_url),
+                            "date": date, "market": "Willcox Livestock Auction", "region": "Arizona",
+                            "category": "Bred cow" if n == 0 else "Cow-calf pair",
+                            "description": f"{head} {desc}", "price": float(price.replace(",", "")),
+                            "price_unit": "USD/head", "source": "Willcox Livestock Auction", "source_url": pdf_url
+                        })
+        except Exception as e:
+            print(f"Willcox report failed {page_url}: {e}", file=sys.stderr)
+    print(f"Willcox: {len(records)} feeder lots and {len(cow_records)} cow/pair records from {len(report_pages)} report pages")
+    return records, cow_records
+
+
 def parse_roswell_web():
     url = "https://www.roswelllivestockauction.com/market-report.html"
     try:
@@ -415,7 +495,7 @@ SOURCES = [
     {"name":"A&M Livestock Auction","state":"CA","kind":"live / video auction","url":"https://www.amlivestockauction.com/","status":"listed; historical parser pending"},
     {"name":"Western Stockman's Market","state":"CA","kind":"live auction","url":"https://www.westernstockmans.com/","status":"listed; historical parser pending"},
     {"name":"Marana Stockyards","state":"AZ","kind":"live auction","url":"https://www.maranastockyards.com/market-report-archives","status":"automated: archive backfill from 2022 plus current reports"},
-    {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"listed; report archive found, parser pending"},
+    {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
     {"name":"Fallon Livestock Exchange","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"archive found; parser pending"},
     {"name":"Roswell Livestock Auction","state":"NM","kind":"live auction","url":"https://www.roswelllivestockauction.com/market-report.html","status":"report page tracked; USDA series ingested"},
@@ -434,7 +514,8 @@ def main():
     records += parse_overland()
     records += parse_visalia()
     marana_records, marana_cows = parse_marana()
-    records += marana_records
+    willcox_records, willcox_cows = parse_willcox()
+    records += marana_records + willcox_records
     records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico")
@@ -457,7 +538,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows:
+    for r in marana_cows + willcox_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
