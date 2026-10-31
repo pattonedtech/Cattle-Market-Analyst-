@@ -76,7 +76,7 @@
 </div><p class="sub">Other costs should include freight, processing paid by the ranch, health, death-loss allowance, commissions, interest and any costs not entered separately. Customer-paid processing is excluded from ranch costs.</p></div>
 <div class="card span-7" id="cowInputs" style="display:none"><h2>Breeding-cow investment assumptions</h2><div class="fieldgrid">
 <div class="field"><label>Purchase age (years)</label><input id="cowAge" type="number" value="3"></div>
-<div class="field"><label>Expected productive years remaining</label><input id="cowYears" type="number" value="5"></div>
+<div class="field"><label>Expected productive years remaining</label><input id="cowYears" type="number" value="5"></div><div class="field"><label>Months until first calf is sold</label><input id="cowFirstCalfMonths" type="number" value="12"></div>
 <div class="field"><label>Annual cow carrying cost ($)</label><input id="cowAnnual" type="number" value="900"></div>
 <div class="field"><label>Pregnancy / calving probability (%)</label><input id="cowPreg" type="number" value="85"></div>
 <div class="field"><label>Weaning / calf survival (%)</label><input id="cowSurvive" type="number" value="95"></div>
@@ -197,29 +197,43 @@ $('invTime').textContent=fmt(days,0)+' days ('+fmt(days/30.4,1)+' months)';
 $('invSalePriceLabel').textContent=channel==='direct'?'Expected hanging price ($/lb)':'Expected live sale price ($/cwt)';
 }else{
 $('invPurchase').readOnly=false;
-var years=Math.max(0,num('cowYears')), annual=num('cowAnnual')+num('cowBreed')+num('cowOther');
+var years=Math.max(0,num('cowYears')), months=Math.floor(years*12), annual=num('cowAnnual')+num('cowBreed')+num('cowOther');
 var preg=Math.min(1,num('cowPreg')/100), survival=Math.min(1,num('cowSurvive')/100);
 var calfExpected=num('cowCalf')*preg*survival;
-var disc=Math.max(0,num('cowDiscount'))/100, pvCalves=0,pvCosts=0;
-for(var y=1;y<=Math.floor(years);y++){var factor=1/Math.pow(1+disc,y);pvCalves+=calfExpected*factor;pvCosts+=annual*factor}
+var firstCalf=Math.max(1,Math.floor(num('cowFirstCalfMonths')));
+var disc=Math.max(0,num('cowDiscount'))/100, npv=-purchase, cumulative=-purchase, paybackMonth=Infinity, expectedCalves=0, pvCosts=0, pvCalves=0;
+for(var month=1;month<=months;month++){
+var discountFactor=1/Math.pow(1+disc,month/12);
+var monthlyCost=annual/12;
+npv-=monthlyCost*discountFactor;pvCosts+=monthlyCost*discountFactor;
+cumulative-=monthlyCost;
+if(month>=firstCalf&&(month-firstCalf)%12===0){
+npv+=calfExpected*discountFactor;pvCalves+=calfExpected*discountFactor;
+cumulative+=calfExpected;expectedCalves+=preg*survival;
+}
+if(cumulative>=0&&paybackMonth===Infinity)paybackMonth=month;
+}
 var exitPv=num('cowCull')/Math.pow(1+disc,years);
-var npv=pvCalves+exitPv-purchase-pvCosts;
+npv+=exitPv;cumulative+=num('cowCull');
 var undiscountedCosts=purchase+annual*years;
-var expectedCalves=preg*survival*years;
 var requiredCalf=expectedCalves>0?Math.max(0,(undiscountedCosts/(1-target)-num('cowCull'))/expectedCalves):0;
-var annualNet=calfExpected-annual;
-var payback=annualNet>0?purchase/annualNet:Infinity;
-investmentCost=undiscountedCosts;
-saleRevenue=calfExpected*years+num('cowCull');
-profit=saleRevenue-investmentCost;margin=saleRevenue>0?profit/saleRevenue*100:-100;
+var saleRevenue=calfExpected*(expectedCalves/(preg*survival||1))+num('cowCull');
+var profit=saleRevenue-undiscountedCosts, margin=saleRevenue>0?profit/saleRevenue*100:-100;
 $('invRequired').textContent=money(requiredCalf)+' / calf';
 $('invProfit').textContent=money(npv)+' NPV';
 $('invProfit').className='kpi '+(npv>=0?'positive':'negative');
 $('invActual').textContent=fmt(margin,1)+'% undiscounted margin';
 $('invActual').className='kpi '+(margin>=num('invMargin')?'positive':'negative');
-$('invTime').textContent=Number.isFinite(payback)&&payback<=years?fmt(payback,1)+' years (operating cash-flow payback)':'Not paid back from annual calf cash flow within modeled ownership';
-$('invDecision').textContent='Expected calf revenue/year: '+money(calfExpected)+' · annual cow costs: '+money(annual)+' · exit cull value: '+money(num('cowCull'))+'. Required average calf sale value for '+fmt(target*100,1)+'% undiscounted margin: '+money(requiredCalf)+'. Discounted NPV at '+fmt(disc*100,1)+'%: '+money(npv)+'. '+(npv>=0?'Positive modeled NPV.':'Negative modeled NPV; purchase price, annual cost, calf value or productive life assumptions need review.');
-var recentCows=cowMarketRecords.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));var bredRefs=recentCows.filter(x=>x.category==='Bred cow').slice(0,4);var pairRefs=recentCows.filter(x=>x.category==='Cow-calf pair').slice(0,3);var cowRefText='';if(bredRefs.length)cowRefText+=' Recent Marana bred-cow asks/sales: '+bredRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';if(pairRefs.length)cowRefText+=' Cow-calf pairs: '+pairRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';$('invMarketGap').textContent='Compare cow purchase price with local bred-cow and replacement sales; compare expected calf value with your likely weaning sale month and cull value with local cull-cow prices. Feeder/live cattle futures alone are not a valid cow ROI forecast.'+cowRefText;
+$('invTime').textContent=Number.isFinite(paybackMonth)?fmt(paybackMonth/12,1)+' years (cash payback)':'Not paid back within modeled ownership';
+$('invDecision').textContent='First calf sale assumed in month '+firstCalf+'. Expected calves sold: '+fmt(expectedCalves,2)+' · expected calf revenue/crop: '+money(calfExpected)+' · annual cow costs: '+money(annual)+' · exit cull value: '+money(num('cowCull'))+'. Required average calf sale value for '+fmt(target*100,1)+'% undiscounted margin: '+money(requiredCalf)+'. Discounted NPV at '+fmt(disc*100,1)+'%: '+money(npv)+'. '+(npv>=0?'Positive modeled NPV.':'Negative modeled NPV; purchase price, annual cost, calf value or productive life assumptions need review.');
+var recentCows=cowMarketRecords.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+var bredRefs=recentCows.filter(x=>x.category==='Bred cow').slice(0,4);
+var pairRefs=recentCows.filter(x=>x.category==='Cow-calf pair').slice(0,3);
+var cowRefText='';
+if(bredRefs.length)cowRefText+=' Recent Marana bred-cow references: '+bredRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';
+if(pairRefs.length)cowRefText+=' Cow-calf pair references: '+pairRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';
+$('invMarketGap').textContent='Compare cow purchase price with local bred-cow and replacement sales; compare expected calf value with your likely weaning sale month and cull value with local cull-cow prices. Feeder/live cattle futures alone are not a valid cow ROI forecast.'+cowRefText;
+
 return;
 }
 $('invRequired').textContent=money(required);
@@ -317,6 +331,6 @@ function heifers(){var p=num('hWeight')*num('hPrice')/100, cost=p+num('hDevelop'
 var months=[['January',['Review winter feed inventory and forage reserves','Assess body condition and late-gestation needs','Watch local bred-cow and replacement offerings']],['February',['Prepare calving supplies and records','Evaluate feed costs and projected calf crop','Review feeder purchase ceiling']],['March',['Monitor calving and cow health','Record birth weights, calving ease, and dam data','Track early spring calf market']],['April',['Continue calving and identify replacements','Evaluate pasture turnout and water','Compare local calf sale reports']],['May',['Plan breeding season and bull soundness exams','Assess forage availability and stocking rate','Track spring calf prices by weight']],['June',['Breeding season; monitor bull performance','Record pasture condition and grazing pressure','Review replacement heifer development']],['July',['Pregnancy / breeding follow-up as scheduled','Plan fall marketing and feed needs','Compare feeder and replacement values']],['August',['Wean / precondition plan as appropriate','Vaccination and health records','Evaluate fall feeder purchase opportunities']],['September',['Wean and sort calves by sex and weight','Price marketing alternatives and sale dates','Update replacement selection']],['October',['Market calves or retain based on economics','Pregnancy-check cows if scheduled','Review winter feed and water systems']],['November',['Cull open, aged, or unsound cows as appropriate','Secure winter feed and bedding','Review annual cost per cow and calf']],['December',['Close out weights, sales, and expenses','Review herd performance and replacement rate','Set next year’s breeding and marketing plan']]];
 $('calendarGrid').innerHTML=months.map(m=>'<div class="month"><strong>'+m[0]+'</strong><ul>'+m[1].map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>').join('');
 $('deleteAll').addEventListener('click',function(){if(confirm('Delete every locally saved market observation from this browser? Export a backup first if needed.')){records=[];save();renderRecords();$('dataMessage').textContent='All local observations deleted.'}});
-window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();renderHistorical();loadPublishedData();['invType','invPurchase','invMargin','invSaleDate','invWeight','invCwt','invLive','invAdg','invFeedDay','invFinishDays','invBackDay','invOther','invDress','invSalePrice','invChannel','invBasis','invBuyBasis','cowAge','cowYears','cowAnnual','cowPreg','cowSurvive','cowCalf','cowBreed','cowCull','cowOther','cowDiscount'].forEach(function(id){if($(id))$(id).addEventListener('input',investment)});$('invType').addEventListener('change',toggleInvestment);$('invChannel').addEventListener('change',function(){$('invSalePrice').value=this.value==='direct'?'5':'230';investment()});toggleInvestment();loadFutures();
+window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();renderHistorical();loadPublishedData();['invType','invPurchase','invMargin','invSaleDate','invWeight','invCwt','invLive','invAdg','invFeedDay','invFinishDays','invBackDay','invOther','invDress','invSalePrice','invChannel','invBasis','invBuyBasis','cowYears','cowFirstCalfMonths','cowAnnual','cowPreg','cowSurvive','cowCalf','cowBreed','cowCull','cowOther','cowDiscount'].forEach(function(id){if($(id))$(id).addEventListener('input',investment)});$('invType').addEventListener('change',toggleInvestment);$('invChannel').addEventListener('change',function(){$('invSalePrice').value=this.value==='direct'?'5':'230';investment()});toggleInvestment();loadFutures();
 })();
 </script></body></html>
