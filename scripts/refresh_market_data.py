@@ -64,22 +64,20 @@ def pdf_text(url):
     return "\n".join(p.extract_text() or "" for p in reader.pages)
 
 
-def parse_usda_report(report_id, market, region, record_type="usda_auction"):
-    url = f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"
+def parse_usda_pdf(url, report_id, market, region, record_type):
     try:
         text = pdf_text(url)
     except Exception as e:
-        print(f"USDA {report_id} fetch failed: {e}", file=sys.stderr)
+        print(f"USDA {report_id} PDF fetch failed {url}: {e}", file=sys.stderr)
         return []
     date = parse_date(text[:1800]) or parse_date(text)
     if not date:
-        print(f"USDA {report_id}: report date not identified", file=sys.stderr)
+        print(f"USDA {report_id}: report date not identified in {url}", file=sys.stderr)
         return []
     records = []
-    # USDA reports contain multi-line tables. Normalize whitespace before parsing rows.
     normalized = re.sub(r"\s+", " ", text)
     section_matches = list(re.finditer(
-        r"(STEERS?|HEIFERS?|DAIRY STEERS?|COWS?|BULLS?|BRED COWS?|COW-CALF PAIRS?)\s*-\s*"
+        r"(DAIRY STEERS?|BRED COWS?|COW-CALF PAIRS?|STEERS?|HEIFERS?|COWS?|BULLS?)\s*-\s*"
         r"(?:Medium|Large|Small|Utility|Boner|Lean|Breaker|Cutter)[^:]{0,100}?\(Per Cwt[^)]*\)",
         normalized, flags=re.I
     ))
@@ -113,7 +111,6 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
             records.append(record(date, market, region, category, sex, breed, avg_weight, avg_price, head,
                                   "USDA AMS Market News", url, record_type,
                                   notes=f"USDA report {report_id}; table {heading}; avg price/cwt"))
-    # Direct-trade report tables use a separate structure (Current FOB/DEL rows).
     if not records and "Direct" in text:
         for section, sex, category in [
             ("Steers", "Steer", "Feeder steer"), ("Heifers", "Heifer", "Feeder heifer")
@@ -128,7 +125,29 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
                 records.append(record(date, market, region, category, sex, "USDA grade; breed not specified",
                                       float(avg_wt), float(avg_price), int(head), "USDA AMS Market News", url,
                                       record_type, notes=f"USDA report {report_id}; direct {section} trade"))
-    print(f"USDA {report_id} {market}: {len(records)} normalized rows for {date}")
+    return records
+
+
+def parse_usda_report(report_id, market, region, record_type="usda_auction"):
+    page_url = f"https://mymarketnews.ams.usda.gov/viewReport/{report_id}"
+    report_urls = []
+    try:
+        soup = BeautifulSoup(fetch(page_url).text, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = urljoin(page_url, a["href"])
+            if ".pdf" in href.lower() and (str(report_id) in href or f"ams_{report_id}" in href.lower()):
+                if href not in report_urls:
+                    report_urls.append(href)
+    except Exception as e:
+        print(f"USDA {report_id} archive index failed: {e}", file=sys.stderr)
+    if not report_urls:
+        report_urls = [f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"]
+    # Backfill recent releases to establish real seasonal history, then daily updates keep it current.
+    report_urls = report_urls[:150]
+    records = []
+    for url in report_urls:
+        records.extend(parse_usda_pdf(url, report_id, market, region, record_type))
+    print(f"USDA {report_id} {market}: {len(records)} normalized rows from {len(report_urls)} reports")
     return records
 
 def parse_marana():
