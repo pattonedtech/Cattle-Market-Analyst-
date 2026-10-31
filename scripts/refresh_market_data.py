@@ -255,27 +255,73 @@ def parse_marana():
 
 def parse_fallon():
     index = "https://www.fallonlivestock.com/market-reports.html"
+    report_urls = []
     try:
         soup = BeautifulSoup(fetch(index).text, "html.parser")
-        links = []
         for a in soup.find_all("a", href=True):
-            href, label = urljoin(index, a["href"]), a.get_text(" ", strip=True)
-            if ".pdf" in href.lower() and label:
-                links.append((label, href))
-        for label, url in links[:12]:
-            try:
-                text = pdf_text(url)
-                date = parse_date(label) or parse_date(text[:1200])
-                if date:
-                    # Keep archive discovery visible. Fallon tables need a format-specific
-                    # parser before individual averages can be ingested without guessing.
-                    print(f"Fallon archive report found: {label} ({date}); awaiting table parser")
-            except Exception as e:
-                print(f"Fallon report failed {url}: {e}", file=sys.stderr)
+            href = urljoin(index, a["href"])
+            label = a.get_text(" ", strip=True)
+            if ".pdf" in href.lower() and ("market_report" in href.lower() or "market-report" in href.lower()):
+                if href not in report_urls:
+                    report_urls.append(href)
     except Exception as e:
         print(f"Fallon archive index failed: {e}", file=sys.stderr)
-    return []
-
+    records, cow_records = [], []
+    for url in (report_urls[:150] if needs_backfill() else report_urls[:1]):
+        try:
+            text = pdf_text(url)
+            date = parse_date(text[:1200]) or parse_date(url.replace("-", " "))
+            if not date:
+                continue
+            feeder_section = False
+            for line in text.splitlines():
+                line = " ".join(line.split())
+                upper = line.upper()
+                if "CHOICE STEERS (CWT)" in upper and "CHOICE HEIFERS (CWT)" in upper:
+                    feeder_section = True
+                    continue
+                if "CHOICE CATTLE (CWT)" in upper or "DAIRY CATTLE (CWT)" in upper:
+                    feeder_section = False
+                if feeder_section:
+                    matches = list(re.finditer(r"(\d{3,4})\s*-\s*(\d{3,4})\s+([\d.]+(?:\s*-\s*[\d.]+)?)", line))
+                    for n, m in enumerate(matches):
+                        low_w, high_w, price_text = m.groups()
+                        p = re.search(r"([\d.]+)(?:\s*-\s*([\d.]+))?", price_text)
+                        if not p:
+                            continue
+                        lo, hi = float(p.group(1)), float(p.group(2) or p.group(1))
+                        low_weight, high_weight = float(low_w), float(high_w)
+                        sex = "Steer" if n == 0 else ("Heifer" if n == 1 else "Unknown")
+                        if sex == "Unknown" or hi <= 0:
+                            continue
+                        records.append(record(date, "Fallon Livestock", "Nevada",
+                                              "Feeder steer" if sex == "Steer" else "Feeder heifer",
+                                              sex, "Choice; breed not specified",
+                                              (low_weight+high_weight)/2, (lo+hi)/2, None,
+                                              "Fallon Livestock", url, "published_weight_class_range",
+                                              lo, hi, "Live auction",
+                                              notes=f"Published weight class {low_w}-{high_w} lb; range, not weighted average"))
+                # Bred cow and pair prices are per head and remain separate from cwt series.
+                if "BRED COWS (HD)" in upper or "PAIRS (HD)" in upper:
+                    for category, pattern in [
+                        ("Bred cow", r"Bred Cows?\s*\(HD\)\s*([\d,.]+)(?:\s*-\s*([\d,.]+))?"),
+                        ("Cow-calf pair", r"Pairs\s*\(HD\)\s*([\d,.]+)(?:\s*-\s*([\d,.]+))?")
+                    ]:
+                        m = re.search(pattern, line, flags=re.I)
+                        if m:
+                            lo = float(m.group(1).replace(",", ""))
+                            hi = float((m.group(2) or m.group(1)).replace(",", ""))
+                            cow_records.append({
+                                "id": stable_id("fallon", date, category, lo, hi, url),
+                                "date": date, "market": "Fallon Livestock", "region": "Nevada",
+                                "category": category, "description": "Published per-head range",
+                                "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
+                                "price_unit": "USD/head", "source": "Fallon Livestock", "source_url": url
+                            })
+        except Exception as e:
+            print(f"Fallon report failed {url}: {e}", file=sys.stderr)
+    print(f"Fallon: {len(records)} feeder weight-class ranges and {len(cow_records)} cow/pair price ranges from {len(report_urls)} reports")
+    return records, cow_records
 
 def parse_willcox():
     archive_url = "https://test.willcoxlivestockauction.com/market-report/"
@@ -568,7 +614,8 @@ SOURCES = [
     {"name":"Marana Stockyards","state":"AZ","kind":"live auction","url":"https://www.maranastockyards.com/market-report-archives","status":"automated: archive backfill from 2022 plus current reports"},
     {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
-    {"name":"Fallon Livestock Exchange","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"archive found; parser pending"},
+    {"name":"Fallon Livestock","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"automated: archived weekly weight-class ranges and bred-cow/pair values"},
+    {"name":"Nevada Livestock Marketing","state":"NV","kind":"live auction","url":"https://www.nevadalivestock.us/cattle/","status":"listed; weekly feeder sale and public price parser pending"},
     {"name":"Roswell Livestock Auction","state":"NM","kind":"live auction","url":"https://www.roswelllivestockauction.com/market-report.html","status":"report page tracked; USDA series ingested"},
     {"name":"USDA Roswell Livestock Auction","state":"NM","kind":"USDA auction report","url":"https://mymarketnews.ams.usda.gov/viewReport/1782","status":"automated: current USDA report"},
     {"name":"USDA Clovis Livestock Auction","state":"NM","kind":"USDA auction report","url":"https://mymarketnews.ams.usda.gov/viewReport/1781","status":"automated: current USDA report"},
@@ -594,7 +641,8 @@ def main():
     records += parse_usda_report(1784, "New Mexico Weekly Cattle Summary (USDA)", "New Mexico", "usda_state_summary")
     records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "AZ/CA/NV", "usda_direct_trade")
     parse_roswell_web()
-    parse_fallon()
+    fallon_records, fallon_cows = parse_fallon()
+    records += fallon_records
     old = []
     old_cows = []
     if OUT.exists():
@@ -609,7 +657,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows + willcox_cows:
+    for r in marana_cows + willcox_cows + fallon_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
