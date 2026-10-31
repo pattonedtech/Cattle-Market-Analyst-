@@ -63,7 +63,7 @@ def needs_backfill():
         return True
     try:
         payload = json.loads(OUT.read_text(encoding="utf-8"))
-        return int(payload.get("schema_version", 0)) < 3
+        return int(payload.get("schema_version", 0)) < 4
     except Exception:
         return True
 
@@ -662,7 +662,7 @@ def main():
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({
-        "schema_version": 3, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "schema_version": 4, "generated_at": datetime.now(timezone.utc).isoformat(),
         "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows,
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
