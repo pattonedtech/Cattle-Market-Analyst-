@@ -58,6 +58,16 @@ def record(date, market, region, category, sex, breed, weight, price, head, sour
     }
 
 
+def needs_backfill():
+    if not OUT.exists():
+        return True
+    try:
+        payload = json.loads(OUT.read_text(encoding="utf-8"))
+        return int(payload.get("schema_version", 0)) < 3
+    except Exception:
+        return True
+
+
 def pdf_text(url):
     r = fetch(url)
     reader = PdfReader(BytesIO(r.content))
@@ -143,7 +153,7 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     if not report_urls:
         report_urls = [f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"]
     # Backfill recent releases to establish real seasonal history, then daily updates keep it current.
-    report_urls = report_urls[:150] if not OUT.exists() else report_urls[:1]
+    report_urls = report_urls[:150] if needs_backfill() else report_urls[:1]
     records = []
     for url in report_urls:
         records.extend(parse_usda_pdf(url, report_id, market, region, record_type))
@@ -163,7 +173,7 @@ def parse_marana():
     except Exception as e:
         print(f"Marana archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
-    for url in (report_urls[:220] if not OUT.exists() else report_urls[:1]):
+    for url in (report_urls[:220] if needs_backfill() else report_urls[:1]):
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
             body = soup.get_text(" ", strip=True)
@@ -292,7 +302,7 @@ def parse_overland():
     except Exception as e:
         print(f"Overland archive index failed: {e}", file=sys.stderr)
         return records
-    for report_id, url in list(report_urls.items())[:200 if not OUT.exists() else 10]:
+    for report_id, url in list(report_urls.items())[:200 if needs_backfill() else 10]:
         try:
             page = BeautifulSoup(fetch(url).text, "html.parser")
             body = page.get_text(" ", strip=True)
@@ -452,7 +462,7 @@ def main():
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({
-        "schema_version": 2, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "schema_version": 3, "generated_at": datetime.now(timezone.utc).isoformat(),
         "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows,
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
