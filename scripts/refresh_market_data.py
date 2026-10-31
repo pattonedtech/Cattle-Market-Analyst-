@@ -119,16 +119,22 @@ def parse_visalia():
             response.raise_for_status()
             reader = PdfReader(BytesIO(response.content))
             text = "\n".join(p.extract_text() or "" for p in reader.pages)
-            period = re.search(r"([A-Z][a-z]+ \d{1,2})\s*-\s*([A-Z][a-z]+ \d{1,2})\s+(\d{4})", text)
-            if period:
-                start = datetime.strptime(f"{period.group(1)} {period.group(3)}", "%B %d %Y").date()
-                end = datetime.strptime(f"{period.group(2)} {period.group(3)}", "%B %d %Y").date()
-            else:
-                date_match = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4})", text)
-                if not date_match:
-                    print(f"Visalia: could not identify snapshot date in {url}", file=sys.stderr)
-                    continue
-                start = end = datetime.strptime(date_match.group(1), "%B %d, %Y").date()
+            # Snapshot headings vary: "January 7th thru 28th 2026",
+            # "March 11th, 18th & 25th 2026", or a single dated sale.
+            heading = text[:500]
+            period = re.search(r"([A-Z][a-z]+)\\s+(.{1,100}?)\\s+(20\\d{2})", heading, flags=re.S)
+            if not period:
+                print(f"Visalia: could not identify snapshot date in {url}", file=sys.stderr)
+                continue
+            month_name, date_phrase, year = period.group(1), period.group(2), int(period.group(3))
+            day_values = [int(x) for x in re.findall(r"(?<!\\d)(\\d{1,2})(?:st|nd|rd|th)?", date_phrase)]
+            day_values = [d for d in day_values if 1 <= d <= 31]
+            if not day_values:
+                print(f"Visalia: could not identify day in {url}", file=sys.stderr)
+                continue
+            month_num = datetime.strptime(month_name, "%B").month
+            start = datetime(year, month_num, min(day_values)).date()
+            end = datetime(year, month_num, max(day_values)).date()
             # Snapshot table rows: steer low-high, weight, heifer low-high.
             row_re = re.compile(
                 r"\$\s*([\d,]+(?:\.\d{1,2})?)\s*-\s*\$?\s*([\d,]+(?:\.\d{1,2})?)"
