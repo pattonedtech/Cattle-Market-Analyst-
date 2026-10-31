@@ -216,7 +216,7 @@ cumulative+=calfExpected;expectedCalves+=preg*survival;
 if(cumulative>=0&&paybackMonth===Infinity)paybackMonth=month;
 }
 var exitPv=num('cowCull')/Math.pow(1+disc,years);
-npv+=exitPv;cumulative+=num('cowCull');
+npv+=exitPv;cumulative+=num('cowCull');if(cumulative>=0&&paybackMonth===Infinity)paybackMonth=months;
 var undiscountedCosts=purchase+annual*years;
 var requiredCalf=expectedCalves>0?Math.max(0,(undiscountedCosts/(1-target)-num('cowCull'))/expectedCalves):0;
 var saleRevenue=calfExpected*(expectedCalves/(preg*survival||1))+num('cowCull');
