@@ -96,6 +96,20 @@ function money(v){return (v<0?'−':'')+'$'+Math.abs(v).toLocaleString('en-US',{
 function fmt(v,d){return Number(v).toLocaleString('en-US',{minimumFractionDigits:d||0,maximumFractionDigits:d||0})}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function load(){try{records=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(records))records=[]}catch(e){records=[]}}
+async function loadPublishedData(){
+try{
+var response=await fetch('data/market_observations.json?refresh='+Date.now(),{cache:'no-store'});
+if(!response.ok)return;
+var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];
+var ids=new Set(records.map(r=>String(r.id)));
+published.forEach(function(r){if(!ids.has(String(r.id))){records.push(r);ids.add(String(r.id))}});
+records.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+$('overviewStatus').textContent=published.length
+? 'Auto-updated source history: '+published.length+' published observations. Last data refresh: '+(payload.generated_at||'timestamp unavailable')+'. Manually entered records are retained on this device.'
+: 'The automatic collector has not published any observations yet. Manual entry remains available.';
+renderRecords();
+}catch(e){$('overviewStatus').textContent='Published market data is not available yet. Manual observations are still available.'}
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(records))}
 function today(){var d=new Date();$('today').textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});$('mDate').value=d.toISOString().slice(0,10)}
 document.querySelectorAll('.nav button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(''+b.dataset.page).classList.add('active');drawCharts()})});
@@ -134,6 +148,6 @@ function heifers(){var p=num('hWeight')*num('hPrice')/100, cost=p+num('hDevelop'
 var months=[['January',['Review winter feed inventory and forage reserves','Assess body condition and late-gestation needs','Watch local bred-cow and replacement offerings']],['February',['Prepare calving supplies and records','Evaluate feed costs and projected calf crop','Review feeder purchase ceiling']],['March',['Monitor calving and cow health','Record birth weights, calving ease, and dam data','Track early spring calf market']],['April',['Continue calving and identify replacements','Evaluate pasture turnout and water','Compare local calf sale reports']],['May',['Plan breeding season and bull soundness exams','Assess forage availability and stocking rate','Track spring calf prices by weight']],['June',['Breeding season; monitor bull performance','Record pasture condition and grazing pressure','Review replacement heifer development']],['July',['Pregnancy / breeding follow-up as scheduled','Plan fall marketing and feed needs','Compare feeder and replacement values']],['August',['Wean / precondition plan as appropriate','Vaccination and health records','Evaluate fall feeder purchase opportunities']],['September',['Wean and sort calves by sex and weight','Price marketing alternatives and sale dates','Update replacement selection']],['October',['Market calves or retain based on economics','Pregnancy-check cows if scheduled','Review winter feed and water systems']],['November',['Cull open, aged, or unsound cows as appropriate','Secure winter feed and bedding','Review annual cost per cow and calf']],['December',['Close out weights, sales, and expenses','Review herd performance and replacement rate','Set next year’s breeding and marketing plan']]];
 $('calendarGrid').innerHTML=months.map(m=>'<div class="month"><strong>'+m[0]+'</strong><ul>'+m[1].map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>').join('');
 $('deleteAll').addEventListener('click',function(){if(confirm('Delete every locally saved market observation from this browser? Export a backup first if needed.')){records=[];save();renderRecords();$('dataMessage').textContent='All local observations deleted.'}});
-window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();
+window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();loadPublishedData();
 })();
 </script></body></html>
