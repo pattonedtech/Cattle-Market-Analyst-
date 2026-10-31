@@ -132,47 +132,87 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     return records
 
 def parse_marana():
-    url = "https://www.maranastockyards.us/marketreport/current.html"
+    archive_url = "https://www.maranastockyards.com/market-report-archives"
+    current_url = "https://www.maranastockyards.us/marketreport/current.html"
+    report_urls = [current_url]
     try:
-        soup = BeautifulSoup(fetch(url).text, "html.parser")
-        text = soup.get_text(" ", strip=True)
-        date = parse_date(text)
-        if not date:
-            print("Marana: report date not found", file=sys.stderr)
-            return []
-        records, section = [], None
-        for tr in soup.find_all("tr"):
-            cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
-            joined = " ".join(cells)
-            if re.search(r"\bSTEERS\b", joined, re.I):
-                section = "Steer"
-                continue
-            if re.search(r"\bHEIFERS\b", joined, re.I):
-                section = "Heifer"
-                continue
-            if not section or len(cells) < 3:
-                continue
-            desc = cells[0]
-            wt = re.search(r"\b(\d{3,4})\b", cells[1])
-            price = re.search(r"\$?\s*([\d,]+(?:\.\d+)?)", cells[2])
-            head = re.search(r"^\s*(\d+)\b", desc)
-            if not wt or not price:
-                continue
-            w, p = float(wt.group(1)), float(price.group(1).replace(",", ""))
-            h = int(head.group(1)) if head else None
-            if w < 200 or w > 1600 or p < 50 or p > 1000:
-                continue
-            records.append(record(date, "Marana Stockyards", "Arizona",
-                                  "Feeder heifer" if section == "Heifer" else "Feeder steer",
-                                  section, desc, w, p, h, "Marana Stockyards", url,
-                                  "auction_lot_average", sale_type="Live auction",
-                                  notes="Average weight and price from published sale table"))
-        print(f"Marana: {len(records)} rows for {date}")
-        return records
+        archive = BeautifulSoup(fetch(archive_url).text, "html.parser")
+        for a in archive.find_all("a", href=True):
+            href = urljoin(archive_url, a["href"])
+            if "maranastockyards.us/marketreport/" in href and href not in report_urls:
+                report_urls.append(href)
     except Exception as e:
-        print(f"Marana failed: {e}", file=sys.stderr)
-        return []
-
+        print(f"Marana archive index failed: {e}", file=sys.stderr)
+    records, cow_records = [], []
+    for url in report_urls[:220]:
+        try:
+            soup = BeautifulSoup(fetch(url).text, "html.parser")
+            body = soup.get_text(" ", strip=True)
+            date = parse_date(body)
+            if not date:
+                continue
+            section = ""
+            for tr in soup.find_all("tr"):
+                cells = [x.get_text(" ", strip=True) for x in tr.find_all(["td", "th"])]
+                upper = " ".join(cells).upper()
+                if "BRED COWS" in upper:
+                    section = "bred"
+                    continue
+                if re.search(r"\bPAIRS\b", upper) and ("DESCRIPTION" in upper or len(cells) <= 4):
+                    section = "pairs"
+                    continue
+                if "STEERS" in upper and "HEIFERS" in upper:
+                    section = "feeders"
+                    continue
+                if "BEEF COWS (CWT)" in upper or "HOLSTEIN COWS (CWT)" in upper or "WEIGH BULLS (CWT)" in upper:
+                    section = "cull"
+                    continue
+                if not cells:
+                    continue
+                if section == "feeders":
+                    groups = []
+                    if len(cells) >= 3:
+                        groups.append(("Steer", cells[0], cells[1], cells[2]))
+                    if len(cells) >= 7:
+                        groups.append(("Heifer", cells[4], cells[5], cells[6]))
+                    for sex, desc, avg_text, price_text in groups:
+                        wt = re.search(r"\d{3,4}(?:\.\d+)?", avg_text)
+                        price = re.search(r"\$?\s*([\d,]+(?:\.\d+)?)", price_text)
+                        head = re.search(r"^\s*(\d+)", desc)
+                        if not wt or not price:
+                            continue
+                        weight, value = float(wt.group(0)), float(price.group(1).replace(",", ""))
+                        if not (200 <= weight <= 1600 and 50 <= value <= 1000):
+                            continue
+                        breed = "Angus" if "ANGUS" in desc.upper() else ("Beef cross / native" if any(x in desc.upper() for x in ["BLK", "BMF", "RMF", "BWF", "RED"]) else "Mixed / unknown")
+                        records.append(record(date, "Marana Stockyards", "Arizona",
+                                              "Feeder steer" if sex == "Steer" else "Feeder heifer",
+                                              sex, breed, weight, value, int(head.group(1)) if head else None,
+                                              "Marana Stockyards", url, "auction_lot_average",
+                                              sale_type="Live auction", notes=f"Published lot description: {desc}"))
+                elif section in ("bred", "pairs"):
+                    for base in (0, 3):
+                        if len(cells) <= base+1:
+                            continue
+                        desc = cells[base]
+                        price_text = cells[base+2] if len(cells)>base+2 and not cells[base+1] else cells[base+1]
+                        price = re.search(r"\$?\s*([\d,]+(?:\.\d{1,2})?)", price_text)
+                        if not desc or not price:
+                            continue
+                        value = float(price.group(1).replace(",", ""))
+                        if value < 100:
+                            continue
+                        cow_records.append({
+                            "id": stable_id("marana", date, section, desc, value, url),
+                            "date": date, "market": "Marana Stockyards", "region": "Arizona",
+                            "category": "Bred cow" if section == "bred" else "Cow-calf pair",
+                            "description": desc, "price": value, "price_unit": "USD/head",
+                            "source": "Marana Stockyards", "source_url": url
+                        })
+        except Exception as e:
+            print(f"Marana report failed {url}: {e}", file=sys.stderr)
+    print(f"Marana: {len(records)} feeder lots and {len(cow_records)} cow/pair records from {min(len(report_urls),220)} reports")
+    return records, cow_records
 
 def parse_fallon():
     index = "https://www.fallonlivestock.com/market-reports.html"
@@ -350,7 +390,8 @@ def main():
     records = []
     records += parse_overland()
     records += parse_visalia()
-    records += parse_marana()
+    marana_records, marana_cows = parse_marana()
+    records += marana_records
     records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico")
@@ -360,19 +401,26 @@ def main():
     parse_roswell_web()
     parse_fallon()
     old = []
+    old_cows = []
     if OUT.exists():
         try:
-            old = json.loads(OUT.read_text(encoding="utf-8")).get("records", [])
+            old_payload = json.loads(OUT.read_text(encoding="utf-8"))
+            old = old_payload.get("records", [])
+            old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
     by_id = {r["id"]: r for r in old}
     for r in records:
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
+    cow_by_id = {r["id"]: r for r in old_cows}
+    for r in marana_cows:
+        cow_by_id[r["id"]] = r
+    merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({
         "schema_version": 2, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "sources": SOURCES, "records": merged,
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows,
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
