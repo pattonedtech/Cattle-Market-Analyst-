@@ -255,11 +255,12 @@ async function loadFutures(){
 try{
 var r=await fetch('data/futures.json?refresh='+Date.now(),{cache:'no-store'});
 if(!r.ok)throw new Error('No published futures file yet');
-var d=await r.json();futuresContracts=d.contracts||[];
+var d=await r.json();futuresContracts=d.contracts||[];var usda={};try{var ur=await fetch('data/usda_outlook.json?refresh='+Date.now(),{cache:'no-store'});if(ur.ok)usda=await ur.json()}catch(e){}
 var html=futuresContracts.length?'<div class="tablewrap"><table><thead><tr><th>Market</th><th>Contract</th><th class="num">Price ($/cwt equiv.)</th><th class="num">Daily change</th></tr></thead><tbody>':'';
 futuresContracts.forEach(function(x){html+='<tr><td>'+esc(x.product)+'</td><td>'+esc(x.contract_month)+'</td><td class="num">'+money(x.price_cwt)+'</td><td class="num">'+(x.change>=0?'+':'')+fmt(x.change,2)+' ('+fmt(x.change_pct,2)+'%)</td></tr>'});
 html+=futuresContracts.length?'</tbody></table></div>':'No deferred futures contracts returned by the data provider.';
 html+='<p class="sub">Quotes are cents/lb, numerically equivalent to dollars/cwt. Source: Farmbucks, which credits DTN/CME. Delayed/indicative; confirm with CME or broker before acting.</p>';
+if(usda.status==='updated'){var f=usda.forecasts||{},ff=f.feeder_steer||{},lf=f.fed_steer||{},fund=usda.fundamentals||{};html+='<div class="notice"><b>USDA ERS Outlook ('+esc(usda.report_date||'latest')+')</b><br>Feeder steer: Q4 2026 '+(ff['2026_Q4']?money(ff['2026_Q4'])+'/cwt':'—')+' · 2027 '+(ff['2027_annual']?money(ff['2027_annual'])+'/cwt':'—')+' (750–800 lb, Oklahoma City).<br>Fed steer: Q4 2026 '+(lf['2026_Q4']?money(lf['2026_Q4'])+'/cwt':'—')+' · 2027 '+(lf['2027_annual']?money(lf['2027_annual'])+'/cwt':'—')+' (5-area).<br><span class="sub">Placements '+(fund.august_placements_yoy_pct!==undefined?fmt(fund.august_placements_yoy_pct,1)+'% year over year':'—')+'; national forecast, not a California cash bid. <a href="'+esc(usda.source_url)+'" target="_blank" rel="noopener">USDA report</a></span></div>'}else{html+='<p class="sub">USDA ERS outlook not yet parsed. See <a href="https://ers.usda.gov/topics/animal-products/cattle-beef/market-outlook" target="_blank" rel="noopener">USDA market outlook</a>.</p>'}
 $('futuresPanel').innerHTML=html;
 investment();
 }catch(e){$('futuresPanel').textContent='Deferred futures feed is not published yet. The collector must complete successfully before a contract curve is shown.'}
