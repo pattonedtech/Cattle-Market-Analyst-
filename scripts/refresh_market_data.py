@@ -122,12 +122,12 @@ def parse_visalia():
             # Snapshot headings vary: "January 7th thru 28th 2026",
             # "March 11th, 18th & 25th 2026", or a single dated sale.
             heading = text[:500]
-            period = re.search(r"([A-Z][a-z]+)\\s+(.{1,100}?)\\s+(20\\d{2})", heading, flags=re.S)
+            period = re.search(r"([A-Z][a-z]+)\s+(.{1,100}?)\s+(20\d{2})", heading, flags=re.S)
             if not period:
                 print(f"Visalia: could not identify snapshot date in {url}", file=sys.stderr)
                 continue
             month_name, date_phrase, year = period.group(1), period.group(2), int(period.group(3))
-            day_values = [int(x) for x in re.findall(r"(?<!\\d)(\\d{1,2})(?:st|nd|rd|th)?", date_phrase)]
+            day_values = [int(x) for x in re.findall(r"(?<!\d)(\d{1,2})(?:st|nd|rd|th)?", date_phrase)]
             day_values = [d for d in day_values if 1 <= d <= 31]
             if not day_values:
                 print(f"Visalia: could not identify day in {url}", file=sys.stderr)
