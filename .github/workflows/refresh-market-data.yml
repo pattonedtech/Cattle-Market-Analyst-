@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: market-data-refresh
+  group: market-data-refresh-v3
   cancel-in-progress: true
 
 jobs:
