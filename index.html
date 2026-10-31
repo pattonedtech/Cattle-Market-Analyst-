@@ -33,7 +33,7 @@
 <div class="card span-7"><h2>Seasonal price pattern</h2><p class="sub">Average recorded $/cwt by calendar month. This is descriptive history, not a forecast.</p><canvas class="chart" id="seasonChart"></canvas><div id="seasonNote" class="sub"></div></div>
 <div class="card span-5"><h2>Year-over-year</h2><p class="sub">Annual average of matching observations.</p><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Avg $/cwt</th><th class="num">Records</th></tr></thead><tbody id="yearBody"><tr><td colspan="3" class="empty">No data.</td></tr></tbody></table></div></div>
 <div class="card span-12"><h2>Monthly detail</h2><p class="sub">Monthly average, range, and sample size across all available years.</p><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Avg $/cwt</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No data.</td></tr></tbody></table></div></div>
-<div class="card span-12"><div class="notice" id="histCaveat">The system will not issue seasonal buy/sell advice until there are enough years of comparable records. Visalia published ranges and Overland video-lot contract prices are different data types and should be analyzed separately.</div></div>
+<div class="card span-12"><h2>Data source register</h2><p class="sub">A source being listed does not mean its historical reports are already parsed. Status is shown for each source.</p><div id="sourceList" class="sub">Waiting for source register…</div></div><div class="card span-12"><div class="notice" id="histCaveat">The system will not issue seasonal buy/sell advice until there are enough years of comparable records. Visalia published ranges and Overland video-lot contract prices are different data types and should be analyzed separately.</div></div>
 </div></section>
 <section class="page" id="market"><div class="grid">
 <div class="card span-5"><h2>Add market observation</h2><p class="sub">Enter an average price for a clearly defined lot/category. Keep sale barns and cattle types distinct.</p>
@@ -155,7 +155,7 @@ async function loadPublishedData(){
 try{
 var response=await fetch('data/market_observations.json?refresh='+Date.now(),{cache:'no-store'});
 if(!response.ok)return;
-var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];
+var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];var sources=Array.isArray(payload.sources)?payload.sources:[];$('sourceList').innerHTML=sources.map(function(x){return '<p><a href=\"'+esc(x.url)+'\" target=\"_blank\" rel=\"noopener\">'+esc(x.name)+'</a> ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
 var ids=new Set(records.map(r=>String(r.id)));
 published.forEach(function(r){if(!ids.has(String(r.id))){records.push(r);ids.add(String(r.id))}});
 records.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
