@@ -499,7 +499,7 @@ def fetch_usda_outlook():
                 "unit": "USD/cwt", "basis": "750–800 lb Medium and Large #1 steer, Oklahoma City National Stockyards"
             }
         placement = re.search(
-            r"Feedlot net placements in August were\s+([\d.]+) percent lower than last year at\s+([\d.]+) million head and August marketings were down\s+([\d.]+) percent at\s+([\d.]+) million head",
+            r"Feedlot net placements\s*\d*\s*in August were\s+([\d.]+) percent lower than last year at\s+([\d.]+) million head and August marketings were down\s+([\d.]+) percent at\s+([\d.]+) million head",
             normalized, flags=re.I
         )
         if placement:
