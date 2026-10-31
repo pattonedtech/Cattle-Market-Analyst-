@@ -453,6 +453,77 @@ def parse_visalia():
     return records
 
 
+def fetch_usda_outlook():
+    page_url = "https://ers.usda.gov/publications/115633"
+    result = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source": "USDA Economic Research Service",
+        "source_url": page_url,
+        "report_date": None,
+        "forecasts": {},
+        "fundamentals": {},
+        "status": "unavailable"
+    }
+    try:
+        page = BeautifulSoup(fetch(page_url).text, "html.parser")
+        pdf_url = None
+        for a in page.find_all("a", href=True):
+            href = urljoin(page_url, a["href"])
+            if ".pdf" in href.lower() and "ldp-m-" in href.lower():
+                pdf_url = href
+                break
+        if not pdf_url:
+            raise ValueError("Latest ERS Outlook PDF link not found")
+        text = pdf_text(pdf_url)
+        result["source_url"] = pdf_url
+        result["report_date"] = parse_date(text[:3000])
+        normalized = re.sub(r"\s+", " ", text)
+        fed = re.search(
+            r"slaughter steer price forecast for fourth quarter 2026 is unchanged at \$([\d.]+) per cwt\."
+            r".{0,250}?2027 price outlook is unchanged at \$([\d.]+) per cwt",
+            normalized, flags=re.I
+        )
+        feeder = re.search(
+            r"fourth-quarter price forecast is raised \$[\d.]+ to \$([\d.]+) per cwt\."
+            r".{0,250}?2027 feeder steer price outlook remains unchanged at \$([\d.]+) per cwt",
+            normalized, flags=re.I
+        )
+        if fed:
+            result["forecasts"]["fed_steer"] = {
+                "2026_Q4": float(fed.group(1)), "2027_annual": float(fed.group(2)),
+                "unit": "USD/cwt", "basis": "USDA 5-area marketing region slaughter steer"
+            }
+        if feeder:
+            result["forecasts"]["feeder_steer"] = {
+                "2026_Q4": float(feeder.group(1)), "2027_annual": float(feeder.group(2)),
+                "unit": "USD/cwt", "basis": "750–800 lb Medium and Large #1 steer, Oklahoma City National Stockyards"
+            }
+        placement = re.search(
+            r"Feedlot net placements in August were\s+([\d.]+) percent lower than last year at\s+([\d.]+) million head and August marketings were down\s+([\d.]+) percent at\s+([\d.]+) million head",
+            normalized, flags=re.I
+        )
+        if placement:
+            result["fundamentals"] = {
+                "august_placements_yoy_pct": -float(placement.group(1)),
+                "august_placements_million_head": float(placement.group(2)),
+                "august_marketings_yoy_pct": -float(placement.group(3)),
+                "august_marketings_million_head": float(placement.group(4))
+            }
+        production = re.search(
+            r"2026 beef production forecast.*?(\d+\.\d+) billion pounds.*?2027 beef production forecast.*?(\d+\.\d+) billion pounds",
+            normalized, flags=re.I
+        )
+        if production:
+            result["fundamentals"]["beef_production_2026_billion_lb"] = float(production.group(1))
+            result["fundamentals"]["beef_production_2027_billion_lb"] = float(production.group(2))
+        result["status"] = "updated" if result["forecasts"] else "pdf_loaded_forecast_rows_not_parsed"
+    except Exception as e:
+        result["error"] = str(e)
+        print(f"USDA ERS outlook refresh failed: {e}", file=sys.stderr)
+    (DATA / "usda_outlook.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(f"USDA ERS outlook: {result['status']} ({result.get('report_date')})")
+
+
 def fetch_futures():
     # Farmbucks publishes an indicative deferred CME contract chain, supplied by DTN/CME.
     # Quotes are cents/lb; numerically equal to dollars/cwt (e.g. 337.78 cents/lb = $337.78/cwt).
@@ -549,6 +620,7 @@ def main():
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
     fetch_futures()
+    fetch_usda_outlook()
 
 
 if __name__ == "__main__":
