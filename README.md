@@ -29,3 +29,8 @@ Market observations are saved in the current browser on the current device. Use 
 The beef calculator currently assumes the entered feed period begins at 600 lb. If cattle are purchased below 600 lb, include backgrounding expenses in other costs until a dedicated backgrounding model is added. Processing is excluded under the assumption that the customer pays the processor separately.
 
 This is a decision-support tool, not a guarantee of market prices or investment returns.
+
+
+## Automatic market history refresh
+
+A GitHub Actions workflow runs the public-source collector daily (and can be run manually from Actions). It checks Overland Stock Yard's public market-report archive and the current Visalia Livestock Market snapshot PDFs, preserving source URLs and record type. The dashboard loads the published JSON dataset automatically when opened. Overland's archive contains many years of video-auction reports, but much of that series is Holstein/dairy-cross cattle; it is not a substitute for Angus/Angus-cross sale history. Visalia's public snapshot page currently exposes only a small recent set of PDFs. The collector does not manufacture missing history, and the historical analysis displays sample counts rather than presenting weak samples as dependable seasonal patterns.
