@@ -72,7 +72,7 @@
 <div class="field"><label>Backgrounding cost per day ($)</label><input id="invBackDay" type="number" value="3"></div>
 <div class="field"><label>Other costs total ($/head)</label><input id="invOther" type="number" value="320"></div>
 <div class="field"><label>Dressing percentage (%)</label><input id="invDress" type="number" value="58"></div>
-<div class="field"><label>Expected sale price ($/cwt live)</label><input id="invSalePrice" type="number" value="230"></div>
+<div class="field"><label>Expected sale price ($/cwt live)</label><input id="invSalePrice" type="number" value="230"></div><div class="field"><label>Local live-cattle basis ($/cwt)</label><input id="invBasis" type="number" value="0" step=".25"></div><div class="field"><label>Local feeder purchase basis ($/cwt)</label><input id="invBuyBasis" type="number" value="0" step=".25"></div>
 </div><p class="sub">Other costs should include freight, processing paid by the ranch, health, death-loss allowance, commissions, interest and any costs not entered separately. Customer-paid processing is excluded from ranch costs.</p></div>
 <div class="card span-7" id="cowInputs" style="display:none"><h2>Breeding-cow investment assumptions</h2><div class="fieldgrid">
 <div class="field"><label>Purchase age (years)</label><input id="cowAge" type="number" value="3"></div>
@@ -144,7 +144,7 @@
 <script>
 (function(){
 'use strict';
-var KEY='flyingp_market_records_v1', records=[];
+var KEY='flyingp_market_records_v1', records=[], futuresContracts=[];
 function $(id){return document.getElementById(id)}
 function num(id){var v=parseFloat($(id).value);return Number.isFinite(v)?v:0}
 function money(v){return (v<0?'−':'')+'$'+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0})}
@@ -185,7 +185,7 @@ var requiredHangPrice=requiredHangLb>0?requiredRevenue/requiredHangLb:0;
 saleRevenue=live*num('invSalePrice')/100;
 profit=saleRevenue-investmentCost;margin=saleRevenue>0?profit/saleRevenue*100:-100;
 notes='Purchase '+money(purchaseCost)+' ('+money(num('invCwt'))+'/cwt) · background '+fmt(backDays,0)+' days · finish '+fmt(finishDays,0)+' days · feed/background '+money(feedCost)+' · other '+money(num('invOther'))+'. Required live sale price: '+money(requiredLiveCwt)+'/cwt; equivalent hanging price at entered dressing %: '+money(requiredHangPrice)+'/lb.';
-$('invMarketGap').textContent='At your entered sale assumption of '+money(num('invSalePrice'))+'/cwt live, modeled revenue is '+money(saleRevenue)+'. Required sale benchmark is '+money(requiredLiveCwt)+'/cwt live. Compare against the feeder futures contract closest to the expected sale month, then adjust for local basis, weight, grade and freight.';
+$('invMarketGap').textContent='At your entered sale assumption of '+money(num('invSalePrice'))+'/cwt live, modeled revenue is '+money(saleRevenue)+'. Required sale benchmark is '+money(requiredLiveCwt)+'/cwt live. Expected local cash from the matching Live Cattle contract is futures plus your basis input. Compare the current local feeder purchase bid with the matching Feeder Cattle contract plus feeder basis; weight and quality differences remain important.';
 $('invTime').textContent=fmt(days,0)+' days ('+fmt(days/30.4,1)+' months)';
 }else{
 $('invPurchase').readOnly=false;
@@ -232,10 +232,16 @@ async function loadFutures(){
 try{
 var r=await fetch('data/futures.json?refresh='+Date.now(),{cache:'no-store'});
 if(!r.ok)throw new Error('No published futures file yet');
-var d=await r.json(),q=d.quotes||[];
-$('futuresPanel').innerHTML=q.length?q.map(x=>'<p><b>'+esc(x.name)+'</b>: '+money(x.price)+'/cwt · '+esc(x.quote_date)+' · 5-day '+(x.change_5d>=0?'+':'')+fmt(x.change_5d,2)+' ('+fmt(x.change_5d_pct,1)+'%) · 1-month '+(x.change_1m>=0?'+':'')+fmt(x.change_1m,2)+' ('+fmt(x.change_1m_pct,1)+'%)</p><p class="sub">'+esc(x.contract_basis)+' · <a href="'+esc(x.source_url)+'" target="_blank" rel="noopener">source</a></p>').join(''):'No futures benchmark was returned by the provider.';
-}catch(e){$('futuresPanel').textContent='Futures feed is not published yet. The collector must complete successfully before a live benchmark is shown.'}
+var d=await r.json();futuresContracts=d.contracts||[];
+var html=futuresContracts.length?'<div class="tablewrap"><table><thead><tr><th>Market</th><th>Contract</th><th class="num">Price ($/cwt equiv.)</th><th class="num">Daily change</th></tr></thead><tbody>':'';
+futuresContracts.forEach(function(x){html+='<tr><td>'+esc(x.product)+'</td><td>'+esc(x.contract_month)+'</td><td class="num">'+money(x.price_cwt)+'</td><td class="num">'+(x.change>=0?'+':'')+fmt(x.change,2)+' ('+fmt(x.change_pct,2)+'%)</td></tr>'});
+html+=futuresContracts.length?'</tbody></table></div>':'No deferred futures contracts returned by the data provider.';
+html+='<p class="sub">Quotes are cents/lb, numerically equivalent to dollars/cwt. Source: Farmbucks, which credits DTN/CME. Delayed/indicative; confirm with CME or broker before acting.</p>';
+$('futuresPanel').innerHTML=html;
+investment();
+}catch(e){$('futuresPanel').textContent='Deferred futures feed is not published yet. The collector must complete successfully before a contract curve is shown.'}
 }
+
 function calcBeef(){
 var revenue=num('bHang')*num('bPrice'), feed=num('bDays')*num('bFeed'), diesel=num('bLoad')>0?num('bDiesel')/num('bLoad'):0, fixed=num('bGeneral')+diesel+num('bVax'), other=num('bOther'), margin=Math.min(100,Math.max(0,num('bMargin')))/100, allowable=revenue*(1-margin), max=allowable-feed-fixed-other, weight=num('bWeight'), cwt=weight>0?max/weight*100:0, profitAtMax=revenue-(max+feed+fixed+other);
 $('bRevenue').textContent=money(revenue);$('bMax').textContent=money(max);$('bCwt').textContent=money(cwt)+'/cwt';$('bProfit').textContent=money(profitAtMax);
@@ -298,6 +304,6 @@ function heifers(){var p=num('hWeight')*num('hPrice')/100, cost=p+num('hDevelop'
 var months=[['January',['Review winter feed inventory and forage reserves','Assess body condition and late-gestation needs','Watch local bred-cow and replacement offerings']],['February',['Prepare calving supplies and records','Evaluate feed costs and projected calf crop','Review feeder purchase ceiling']],['March',['Monitor calving and cow health','Record birth weights, calving ease, and dam data','Track early spring calf market']],['April',['Continue calving and identify replacements','Evaluate pasture turnout and water','Compare local calf sale reports']],['May',['Plan breeding season and bull soundness exams','Assess forage availability and stocking rate','Track spring calf prices by weight']],['June',['Breeding season; monitor bull performance','Record pasture condition and grazing pressure','Review replacement heifer development']],['July',['Pregnancy / breeding follow-up as scheduled','Plan fall marketing and feed needs','Compare feeder and replacement values']],['August',['Wean / precondition plan as appropriate','Vaccination and health records','Evaluate fall feeder purchase opportunities']],['September',['Wean and sort calves by sex and weight','Price marketing alternatives and sale dates','Update replacement selection']],['October',['Market calves or retain based on economics','Pregnancy-check cows if scheduled','Review winter feed and water systems']],['November',['Cull open, aged, or unsound cows as appropriate','Secure winter feed and bedding','Review annual cost per cow and calf']],['December',['Close out weights, sales, and expenses','Review herd performance and replacement rate','Set next year’s breeding and marketing plan']]];
 $('calendarGrid').innerHTML=months.map(m=>'<div class="month"><strong>'+m[0]+'</strong><ul>'+m[1].map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>').join('');
 $('deleteAll').addEventListener('click',function(){if(confirm('Delete every locally saved market observation from this browser? Export a backup first if needed.')){records=[];save();renderRecords();$('dataMessage').textContent='All local observations deleted.'}});
-window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();renderHistorical();loadPublishedData();['invType','invPurchase','invMargin','invSaleDate','invWeight','invCwt','invLive','invAdg','invFeedDay','invFinishDays','invBackDay','invOther','invDress','invSalePrice','cowAge','cowYears','cowAnnual','cowPreg','cowSurvive','cowCalf','cowBreed','cowCull','cowOther','cowDiscount'].forEach(function(id){if($(id))$(id).addEventListener('input',investment)});$('invType').addEventListener('change',toggleInvestment);toggleInvestment();loadFutures();
+window.addEventListener('resize',drawCharts);load();today();calcBeef();heifers();renderRecords();renderHistorical();loadPublishedData();['invType','invPurchase','invMargin','invSaleDate','invWeight','invCwt','invLive','invAdg','invFeedDay','invFinishDays','invBackDay','invOther','invDress','invSalePrice','invBasis','invBuyBasis','cowAge','cowYears','cowAnnual','cowPreg','cowSurvive','cowCalf','cowBreed','cowCull','cowOther','cowDiscount'].forEach(function(id){if($(id))$(id).addEventListener('input',investment)});$('invType').addEventListener('change',toggleInvestment);toggleInvestment();loadFutures();
 })();
 </script></body></html>
