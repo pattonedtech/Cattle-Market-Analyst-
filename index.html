@@ -58,13 +58,13 @@
 <div class="card span-12"><h2>Forward investment planner</h2><p class="sub">Work backward from the cash return required on the date you expect to sell. Enter the actual expected purchase price and operating costs. Futures are a market reference, not a guaranteed local cash price.</p>
 <div class="fieldgrid">
 <div class="field"><label>Investment type</label><select id="invType"><option value="feeder">Buy feeder steer (400–600 lb)</option><option value="cow">Buy breeding cow</option></select></div>
-<div class="field"><label id="invPurchaseLabel">Calculated purchase cost ($/head)</label><input id="invPurchase" type="number" value="1500"></div>
+<div class="field"><label id="invPurchaseLabel">Calculated purchase cost ($/head)</label><input id="invPurchase" type="number" value="2800"></div>
 <div class="field"><label>Target net margin (%)</label><input id="invMargin" type="number" value="20" step=".5"></div>
 <div class="field"><label>Expected sale date</label><input id="invSaleDate" type="date"></div>
 </div></div>
 <div class="card span-7" id="feederInputs"><h2>Feeder-to-finish assumptions</h2><div class="fieldgrid">
-<div class="field"><label>Purchase weight (lb)</label><input id="invWeight" type="number" value="500"></div>
-<div class="field"><label>Purchase price ($/cwt)</label><input id="invCwt" type="number" value="300"></div>
+<div class="field"><label>Purchase weight (lb)</label><input id="invWeight" type="number" value="479"></div>
+<div class="field"><label>Purchase price ($/cwt)</label><input id="invCwt" type="number" value="442.5"></div>
 <div class="field"><label>Target sale live weight (lb)</label><input id="invLive" type="number" value="1200"></div>
 <div class="field"><label>Expected average daily gain (lb/day)</label><input id="invAdg" type="number" value="2.8" step=".1"></div>
 <div class="field"><label>Feed cost per day ($)</label><input id="invFeedDay" type="number" value="5"></div>
@@ -76,11 +76,11 @@
 </div><p class="sub">Other costs should include freight, processing paid by the ranch, health, death-loss allowance, commissions, interest and any costs not entered separately. Customer-paid processing is excluded from ranch costs.</p></div>
 <div class="card span-7" id="cowInputs" style="display:none"><h2>Breeding-cow investment assumptions</h2><div class="fieldgrid">
 <div class="field"><label>Purchase age (years)</label><input id="cowAge" type="number" value="3"></div>
-<div class="field"><label>Expected productive years remaining</label><input id="cowYears" type="number" value="5"></div><div class="field"><label>Months until first calf is sold</label><input id="cowFirstCalfMonths" type="number" value="12"></div>
+<div class="field"><label>Expected productive years remaining</label><input id="cowYears" type="number" value="5"></div><div class="field"><label>Months until first calf is sold</label><input id="cowFirstCalfMonths" type="number" value="9"></div>
 <div class="field"><label>Annual cow carrying cost ($)</label><input id="cowAnnual" type="number" value="900"></div>
 <div class="field"><label>Pregnancy / calving probability (%)</label><input id="cowPreg" type="number" value="85"></div>
 <div class="field"><label>Weaning / calf survival (%)</label><input id="cowSurvive" type="number" value="95"></div>
-<div class="field"><label>Expected calf sale value ($)</label><input id="cowCalf" type="number" value="1200"></div>
+<div class="field"><label>Expected calf sale value ($)</label><input id="cowCalf" type="number" value="2000"></div>
 <div class="field"><label>Annual bull / breeding / vet ($)</label><input id="cowBreed" type="number" value="150"></div>
 <div class="field"><label>Expected cull value at exit ($)</label><input id="cowCull" type="number" value="900"></div>
 <div class="field"><label>Annual other cost ($)</label><input id="cowOther" type="number" value="0"></div>
