@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "scripts/refresh_market_data.py"
+      - "data/futures.json"
       - ".github/workflows/refresh-market-data.yml"
   schedule:
     - cron: "17 14 * * *"
