@@ -143,7 +143,7 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     if not report_urls:
         report_urls = [f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"]
     # Backfill recent releases to establish real seasonal history, then daily updates keep it current.
-    report_urls = report_urls[:150]
+    report_urls = report_urls[:150] if not OUT.exists() else report_urls[:1]
     records = []
     for url in report_urls:
         records.extend(parse_usda_pdf(url, report_id, market, region, record_type))
@@ -163,7 +163,7 @@ def parse_marana():
     except Exception as e:
         print(f"Marana archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
-    for url in report_urls[:220]:
+    for url in (report_urls[:220] if not OUT.exists() else report_urls[:1]):
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
             body = soup.get_text(" ", strip=True)
@@ -292,7 +292,7 @@ def parse_overland():
     except Exception as e:
         print(f"Overland archive index failed: {e}", file=sys.stderr)
         return records
-    for report_id, url in report_urls.items():
+    for report_id, url in list(report_urls.items())[:200 if not OUT.exists() else 10]:
         try:
             page = BeautifulSoup(fetch(url).text, "html.parser")
             body = page.get_text(" ", strip=True)
