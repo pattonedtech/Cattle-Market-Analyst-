@@ -144,7 +144,7 @@
 <script>
 (function(){
 'use strict';
-var KEY='flyingp_market_records_v1', records=[], futuresContracts=[];
+var KEY='flyingp_market_records_v1', records=[], futuresContracts=[], cowMarketRecords=[];
 function $(id){return document.getElementById(id)}
 function num(id){var v=parseFloat($(id).value);return Number.isFinite(v)?v:0}
 function money(v){return (v<0?'−':'')+'$'+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:0})}
@@ -155,7 +155,7 @@ async function loadPublishedData(){
 try{
 var response=await fetch('data/market_observations.json?refresh='+Date.now(),{cache:'no-store'});
 if(!response.ok)return;
-var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];
+var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];
 var ids=new Set(records.map(r=>String(r.id)));
 published.forEach(function(r){if(!ids.has(String(r.id))){records.push(r);ids.add(String(r.id))}});
 records.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
@@ -219,7 +219,7 @@ $('invActual').textContent=fmt(margin,1)+'% undiscounted margin';
 $('invActual').className='kpi '+(margin>=num('invMargin')?'positive':'negative');
 $('invTime').textContent=Number.isFinite(payback)&&payback<=years?fmt(payback,1)+' years (operating cash-flow payback)':'Not paid back from annual calf cash flow within modeled ownership';
 $('invDecision').textContent='Expected calf revenue/year: '+money(calfExpected)+' · annual cow costs: '+money(annual)+' · exit cull value: '+money(num('cowCull'))+'. Required average calf sale value for '+fmt(target*100,1)+'% undiscounted margin: '+money(requiredCalf)+'. Discounted NPV at '+fmt(disc*100,1)+'%: '+money(npv)+'. '+(npv>=0?'Positive modeled NPV.':'Negative modeled NPV; purchase price, annual cost, calf value or productive life assumptions need review.');
-$('invMarketGap').textContent='Compare cow purchase price with local bred-cow and replacement sales; compare expected calf value with your likely weaning sale month and cull value with local cull-cow prices. Feeder/live cattle futures alone are not a valid cow ROI forecast.';
+var recentCows=cowMarketRecords.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));var bredRefs=recentCows.filter(x=>x.category==='Bred cow').slice(0,4);var pairRefs=recentCows.filter(x=>x.category==='Cow-calf pair').slice(0,3);var cowRefText='';if(bredRefs.length)cowRefText+=' Recent Marana bred-cow asks/sales: '+bredRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';if(pairRefs.length)cowRefText+=' Cow-calf pairs: '+pairRefs.map(x=>x.date+' '+money(x.price)+'/head').join('; ')+'.';$('invMarketGap').textContent='Compare cow purchase price with local bred-cow and replacement sales; compare expected calf value with your likely weaning sale month and cull value with local cull-cow prices. Feeder/live cattle futures alone are not a valid cow ROI forecast.'+cowRefText;
 return;
 }
 $('invRequired').textContent=money(required);
