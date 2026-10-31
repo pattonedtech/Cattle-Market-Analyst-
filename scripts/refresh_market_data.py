@@ -500,7 +500,8 @@ def parse_visalia():
 
 
 def fetch_usda_outlook():
-    page_url = "https://ers.usda.gov/publications/115633"
+    index_url = "https://ers.usda.gov/topics/animal-products/cattle-beef/market-outlook"
+    page_url = index_url
     result = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": "USDA Economic Research Service",
@@ -511,16 +512,26 @@ def fetch_usda_outlook():
         "status": "unavailable"
     }
     try:
-        page = BeautifulSoup(fetch(page_url).text, "html.parser")
-        pdf_url = None
+        page = BeautifulSoup(fetch(index_url).text, "html.parser")
+        report_page_url = None
         for a in page.find_all("a", href=True):
-            href = urljoin(page_url, a["href"])
+            href = urljoin(index_url, a["href"])
+            if "report" in a.get_text(" ", strip=True).lower() and "/publications/" in href:
+                report_page_url = href
+                break
+        if not report_page_url:
+            raise ValueError("Latest ERS Outlook report page link not found")
+        report_page = BeautifulSoup(fetch(report_page_url).text, "html.parser")
+        pdf_url = None
+        for a in report_page.find_all("a", href=True):
+            href = urljoin(report_page_url, a["href"])
             if ".pdf" in href.lower() and "ldp-m-" in href.lower():
                 pdf_url = href
                 break
         if not pdf_url:
             raise ValueError("Latest ERS Outlook PDF link not found")
         text = pdf_text(pdf_url)
+        result["report_page_url"] = report_page_url
         result["source_url"] = pdf_url
         result["report_date"] = parse_date(text[:3000])
         normalized = re.sub(r"\s+", " ", text)
