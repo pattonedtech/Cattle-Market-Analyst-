@@ -89,7 +89,7 @@
 <div class="card span-5"><h2>Investment result</h2>
 <div class="kpi-label">Required sale revenue / head for target margin</div><div class="kpi" id="invRequired">$—</div>
 <div class="kpi-label" style="margin-top:12px">Projected net profit / head</div><div class="kpi" id="invProfit">$—</div>
-<div class="kpi-label" style="margin-top:12px">Projected net margin</div><div class="kpi" id="invActual">—</div>
+<div class="kpi-label" style="margin-top:12px">Projected net margin</div><div class="kpi" id="invActual">—</div><div class="kpi-label" style="margin-top:12px">Maximum purchase bid for target margin</div><div class="kpi" id="invMaxBid">—</div>
 <div class="kpi-label" style="margin-top:12px">Time to sale / payback</div><div class="kpi" id="invTime">—</div>
 <div class="notice" id="invDecision" style="margin-top:14px">Enter assumptions to calculate.</div>
 </div>
@@ -179,6 +179,8 @@ var purchaseCost=weight*num('invCwt')/100;
 $('invPurchase').value=purchaseCost.toFixed(2);$('invPurchase').readOnly=true;
 investmentCost=purchaseCost+feedCost+num('invOther');
 var requiredRevenue=investmentCost/(1-target);
+var maxPurchaseBid=saleRevenue*(1-target)-feedCost-num('invOther');
+var maxBidCwt=weight>0?maxPurchaseBid*100/weight:0;
 var requiredLiveCwt=live>0?requiredRevenue/(live/100):0;
 var requiredHangLb=live*num('invDress')/100;
 var requiredHangPrice=requiredHangLb>0?requiredRevenue/requiredHangLb:0;
@@ -221,6 +223,9 @@ var undiscountedCosts=purchase+annual*years;
 var requiredCalf=expectedCalves>0?Math.max(0,(undiscountedCosts/(1-target)-num('cowCull'))/expectedCalves):0;
 var saleRevenue=calfExpected*(expectedCalves/(preg*survival||1))+num('cowCull');
 var profit=saleRevenue-undiscountedCosts, margin=saleRevenue>0?profit/saleRevenue*100:-100;
+var maxCowBid=saleRevenue*(1-target)-annual*years;
+$('invMaxBid').textContent=money(maxCowBid)+' / head';
+$('invMaxBid').className='kpi '+(maxCowBid>=0?'positive':'negative');
 $('invRequired').textContent=money(requiredCalf)+' / calf';
 $('invProfit').textContent=money(npv)+' NPV';
 $('invProfit').className='kpi '+(npv>=0?'positive':'negative');
@@ -239,6 +244,8 @@ $('invMarketGap').textContent='Compare cow purchase price with local bred-cow an
 return;
 }
 $('invRequired').textContent=money(required);
+$('invMaxBid').textContent=money(maxPurchaseBid)+' / head ('+money(maxBidCwt)+'/cwt)';
+$('invMaxBid').className='kpi '+(maxPurchaseBid>=0?'positive':'negative');
 $('invProfit').textContent=money(profit);
 $('invProfit').className='kpi '+(profit>=0?'positive':'negative');
 $('invActual').textContent=fmt(margin,1)+'%';
