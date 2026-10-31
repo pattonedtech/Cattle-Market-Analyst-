@@ -33,15 +33,16 @@ def fetch(url):
 
 
 def parse_date(text):
-    pat = r"(?:SALE DATE:\s*)?(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)?[,]?\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(20\d{2})"
+    pat = r"(?:SALE DATE:\s*)?(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)?[,]?\s*(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(20\d{2})"
     m = re.search(pat, text, flags=re.I)
     if not m:
         return None
     try:
-        return datetime.strptime(f"{m.group(1).title()} {m.group(2)} {m.group(3)}", "%B %d %Y").date().isoformat()
+        month = m.group(1).title()
+        fmt = "%B %d %Y" if len(month) > 3 else "%b %d %Y"
+        return datetime.strptime(f"{month} {m.group(2)} {m.group(3)}", fmt).date().isoformat()
     except ValueError:
         return None
-
 
 def record(date, market, region, category, sex, breed, weight, price, head, source, url,
            record_type, price_low=None, price_high=None, sale_type="Auction", notes=""):
@@ -74,40 +75,61 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     if not date:
         print(f"USDA {report_id}: report date not identified", file=sys.stderr)
         return []
-    records, section = [], ""
+    records = []
+    # USDA reports contain multi-line tables. Normalize whitespace before parsing rows.
+    normalized = re.sub(r"\s+", " ", text)
+    section_matches = list(re.finditer(
+        r"(STEERS?|HEIFERS?|DAIRY STEERS?|COWS?|BULLS?|BRED COWS?|COW-CALF PAIRS?)\s*-\s*"
+        r"(?:Medium|Large|Small|Utility|Boner|Lean|Breaker|Cutter)[^:]{0,100}?\(Per Cwt[^)]*\)",
+        normalized, flags=re.I
+    ))
     row_re = re.compile(
-        r"(?:Current\s+(?:FOB|DEL)|Current|[A-Z][a-z]{2}\s+DEL)\s+"
-        r"([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d.]+)\s+([\d.]+)", re.I
+        r"(\d{1,4})\s+(\d{2,4}(?:-\d{2,4})?)\s+(\d{2,4})\s+"
+        r"([\d,.]+(?:-[\d,.]+)?)\s+([\d,.]+)"
     )
-    for line in text.splitlines():
-        stripped = " ".join(line.split())
-        if not stripped:
-            continue
-        if re.search(r"\bDairy Steers?\b", stripped, re.I):
-            section = "Dairy steer"
-        elif re.search(r"\bHeifers?\b", stripped, re.I):
-            section = "Heifer"
-        elif re.search(r"\bSteers?\b", stripped, re.I):
-            section = "Steer"
-        m = row_re.search(stripped)
-        if not m or not section:
-            continue
-        head, wt_range, avg_wt, price_range, avg_price = m.groups()
-        try:
-            h, w, p = int(head.replace(",", "")), float(avg_wt.replace(",", "")), float(avg_price)
-            if h <= 0 or w <= 0 or p <= 0:
+    for idx, section_match in enumerate(section_matches):
+        heading = section_match.group(0).upper()
+        segment_end = section_matches[idx+1].start() if idx+1 < len(section_matches) else len(normalized)
+        segment = normalized[section_match.end():segment_end]
+        section = section_match.group(1).upper()
+        if "HEIFER" in section:
+            sex, category = "Heifer", "Feeder heifer"
+        elif "STEER" in section:
+            sex, category = "Steer", "Feeder steer"
+        elif "COW" in section:
+            sex, category = "Cow", "Cull cow"
+        else:
+            sex, category = "Bull", "Bull"
+        for row in row_re.finditer(segment):
+            try:
+                head = int(row.group(1).replace(",", ""))
+                avg_weight = float(row.group(3).replace(",", ""))
+                avg_price = float(row.group(5).replace(",", ""))
+                if head <= 0 or avg_weight < 100 or avg_price <= 0:
+                    continue
+            except ValueError:
                 continue
-        except ValueError:
-            continue
-        sex = "Heifer" if section == "Heifer" else "Steer"
-        breed = "Dairy / Holstein" if section == "Dairy steer" else "USDA grade; breed not specified"
-        category = "Feeder heifer" if sex == "Heifer" else "Feeder steer"
-        records.append(record(date, market, region, category, sex, breed, w, p, h,
-                              "USDA AMS Market News", url, record_type,
-                              notes=f"USDA report {report_id}; row class: {section}; weight range: {wt_range}"))
+            breed = "Dairy / Holstein" if "DAIRY" in section else "USDA grade; breed not specified"
+            records.append(record(date, market, region, category, sex, breed, avg_weight, avg_price, head,
+                                  "USDA AMS Market News", url, record_type,
+                                  notes=f"USDA report {report_id}; table {heading}; avg price/cwt"))
+    # Direct-trade report tables use a separate structure (Current FOB/DEL rows).
+    if not records and "Direct" in text:
+        for section, sex, category in [
+            ("Steers", "Steer", "Feeder steer"), ("Heifers", "Heifer", "Feeder heifer")
+        ]:
+            pattern = re.compile(
+                rf"{section}\s*-\s*Medium and Large[^ ]*.*?Current\s+(?:FOB|DEL)\s+"
+                r"(\d{1,4})\s+(\d{2,4})\s+(\d{2,4})\s+([\d,.]+)\s+([\d,.]+)",
+                re.I
+            )
+            for row in pattern.finditer(normalized):
+                head, wt_range, avg_wt, price_range, avg_price = row.groups()
+                records.append(record(date, market, region, category, sex, "USDA grade; breed not specified",
+                                      float(avg_wt), float(avg_price), int(head), "USDA AMS Market News", url,
+                                      record_type, notes=f"USDA report {report_id}; direct {section} trade"))
     print(f"USDA {report_id} {market}: {len(records)} normalized rows for {date}")
     return records
-
 
 def parse_marana():
     url = "https://www.maranastockyards.us/marketreport/current.html"
@@ -273,37 +295,34 @@ def parse_visalia():
 
 
 def fetch_futures():
-    quotes = []
-    for symbol, name in [("GF=F", "Feeder cattle futures"), ("LE=F", "Live cattle futures")]:
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{quote(symbol)}?range=3mo&interval=1d"
-        try:
-            data = fetch(url).json()["chart"]["result"][0]
-            timestamps = data.get("timestamp") or []
-            closes = data["indicators"]["quote"][0].get("close") or []
-            valid = [(t, float(c)) for t, c in zip(timestamps, closes) if c is not None]
-            if not valid:
-                raise ValueError("No daily closes returned")
-            latest_ts, latest = valid[-1]
-            prev = valid[-6][1] if len(valid) >= 6 else valid[0][1]
-            month_ago = valid[-22][1] if len(valid) >= 22 else valid[0][1]
-            quotes.append({
-                "symbol": symbol, "name": name, "price": latest,
-                "quote_date": datetime.fromtimestamp(latest_ts, timezone.utc).date().isoformat(),
-                "change_5d": latest-prev, "change_5d_pct": (latest/prev-1)*100 if prev else None,
-                "change_1m": latest-month_ago, "change_1m_pct": (latest/month_ago-1)*100 if month_ago else None,
-                "unit": "USD/cwt", "contract_basis": "continuous front-month indicative series; NOT a deferred contract curve",
-                "provider": "Yahoo Finance chart data", "source_url": f"https://finance.yahoo.com/quote/{quote(symbol)}/"
+    # Farmbucks publishes an indicative deferred CME contract chain, supplied by DTN/CME.
+    # Quotes are cents/lb; numerically equal to dollars/cwt (e.g. 337.78 cents/lb = $337.78/cwt).
+    url = "https://farmbucks.com/futures/livestock"
+    contracts = []
+    try:
+        soup = BeautifulSoup(fetch(url).text, "html.parser")
+        text = " ".join(soup.get_text(" ", strip=True).split())
+        pat = re.compile(r"\b(GF|LE)([A-Z])(\d{2})\s+([A-Za-z]{3})\s+(20\d{2})\s+([\d.]+)\s+¢/lb\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)%", re.I)
+        for m in pat.finditer(text):
+            product, month_code, year2, month_name, year, price, change, pct = m.groups()
+            code = product.upper() + month_code.upper() + year2
+            contracts.append({
+                "symbol": code, "product": "Feeder cattle" if product.upper()=="GF" else "Live cattle",
+                "contract_month": month_name + " " + year, "month": datetime.strptime(month_name,"%b").month,
+                "year": int(year), "price_cwt": float(price), "change": float(change),
+                "change_pct": float(pct), "quote_unit": "cents/lb",
+                "equivalent_unit": "USD/cwt", "source": "Farmbucks (data credited to DTN/CME)",
+                "source_url": url
             })
-        except Exception as e:
-            print(f"Futures quote {symbol} unavailable: {e}", file=sys.stderr)
+    except Exception as e:
+        print(f"Deferred futures chain unavailable: {e}", file=sys.stderr)
     FUTURES_OUT.parent.mkdir(parents=True, exist_ok=True)
     FUTURES_OUT.write_text(json.dumps({
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "disclaimer": "Continuous front-month futures are directional benchmarks only. They are not month-matched deferred contract quotes or local cash-price forecasts.",
-        "quotes": quotes
+        "disclaimer": "Deferred futures are exchange benchmarks, not local cash bids. Apply a local basis and allow for contract-to-cash differences.",
+        "contracts": contracts
     }, indent=2) + "\n", encoding="utf-8")
-    print(f"Saved {len(quotes)} futures benchmarks")
-
+    print(f"Saved {len(contracts)} deferred futures contracts")
 
 SOURCES = [
     {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges"},
@@ -330,6 +349,9 @@ def main():
     records += parse_visalia()
     records += parse_marana()
     records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico")
+    records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico")
+    records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico")
+    records += parse_usda_report(1290, "Santa Teresa Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1784, "New Mexico Weekly Cattle Summary (USDA)", "New Mexico", "usda_state_summary")
     records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "AZ/CA/NV", "usda_direct_trade")
     parse_roswell_web()
