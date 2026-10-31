@@ -155,6 +155,9 @@ def parse_marana():
             for tr in soup.find_all("tr"):
                 cells = [x.get_text(" ", strip=True) for x in tr.find_all(["td", "th"])]
                 upper = " ".join(cells).upper()
+                if "BRED COWS" in upper and "PAIRS" in upper:
+                    section = "bred_pairs"
+                    continue
                 if "BRED COWS" in upper:
                     section = "bred"
                     continue
@@ -190,12 +193,19 @@ def parse_marana():
                                               sex, breed, weight, value, int(head.group(1)) if head else None,
                                               "Marana Stockyards", url, "auction_lot_average",
                                               sale_type="Live auction", notes=f"Published lot description: {desc}"))
-                elif section in ("bred", "pairs"):
-                    for base in (0, 3):
-                        if len(cells) <= base+1:
-                            continue
-                        desc = cells[base]
-                        price_text = cells[base+2] if len(cells)>base+2 and not cells[base+1] else cells[base+1]
+                elif section in ("bred", "pairs", "bred_pairs"):
+                    groups = []
+                    if section == "bred_pairs":
+                        if len(cells) >= 7:
+                            groups = [("bred", cells[0], cells[2]), ("pairs", cells[4], cells[6])]
+                        elif len(cells) >= 4:
+                            groups = [("bred", cells[0], cells[1]), ("pairs", cells[2], cells[3])]
+                    else:
+                        if len(cells) >= 3 and cells[1] == "":
+                            groups = [(section, cells[0], cells[2])]
+                        elif len(cells) >= 2:
+                            groups = [(section, cells[0], cells[1])]
+                    for cow_type, desc, price_text in groups:
                         price = re.search(r"\$?\s*([\d,]+(?:\.\d{1,2})?)", price_text)
                         if not desc or not price:
                             continue
@@ -203,9 +213,9 @@ def parse_marana():
                         if value < 100:
                             continue
                         cow_records.append({
-                            "id": stable_id("marana", date, section, desc, value, url),
+                            "id": stable_id("marana", date, cow_type, desc, value, url),
                             "date": date, "market": "Marana Stockyards", "region": "Arizona",
-                            "category": "Bred cow" if section == "bred" else "Cow-calf pair",
+                            "category": "Bred cow" if cow_type == "bred" else "Cow-calf pair",
                             "description": desc, "price": value, "price_unit": "USD/head",
                             "source": "Marana Stockyards", "source_url": url
                         })
