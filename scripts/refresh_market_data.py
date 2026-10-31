@@ -535,30 +535,34 @@ def fetch_usda_outlook():
         result["source_url"] = pdf_url
         result["report_date"] = parse_date(text[:3000])
         normalized = re.sub(r"\s+", " ", text)
-        fed = re.search(
-            r"slaughter steer price forecast for fourth quarter 2026 is unchanged at \$([\d.]+) per cwt\."
-            r".{0,250}?2027 price outlook is unchanged at \$([\d.]+) per cwt",
+        fed_q4 = re.search(
+            r"slaughter steer price forecast for fourth quarter 2026[^.]*\$([\d.]+) per cwt",
             normalized, flags=re.I
         )
-        feeder = re.search(
-            r"fourth-quarter price forecast is raised \$[\d.]+ to \$([\d.]+) per cwt\."
-            r".{0,250}?2027 feeder steer price outlook remains unchanged at \$([\d.]+) per cwt",
+        fed_annual = re.search(
+            r"2027 price outlook[^.]*\$([\d.]+) per cwt",
             normalized, flags=re.I
         )
-        if fed:
+        feeder_q4 = re.search(
+            r"fourth-quarter price forecast[^.]*\$([\d.]+) per cwt",
+            normalized, flags=re.I
+        )
+        feeder_annual = re.search(
+            r"2027 feeder steer price outlook[^.]*\$([\d.]+) per cwt",
+            normalized, flags=re.I
+        )
+        if fed_q4 or fed_annual:
             result["forecasts"]["fed_steer"] = {
-                "2026_Q4": float(fed.group(1)), "2027_annual": float(fed.group(2)),
+                "2026_Q4": float(fed_q4.group(1)) if fed_q4 else None,
+                "2027_annual": float(fed_annual.group(1)) if fed_annual else None,
                 "unit": "USD/cwt", "basis": "USDA 5-area marketing region slaughter steer"
             }
-        if feeder:
+        if feeder_q4 or feeder_annual:
             result["forecasts"]["feeder_steer"] = {
-                "2026_Q4": float(feeder.group(1)), "2027_annual": float(feeder.group(2)),
+                "2026_Q4": float(feeder_q4.group(1)) if feeder_q4 else None,
+                "2027_annual": float(feeder_annual.group(1)) if feeder_annual else None,
                 "unit": "USD/cwt", "basis": "750–800 lb Medium and Large #1 steer, Oklahoma City National Stockyards"
             }
-        placement = re.search(
-            r"Feedlot net placements\s*\d*\s*in August were\s+([\d.]+) percent lower than last year at\s+([\d.]+) million head and August marketings were down\s+([\d.]+) percent at\s+([\d.]+) million head",
-            normalized, flags=re.I
-        )
         if placement:
             result["fundamentals"] = {
                 "august_placements_yoy_pct": -float(placement.group(1)),
