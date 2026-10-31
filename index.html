@@ -162,7 +162,7 @@ records.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
 $('overviewStatus').textContent=published.length
 ? 'Auto-updated source history: '+published.length+' published observations. Last data refresh: '+(payload.generated_at||'timestamp unavailable')+'. Manually entered records are retained on this device.'
 : 'The automatic collector has not published any observations yet. Manual entry remains available.';
-renderRecords();
+renderRecords();renderHistorical();investment();
 }catch(e){$('overviewStatus').textContent='Published market data is not available yet. Manual observations are still available.'}
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(records))}
