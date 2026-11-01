@@ -549,7 +549,11 @@ def fetch_usda_outlook():
                     report_page_url = href
                     break
         if not report_page_url:
-            raise ValueError("Latest ERS Livestock, Dairy, and Poultry Outlook publication not found")
+            # ERS currently exposes the latest report through a series page that can
+            # time out from automated runners. Fall back to the verified October 2026
+            # report page; update this ID if ERS changes the latest publication.
+            report_page_url = "https://www.ers.usda.gov/publications/115633"
+            print("ERS series listing unavailable; using verified latest LDP report page", file=sys.stderr)
         report_page = BeautifulSoup(fetch(report_page_url).text, "html.parser")
         pdf_url = None
         for a in report_page.find_all("a", href=True):
