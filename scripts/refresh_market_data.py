@@ -559,7 +559,15 @@ def parse_cattle_channel_west():
         match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
         return match.group(1) if match else ""
     # Keep the newest reports for each state; do not crawl the entire archive daily.
-    urls = sorted(urls, key=report_date_from_url, reverse=True)[:40]
+    urls_by_state = {"idaho": [], "oregon": []}
+    for candidate in urls:
+        parts = urlparse(candidate).path.strip("/").split("/")
+        state_key = parts[1].lower() if len(parts) > 1 else ""
+        if state_key in urls_by_state:
+            urls_by_state[state_key].append(candidate)
+    urls = []
+    for state_key in ("idaho", "oregon"):
+        urls.extend(sorted(urls_by_state[state_key], key=report_date_from_url, reverse=True)[:20])
     for url in urls:
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
