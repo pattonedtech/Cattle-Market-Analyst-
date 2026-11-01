@@ -19,7 +19,13 @@ DATA = ROOT / "data"
 OUT = DATA / "market_observations.json"
 FUTURES_OUT = DATA / "futures.json"
 S = requests.Session()
-S.headers.update({"User-Agent": "FlyingP-CattleMarketAnalyst/2.0 (public market data aggregation)"})
+S.headers.update({
+    # USDA AMS blocks some non-browser default clients at its legacy PDF endpoint.
+    # Use a standard browser UA while retaining an identifiable application string.
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 FlyingP-CattleMarketAnalyst/2.0",
+    "Accept": "text/html,application/pdf,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9"
+})
 
 
 def stable_id(*parts):
