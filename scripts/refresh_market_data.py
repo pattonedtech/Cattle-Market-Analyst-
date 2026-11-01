@@ -618,7 +618,7 @@ def parse_overland():
                 chunk = body[match.start(): matches[i+1].start() if i+1 < len(matches) else len(body)]
                 price_match = re.search(r"\$\s*([\d,]+(?:\.\d+)?)", chunk)
                 weight_match = re.search(r"(\d+)\s*Hd\s*\(\s*([\d,]+)\s*lbs?\s*\)", chunk, flags=re.I)
-                desc_match = re.search(r"\b(MEXICAN\s+BRANDED\s+CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|NATIVE\s+CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|HOL\s*(?:STR|HFR)|HOLSTEIN\s*(?:STEER|HEIFER)?|NATIVE\s*(?:STR|HFR|STEER|HEIFER)|BEEF\s*(?:STR|HFR|STEER|HEIFER)|ANGUS\s*(?:STR|HFR|STEER|HEIFER)|HOL\s*BEEF\s*(?:STR|HFR))\b", chunk, flags=re.I)
+                desc_match = re.search(r"\b(MEXICAN\s+BRANDED\s+CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|M[- ]?BRANDED\s+CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|NATIVE\s+CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|HOL\s*(?:STR|HFR)|HOLSTEIN\s*(?:STEER|HEIFER)?|NATIVE\s*(?:STR|HFR|STEER|HEIFER)|BEEF\s*(?:STR|HFR|STEER|HEIFER)|ANGUS\s*(?:STR|HFR|STEER|HEIFER)|HOL\s*BEEF\s*(?:STR|HFR))\b", chunk, flags=re.I)
                 if not price_match or not weight_match:
                     continue
                 price = float(price_match.group(1).replace(",", ""))
@@ -630,7 +630,7 @@ def parse_overland():
                     sex, category = "Steer", "Corriente steer" if "CORRIENTE" in desc else "Feeder steer"
                 else:
                     sex, category = "Unknown", "Other"
-                breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Mexican-branded Corriente" if "MEXICAN" in desc and "CORRIENTE" in desc else ("Native Corriente" if "NATIVE CORRIENTE" in desc else ("Corriente — type not specified" if "CORRIENTE" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown")))))
+                breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Mexican M-branded Corriente" if ("MEXICAN" in desc or "M-BRANDED" in desc or "M BRANDED" in desc) and "CORRIENTE" in desc else ("Native Corriente" if "NATIVE CORRIENTE" in desc else ("Corriente — type not specified" if "CORRIENTE" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown")))))
                 if price <= 0 or weight <= 0 or head <= 0:
                     continue
                 records.append(record(date, "Overland Stock Yard", "California", category, sex, breed, weight, price, head,
