@@ -12,6 +12,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: market-data-refresh-v3
@@ -20,6 +22,9 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -33,7 +38,7 @@ jobs:
         run: python scripts/refresh_market_data.py
       - name: Commit updated market history
         run: |
-          if ! git diff --quiet -- data/market_observations.json data/futures.json data/usda_outlook.json; then
+          if [ -n "$(git status --porcelain -- data/market_observations.json data/futures.json data/usda_outlook.json)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/market_observations.json data/futures.json data/usda_outlook.json
@@ -42,3 +47,12 @@ jobs:
           else
             echo "No new market observations."
           fi
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
