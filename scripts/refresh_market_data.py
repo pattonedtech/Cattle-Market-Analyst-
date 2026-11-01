@@ -554,6 +554,19 @@ def parse_cattle_channel_west():
                     urls.add(href)
         except Exception:
             continue
+    for archive_url in [
+        "https://cattlechannel.com/market-report/idaho/",
+        "https://cattlechannel.com/market-report/oregon/",
+        "https://cattlechannel.com/market-report/",
+    ]:
+        try:
+            archive = BeautifulSoup(fetch(archive_url).text, "html.parser")
+            for link in archive.find_all("a", href=True):
+                href = urljoin(archive_url, link["href"])
+                if re.search(r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?$", href, re.I):
+                    urls.add(href)
+        except Exception as e:
+            print(f"Cattle Channel archive unavailable {archive_url}: {e}", file=sys.stderr)
     records, seen = [], set()
     def report_date_from_url(url):
         match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
