@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "generated_at": "2026-11-01T20:41:36.955062+00:00",
+  "generated_at": "2026-11-01T20:43:52.553169+00:00",
   "record_count": 17455,
   "cow_record_count": 1523,
   "sources": [
@@ -166,11 +166,18 @@
       "status": "automated: multi-state lots; not assigned to Wyoming"
     },
     {
-      "name": "Idaho / Oregon local auction feeds",
-      "state": "ID/OR",
-      "kind": "local auction",
-      "url": "https://www.ams.usda.gov/market-news/feeder-and-replacement-cattle-auctions",
-      "status": "coverage gap: state-specific parser not yet available"
+      "name": "Cattle Channel \u2014 Idaho sale reports",
+      "state": "ID",
+      "kind": "third-party auction summaries",
+      "url": "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
+      "status": "automated: public weight-class weighted averages; third-party source"
+    },
+    {
+      "name": "Cattle Channel \u2014 Oregon sale reports",
+      "state": "OR",
+      "kind": "third-party auction summaries",
+      "url": "https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06",
+      "status": "automated: public weight-class weighted averages; third-party source"
     },
     {
       "name": "Willcox Livestock Auction",
