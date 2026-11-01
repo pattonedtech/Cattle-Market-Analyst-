@@ -140,20 +140,26 @@ def parse_usda_pdf(url, report_id, market, region, record_type):
 
 def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     page_url = f"https://mymarketnews.ams.usda.gov/viewReport/{report_id}"
+    fallback_url = f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"
     report_urls = []
-    try:
-        soup = BeautifulSoup(fetch(page_url).text, "html.parser")
-        for a in soup.find_all("a", href=True):
-            href = urljoin(page_url, a["href"])
-            if ".pdf" in href.lower() and (str(report_id) in href or f"ams_{report_id}" in href.lower()):
-                if href not in report_urls:
-                    report_urls.append(href)
-    except Exception as e:
-        print(f"USDA {report_id} archive index failed: {e}", file=sys.stderr)
-    if not report_urls:
-        report_urls = [f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"]
-    # Backfill recent releases to establish real seasonal history, then daily updates keep it current.
-    report_urls = report_urls[:150] if needs_backfill() else report_urls[:1]
+    # The public AMS archive index can be very slow from automated runners. On routine
+    # updates, fetch the known current-report PDF directly instead of waiting 45 seconds
+    # for an archive page that is not needed for the latest observation.
+    if needs_backfill():
+        try:
+            soup = BeautifulSoup(fetch(page_url).text, "html.parser")
+            for a in soup.find_all("a", href=True):
+                href = urljoin(page_url, a["href"])
+                if ".pdf" in href.lower() and (str(report_id) in href or f"ams_{report_id}" in href.lower()):
+                    if href not in report_urls:
+                        report_urls.append(href)
+        except Exception as e:
+            print(f"USDA {report_id} archive index failed: {e}", file=sys.stderr)
+        if not report_urls:
+            report_urls = [fallback_url]
+        report_urls = report_urls[:150]
+    else:
+        report_urls = [fallback_url]
     records = []
     for url in report_urls:
         records.extend(parse_usda_pdf(url, report_id, market, region, record_type))
@@ -213,7 +219,10 @@ def parse_marana():
                         head = re.search(r"^\s*(\d+)", desc)
                         if not wt or not price:
                             continue
-                        weight, value = float(wt.group(0)), float(price.group(1).replace(",", ""))
+                        try:
+                            weight, value = float(wt.group(0)), float(price.group(1).replace(",", ""))
+                        except (ValueError, TypeError):
+                            continue
                         if not (200 <= weight <= 1600 and 50 <= value <= 1000):
                             continue
                         breed = "Angus" if "ANGUS" in desc.upper() else ("Beef cross / native" if any(x in desc.upper() for x in ["BLK", "BMF", "RMF", "BWF", "RED"]) else "Mixed / unknown")
@@ -238,7 +247,10 @@ def parse_marana():
                         price = re.search(r"\$?\s*([\d,]+(?:\.\d{1,2})?)", price_text)
                         if not desc or not price:
                             continue
-                        value = float(price.group(1).replace(",", ""))
+                        try:
+                            value = float(price.group(1).replace(",", ""))
+                        except (ValueError, TypeError):
+                            continue
                         if value < 100:
                             continue
                         cow_records.append({
@@ -283,14 +295,17 @@ def parse_fallon():
                 if "CHOICE CATTLE (CWT)" in upper or "DAIRY CATTLE (CWT)" in upper:
                     feeder_section = False
                 if feeder_section:
-                    matches = list(re.finditer(r"(\d{3,4})\s*-\s*(\d{3,4})\s+([\d.]+(?:\s*-\s*[\d.]+)?)", line))
+                    matches = list(re.finditer(r"(\d{3,4})\s*-\s*(\d{3,4})\s+(\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)", line))
                     for n, m in enumerate(matches):
                         low_w, high_w, price_text = m.groups()
-                        p = re.search(r"([\d.]+)(?:\s*-\s*([\d.]+))?", price_text)
+                        p = re.fullmatch(r"(\d+(?:\.\d+)?)(?:\s*-\s*(\d+(?:\.\d+)?))?", price_text)
                         if not p:
                             continue
-                        lo, hi = float(p.group(1)), float(p.group(2) or p.group(1))
-                        low_weight, high_weight = float(low_w), float(high_w)
+                        try:
+                            lo, hi = float(p.group(1)), float(p.group(2) or p.group(1))
+                            low_weight, high_weight = float(low_w), float(high_w)
+                        except (ValueError, TypeError):
+                            continue
                         sex = "Steer" if n == 0 else ("Heifer" if n == 1 else "Unknown")
                         if sex == "Unknown" or hi <= 0:
                             continue
@@ -514,13 +529,27 @@ def fetch_usda_outlook():
     try:
         page = BeautifulSoup(fetch(index_url).text, "html.parser")
         report_page_url = None
+        series_url = None
         for a in page.find_all("a", href=True):
             href = urljoin(index_url, a["href"])
-            if "report" in a.get_text(" ", strip=True).lower() and "/publications/" in href:
-                report_page_url = href
-                break
+            label = a.get_text(" ", strip=True).lower()
+            if "report" in label and "/publications" in href:
+                series_url = href
+                if re.search(r"/publications/\d+", href):
+                    report_page_url = href
+                    break
+        # The current ERS topic page links to a series listing (/publications?series=LDPM),
+        # not directly to an individual report. Resolve the newest LDP report from that list.
+        if not report_page_url and series_url:
+            series_page = BeautifulSoup(fetch(series_url).text, "html.parser")
+            for a in series_page.find_all("a", href=True):
+                href = urljoin(series_url, a["href"])
+                label = a.get_text(" ", strip=True).lower()
+                if "livestock, dairy, and poultry outlook" in label and re.search(r"/publications/\d+", href):
+                    report_page_url = href
+                    break
         if not report_page_url:
-            raise ValueError("Latest ERS Outlook report page link not found")
+            raise ValueError("Latest ERS Outlook publication link not found on the LDP series page")
         report_page = BeautifulSoup(fetch(report_page_url).text, "html.parser")
         pdf_url = None
         for a in report_page.find_all("a", href=True):
@@ -544,7 +573,7 @@ def fetch_usda_outlook():
             normalized, flags=re.I
         )
         feeder_q4 = re.search(
-            r"fourth-quarter price forecast[^.]*\$([\d.]+) per cwt",
+            r"fourth-quarter price forecast.{0,180}?(?:to|at)\s*\$([\d]+(?:\.\d+)?)\s+per cwt",
             normalized, flags=re.I
         )
         feeder_annual = re.search(
@@ -563,6 +592,11 @@ def fetch_usda_outlook():
                 "2027_annual": float(feeder_annual.group(1)) if feeder_annual else None,
                 "unit": "USD/cwt", "basis": "750–800 lb Medium and Large #1 steer, Oklahoma City National Stockyards"
             }
+        placement = re.search(
+            r"placements in August were ([\d.]+) percent lower than last year at ([\d.]+) million head "
+            r"and August marketings were down ([\d.]+) percent at ([\d.]+) million head",
+            normalized, flags=re.I
+        )
         if placement:
             result["fundamentals"] = {
                 "august_placements_yoy_pct": -float(placement.group(1)),
