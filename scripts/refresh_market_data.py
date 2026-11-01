@@ -538,9 +538,9 @@ def parse_belen():
     records, cow_records = [], []
     try:
         soup = BeautifulSoup(fetch(url).text, "html.parser")
-        body = soup.get_text("\\n", strip=True)
+        body = soup.get_text("\n", strip=True)
         headers = list(re.finditer(
-            r"SALE OF\\s+((?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\\s+\\d{1,2},\\s*20\\d{2})",
+            r"SALE OF\s+((?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s+\d{1,2},\s*20\d{2})",
             body, flags=re.I
         ))
         state, county = geographic_fields("Cattlemen's Livestock Auction - Belen", "New Mexico")
@@ -551,9 +551,9 @@ def parse_belen():
             if not date:
                 continue
 
-            def add_head_range(label, category, unit="USD/head"):
+            def add_head_range(label, category):
                 m = re.search(
-                    rf"{label}\\s*\\$?\\s*([\\d,]+(?:\\.\\d{{1,2}})?)\\s*[-–]\\s*\\$?\\s*([\\d,]+(?:\\.\\d{{1,2}})?)\\s*hd\\b",
+                    rf"{label}\s*\$?\s*([\d,]+(?:\.\d{{1,2}})?)\s*[-–]\s*\$?\s*([\d,]+(?:\.\d{{1,2}})?)\s*hd\b",
                     segment, flags=re.I
                 )
                 if not m:
@@ -567,12 +567,12 @@ def parse_belen():
                     "region": "New Mexico", "state": state, "county": county,
                     "category": category, "description": "Published auction price range; origin/type not specified",
                     "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
-                    "price_unit": unit, "source": "Cattlemen's Livestock Auction - Belen",
+                    "price_unit": "USD/head", "source": "Cattlemen's Livestock Auction - Belen",
                     "source_url": url, "record_type": "published_price_range",
                     "head": None, "breed": "Corriente — type not specified" if "Corriente" in category else "Not specified"
                 })
 
-            m = re.search(r"\\bCorrientes\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s*[-–]\\s*\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s*cwt\\b", segment, flags=re.I)
+            m = re.search(r"\bCorrientes\s+\$?([\d,]+(?:\.\d{1,2})?)\s*[-–]\s*\$?([\d,]+(?:\.\d{1,2})?)\s*cwt\b", segment, flags=re.I)
             if m:
                 lo, hi = (float(x.replace(",", "")) for x in m.groups())
                 if lo > 0 and hi >= lo:
