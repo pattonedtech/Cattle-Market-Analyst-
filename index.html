@@ -315,7 +315,13 @@ var ask=num('bAsk'), askProfit=revenue-(ask+feed+fixed+other), askMargin=revenue
 $('kBid').textContent=money(cwt);$('overviewMax').textContent=money(max)+'/head';$('overviewCostText').textContent='Allowable total cost '+money(allowable)+' · modeled operating costs '+money(feed+fixed+other)+'.';$('costBar').style.width=(revenue?Math.min(100,(feed+fixed+other)/revenue*100):0)+'%';
 }
 ['bLive','bHang','bPrice','bDays','bFeed','bMargin','bGeneral','bDiesel','bLoad','bVax','bOther','bWeight','bAsk'].forEach(function(id){$(id).addEventListener('input',calcBeef)});
-function addRecord(){var r={id:Date.now()+Math.random(),date:$('mDate').value,market:$('mMarket').value,category:$('mCategory').value,breed:$('mBreed').value,sex:$('mSex').value,weight:num('mWeight'),price:num('mPrice'),head:num('mHead'),sale:$('mSale').value,notes:$('mNotes').value};if(!r.date||r.weight<=0||r.price<=0){$('formMessage').textContent='Enter a date, average weight, and price greater than zero.';return}records.push(r);save();renderRecords();$('formMessage').textContent='Observation saved on this device.';$('mWeight').value='';$('mPrice').value='';$('mHead').value='';$('mNotes').value=''}
+function clientGeography(market){
+var m=String(market||'').toLowerCase();
+var map=[['visalia','California','Tulare'],['overland','California','Kings'],['marana','Arizona','Pima'],['willcox','Arizona','Cochise'],['fallon','Nevada','Churchill'],['roswell','New Mexico','Chaves'],['clovis','New Mexico','Curry'],["cattlemen's livestock auction",'New Mexico','Valencia'],['santa teresa','New Mexico','Doña Ana']];
+for(var i=0;i<map.length;i++)if(m.indexOf(map[i][0])>=0)return {state:map[i][1],county:map[i][2]};
+return {state:null,county:null};
+}
+function addRecord(){var market=$('mMarket').value,geo=clientGeography(market);var r={id:Date.now()+Math.random(),date:$('mDate').value,market:market,state:geo.state,county:geo.county,category:$('mCategory').value,breed:$('mBreed').value,sex:$('mSex').value,weight:num('mWeight'),price:num('mPrice'),head:num('mHead'),sale:$('mSale').value,notes:$('mNotes').value};if(!r.date||r.weight<=0||r.price<=0){$('formMessage').textContent='Enter a date, average weight, and price greater than zero.';return}records.push(r);save();renderRecords();$('formMessage').textContent='Observation saved on this device.';$('mWeight').value='';$('mPrice').value='';$('mHead').value='';$('mNotes').value=''}
 $('addRecord').addEventListener('click',addRecord);$('clearForm').addEventListener('click',function(){['mWeight','mPrice','mHead','mNotes'].forEach(id=>$(id).value='');$('formMessage').textContent=''});
 function filtered(){return records.filter(r=>(!$('filterCategory').value||r.category===$('filterCategory').value)&&(!$('filterMarket').value||r.market===$('filterMarket').value)).sort((a,b)=>a.date.localeCompare(b.date))}
 function renderRecords(){
@@ -342,7 +348,11 @@ var seriesType=$('histRecordType')?$('histRecordType').value:'all';
 var band=$('histWeight')?$('histWeight').value:'all';
 var level=$('geoLevel')?$('geoLevel').value:'state';
 var previousState=$('geoState')?$('geoState').value:'';
-var eligible=records.filter(function(r){
+var eligible=records.map(function(r){
+if(r.state)return r;
+var geo=clientGeography(r.market||'');
+return Object.assign({},r,{state:geo.state,county:geo.county});
+}).filter(function(r){
 if(r.category!==category)return false;
 if(seriesType!=='all'&&r.record_type!==seriesType)return false;
 if(band!=='all'){var low=Number(band);if(!(Number(r.weight)>=low&&Number(r.weight)<low+100))return false}
