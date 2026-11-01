@@ -1,10 +1,30 @@
 {
-  "generated_at": "2026-11-01T00:26:22.880838+00:00",
+  "generated_at": "2026-11-01T00:28:55.630742+00:00",
   "source": "USDA Economic Research Service",
-  "source_url": "https://ers.usda.gov/topics/animal-products/cattle-beef/market-outlook",
-  "report_date": null,
-  "forecasts": {},
-  "fundamentals": {},
-  "status": "unavailable",
-  "error": "Latest ERS Livestock, Dairy, and Poultry Outlook publication not found"
+  "source_url": "https://www.ers.usda.gov/media/29753/ldp-m-388.pdf?v=14208",
+  "report_date": "2026-11-17",
+  "forecasts": {
+    "fed_steer": {
+      "2026_Q4": 225.0,
+      "2027_annual": 237.5,
+      "unit": "USD/cwt",
+      "basis": "USDA 5-area marketing region slaughter steer"
+    },
+    "feeder_steer": {
+      "2026_Q4": 343.0,
+      "2027_annual": 342.5,
+      "unit": "USD/cwt",
+      "basis": "750\u2013800 lb Medium and Large #1 steer, Oklahoma City National Stockyards"
+    }
+  },
+  "fundamentals": {
+    "august_placements_yoy_pct": -9.5,
+    "august_placements_million_head": 1.565,
+    "august_marketings_yoy_pct": -3.3,
+    "august_marketings_million_head": 1.519,
+    "beef_production_2026_billion_lb": 24.802,
+    "beef_production_2027_billion_lb": 24.675
+  },
+  "status": "updated",
+  "report_page_url": "https://www.ers.usda.gov/publications/115633"
 }
