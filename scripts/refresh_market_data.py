@@ -852,6 +852,27 @@ def main():
     for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
+    category_counts = {}
+    for r in merged:
+        category = r.get("category", "Unknown")
+        category_counts[category] = category_counts.get(category, 0) + 1
+    cow_category_counts = {}
+    for r in merged_cows:
+        category = r.get("category", "Unknown")
+        cow_category_counts[category] = cow_category_counts.get(category, 0) + 1
+    state_counts = {}
+    for r in merged:
+        state = r.get("state") or "Regional / unassigned"
+        state_counts[state] = state_counts.get(state, 0) + 1
+    corriente_counts = {}
+    for r in merged:
+        breed = str(r.get("breed", ""))
+        if "corriente" in breed.lower():
+            corriente_counts[breed] = corriente_counts.get(breed, 0) + 1
+    print("Market records by category: " + "; ".join(f"{k}={v}" for k, v in sorted(category_counts.items())))
+    print("Cow-market records by category: " + "; ".join(f"{k}={v}" for k, v in sorted(cow_category_counts.items())))
+    print("Market records by state: " + "; ".join(f"{k}={v}" for k, v in sorted(state_counts.items())))
+    print("Corriente records by classification: " + ("; ".join(f"{k}={v}" for k, v in sorted(corriente_counts.items())) or "none identified in published descriptions"))
     DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({
         "schema_version": 4, "generated_at": datetime.now(timezone.utc).isoformat(),
