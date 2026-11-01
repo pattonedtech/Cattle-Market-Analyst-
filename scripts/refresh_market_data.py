@@ -17,6 +17,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "market_observations.json"
+QA_OUT = DATA / "market_data_qa.json"
 FUTURES_OUT = DATA / "futures.json"
 S = requests.Session()
 S.headers.update({
@@ -62,6 +63,32 @@ STATE_NAMES = {
 MARKET_COUNTIES = [
     ("visalia", "California", "Tulare"),
     ("overland", "California", "Kings"),
+    ("dos palos", "California", "Merced"),
+    ("escalon", "California", "San Joaquin"),
+    ("turlock", "California", "Stanislaus"),
+    ("fresno livestock", "California", "Fresno"),
+    ("fresno", "California", "Fresno"),
+    ("modesto livestock", "California", "Stanislaus"),
+    ("tulare sales yard", "California", "Tulare"),
+    ("tulare county stockyard", "California", "Tulare"),
+    ("101 livestock", "California", "San Benito"),
+    ("producers livestock marketing", "California", "Madera"),
+    ("burley", "Idaho", "Cassia"),
+    ("twin falls", "Idaho", "Twin Falls"),
+    ("jerome", "Idaho", "Jerome"),
+    ("blackfoot", "Idaho", "Bingham"),
+    ("caldwell", "Idaho", "Canyon"),
+    ("emmett", "Idaho", "Gem"),
+    ("cottonwood", "Idaho", "Idaho"),
+    ("lewiston", "Idaho", "Nez Perce"),
+    ("northwest livestock commission", "Oregon", "Umatilla"),
+    ("producers vale", "Oregon", "Malheur"),
+    ("vale", "Oregon", "Malheur"),
+    ("madras", "Oregon", "Jefferson"),
+    ("eugene", "Oregon", "Lane"),
+    ("la grande", "Oregon", "Union"),
+    ("klamath falls", "Oregon", "Klamath"),
+    ("lebanon auction yard", "Oregon", "Linn"),
     ("marana", "Arizona", "Pima"),
     ("willcox", "Arizona", "Cochise"),
     ("fallon", "Nevada", "Churchill"),
@@ -88,8 +115,8 @@ def record(date, market, region, category, sex, breed, weight, price, head, sour
     state, county = geographic_fields(market, region)
     return {
         "id": stable_id(market, date, category, sex, weight, price, head, url),
-        "date": date, "market": market, "region": region, "state": state, "county": county, "category": category,
-        "sex": sex, "breed": breed, "weight": float(weight), "price": float(price),
+        "date": date, "market": market, "market_id": stable_id("market", market), "region": region, "state": state, "county": county, "geography_method": "verified_market_registry" if county else ("source_report_state_only" if state else "regional_report_unassigned"), "category": category,
+        "sex": sex, "breed": breed, "weight": float(weight) if weight not in (None, "") and float(weight) > 0 else None, "price": float(price),
         "price_low": float(price_low if price_low is not None else price),
         "price_high": float(price_high if price_high is not None else price),
         "head": int(head) if head not in (None, "") else None,
@@ -520,6 +547,73 @@ def parse_willcox():
     return records, cow_records
 
 
+def parse_burley():
+    """Parse Burley Livestock Auction's own public weekly sale tables."""
+    index_url = "https://burleylivestock.auction/reports"
+    urls = ["https://burleylivestock.auction/report"]
+    try:
+        soup = BeautifulSoup(fetch(index_url).text, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = urljoin(index_url, a["href"]).split("#")[0]
+            if urlparse(href).netloc.endswith("burleylivestock.auction") and "/report" in urlparse(href).path:
+                if href not in urls:
+                    urls.append(href)
+    except Exception as e:
+        print(f"Burley archive index failed: {e}", file=sys.stderr)
+    out = []
+    for url in urls[:40 if needs_backfill() else 1]:
+        try:
+            soup = BeautifulSoup(fetch(url).text, "html.parser")
+            body = soup.get_text(" ", strip=True)
+            date = parse_date(body[:1000]) or parse_date(url.replace("-", " "))
+            if not date:
+                print(f"Burley report date not identified: {url}", file=sys.stderr)
+                continue
+            for table in soup.find_all("table"):
+                heading = table.find_previous(["h2", "h3", "h4"])
+                section = heading.get_text(" ", strip=True).lower() if heading else ""
+                if "steer" in section:
+                    category, sex = "Feeder steer", "Steer"
+                elif "heifer" in section and "ette" not in section:
+                    category, sex = "Feeder heifer", "Heifer"
+                elif "cow" in section:
+                    category, sex = "Cull cow", "Cow"
+                elif "bull" in section:
+                    category, sex = "Bull", "Bull"
+                else:
+                    continue
+                for tr in table.find_all("tr"):
+                    cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
+                    if len(cells) < 5 or "town" in cells[0].lower() or "head" in cells[1].lower():
+                        continue
+                    town, head_text, kind, weight_text, price_text = cells[:5]
+                    head_match = re.search(r"\d+", head_text.replace(",", ""))
+                    weight_match = re.search(r"\d+(?:\.\d+)?", weight_text.replace(",", ""))
+                    price_match = re.search(r"\$?\s*([\d,]+(?:\.\d{1,2})?)", price_text)
+                    if not head_match or not weight_match or not price_match:
+                        continue
+                    try:
+                        head = int(head_match.group())
+                        weight = float(weight_match.group())
+                        price = float(price_match.group(1).replace(",", ""))
+                    except ValueError:
+                        continue
+                    # X-weight / cull-only entries are not feeder weight observations.
+                    if not (head > 0 and 100 <= weight <= 3000 and 20 <= price <= 1500):
+                        continue
+                    out.append(record(
+                        date, "Burley Livestock Auction", "Idaho", category, sex,
+                        "Not specified", weight, price, head,
+                        "Burley Livestock Auction", url, "auction_lot_average",
+                        sale_type="Live auction",
+                        notes=f"Published lot; consignor town {town}; source type code {kind}"
+                    ))
+        except Exception as e:
+            print(f"Burley report failed {url}: {e}", file=sys.stderr)
+    print(f"Burley: {len(out)} lot observations from {min(len(urls), 40 if needs_backfill() else 1)} report pages")
+    return out
+
+
 def parse_roswell_web():
     url = "https://www.roswelllivestockauction.com/market-report.html"
     try:
@@ -942,7 +1036,9 @@ def fetch_futures():
     print(f"Saved {len(contracts)} deferred futures contracts")
 
 SOURCES = [
-    {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges"},
+    {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges; current public archive is limited to recent snapshots"},
+    {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"official weekly archive verified; parser pending QA"},
+    {"name":"Burley Livestock Auction","state":"ID","kind":"live auction","url":"https://burleylivestock.auction/reports","status":"automated: public weekly lot tables; archived reports"},
     {"name":"Overland Stock Yard","state":"CA","kind":"auction / video lots","url":"https://www.overlandstockyard.com/market-reports","status":"automated: video lots; dairy and beef types remain separate"},
     {"name":"Tulare County Stockyard","state":"CA","kind":"live auction","url":"https://tularecountystockyard.com/","status":"listed; historical parser pending"},
     {"name":"Escalon Livestock Market","state":"CA","kind":"live auction","url":"https://www.escalonlivestockmarket.com/","status":"listed; weekly reports available; parser pending"},
@@ -965,7 +1061,7 @@ SOURCES = [
     {"name":"Northwest Direct Cattle Report","state":"WA/OR/ID/UT","kind":"multi-state direct trade","url":"https://mymarketnews.ams.usda.gov/viewReport/3059","status":"automated: regional only; not assigned to individual states"},
     {"name":"Western Video Market","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3242","status":"automated: western regional report; not assigned to individual states"},
     {"name":"Cattle Country Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3241","status":"automated: multi-state lots; not assigned to Wyoming"},
-    {"name":"Cattle Channel — Idaho sale reports","state":"ID","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08","status":"automated fetch of published report pages; new report URLs need periodic discovery"},
+    {"name":"Cattle Channel — Idaho sale reports","state":"ID","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08","status":"automated third-party summaries; official Burley reports are collected separately"},
     {"name":"Cattle Channel — Oregon sale reports","state":"OR","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06","status":"automated fetch of published report pages; new report URLs need periodic discovery"},
     {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
@@ -982,10 +1078,139 @@ SOURCES = [
 ]
 
 
+def quality_check(rows, collection):
+    """Reject structurally unsafe observations; retain source-linked rejection details."""
+    accepted, rejected = [], []
+    seen = set()
+    allowed_units = {"USD/cwt", "USD/head", "USD/family"}
+    valid_states = set(STATE_NAMES.values())
+    for original in rows:
+        row = dict(original)
+        issues, warnings = [], []
+        if row.get("weight") in (0, "0", ""):
+            row["weight"] = None
+            warnings.append("weight_not_reported")
+        inferred_state, inferred_county = geographic_fields(row.get("market"), row.get("region") or row.get("state"))
+        if not row.get("state") and inferred_state:
+            row["state"] = inferred_state
+        if not row.get("county") and inferred_county:
+            row["county"] = inferred_county
+        if row.get("market") and not row.get("market_id"):
+            row["market_id"] = stable_id("market", row["market"])
+        if row.get("market") and not row.get("geography_method"):
+            row["geography_method"] = "verified_market_registry" if row.get("county") else ("source_report_state_only" if row.get("state") else "regional_report_unassigned")
+        if not row.get("id"):
+            issues.append("missing_stable_record_id")
+        if not row.get("date"):
+            issues.append("missing_sale_date")
+        else:
+            try:
+                parsed_date = datetime.strptime(str(row["date"]), "%Y-%m-%d").date()
+                if parsed_date > datetime.now(timezone.utc).date():
+                    issues.append("sale_date_in_future")
+            except ValueError:
+                issues.append("sale_date_not_iso_yyyy_mm_dd")
+        for field in ("market", "category", "source"):
+            if not str(row.get(field) or "").strip():
+                issues.append("missing_" + field)
+        source_url = str(row.get("source_url") or "")
+        parsed_url = urlparse(source_url)
+        if parsed_url.scheme != "https" or not parsed_url.netloc:
+            issues.append("missing_or_invalid_https_source_url")
+        if row.get("state") and row["state"] not in valid_states:
+            issues.append("unrecognized_state")
+        if inferred_state and row.get("state") and inferred_state != row["state"]:
+            issues.append("market_state_conflicts_with_location_registry")
+        if inferred_county and row.get("county") and inferred_county != row["county"]:
+            issues.append("market_county_conflicts_with_location_registry")
+        if row.get("county") and not row.get("state"):
+            issues.append("county_without_state")
+        if row.get("state") and not row.get("county"):
+            warnings.append("county_not_identified")
+        unit = row.get("price_unit")
+        if unit not in allowed_units:
+            issues.append("unknown_price_unit")
+        try:
+            price = float(row.get("price"))
+            if not (0 < price <= 100000):
+                issues.append("price_outside_sanity_bounds")
+        except (TypeError, ValueError):
+            price = None
+            issues.append("price_not_numeric")
+        try:
+            low = float(row.get("price_low", price))
+            high = float(row.get("price_high", price))
+            if low <= 0 or high < low or (price is not None and not (low - 0.02 <= price <= high + 0.02)):
+                issues.append("invalid_price_range_or_average")
+        except (TypeError, ValueError):
+            issues.append("price_range_not_numeric")
+        weight = row.get("weight")
+        if weight is not None:
+            try:
+                weight = float(weight)
+                if not (50 <= weight <= 3000):
+                    issues.append("weight_outside_50_3000_lb")
+            except (TypeError, ValueError):
+                issues.append("weight_not_numeric")
+        elif unit == "USD/cwt" and row.get("record_type") != "published_price_range":
+            issues.append("missing_weight_for_cwt_record")
+        head = row.get("head")
+        if head not in (None, ""):
+            try:
+                if int(head) <= 0:
+                    issues.append("head_count_not_positive")
+            except (TypeError, ValueError):
+                issues.append("head_count_not_integer")
+        if collection == "records" and not row.get("record_type"):
+            issues.append("missing_record_type")
+        if price is not None and unit == "USD/cwt" and (price < 50 or price > 900):
+            warnings.append("unusual_cwt_price_review_source")
+        if row.get("id") in seen:
+            issues.append("duplicate_record_id")
+        seen.add(row.get("id"))
+        if issues:
+            rejected.append({
+                "id": row.get("id"), "date": row.get("date"), "market": row.get("market"),
+                "state": row.get("state"), "county": row.get("county"), "category": row.get("category"),
+                "weight": row.get("weight"), "price": row.get("price"), "price_unit": row.get("price_unit"),
+                "source_url": row.get("source_url"), "issues": sorted(set(issues)), "warnings": sorted(set(warnings))
+            })
+        else:
+            row["qa_status"] = "passed_with_warnings" if warnings else "passed"
+            row["qa_warnings"] = sorted(set(warnings))
+            accepted.append(row)
+    return accepted, rejected
+
+
+def build_qa_report(records, cow_records, rejected_records, rejected_cows):
+    by_state, by_market, by_source = {}, {}, {}
+    for row in records:
+        state = row.get("state") or "Regional / unassigned"
+        by_state[state] = by_state.get(state, 0) + 1
+        market = row.get("market") or "Unknown"
+        by_market[market] = by_market.get(market, 0) + 1
+        source = row.get("source") or "Unknown"
+        by_source[source] = by_source.get(source, 0) + 1
+    return {
+        "schema_version": 1,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
+        "market_observations": {"accepted": len(records), "rejected": len(rejected_records)},
+        "cow_market_observations": {"accepted": len(cow_records), "rejected": len(rejected_cows)},
+        "accepted_by_state": dict(sorted(by_state.items())),
+        "accepted_by_market": dict(sorted(by_market.items())),
+        "accepted_by_source": dict(sorted(by_source.items())),
+        "rejected_observations": rejected_records + rejected_cows,
+        "source_registry": SOURCES
+    }
+
+
 def main():
     records = []
     records += parse_overland()
     records += parse_visalia()
+    records += parse_burley()
+    records += parse_usda_report(3922, "Overland Stockyard (USDA)", "California", "usda_video_regional")
     marana_records, marana_cows = parse_marana()
     willcox_records, willcox_cows = parse_willcox()
     records += marana_records + willcox_records
@@ -1033,6 +1258,15 @@ def main():
     for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
+    new_ids = {r.get("id") for r in records}
+    merged, rejected_records = quality_check(merged, "records")
+    merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
+    rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
+    if new_ids and rejected_new / len(new_ids) > 0.05:
+        raise RuntimeError(f"QA gate blocked publishing: {rejected_new}/{len(new_ids)} newly collected observations failed validation")
+    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows)
+    QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\\n", encoding="utf-8")
+    print(f"QA: accepted {len(merged)} market and {len(merged_cows)} cow records; quarantined {len(rejected_records)} market and {len(rejected_cows)} cow records")
     category_counts = {}
     for r in merged:
         category = r.get("category", "Unknown")
@@ -1056,8 +1290,8 @@ def main():
     print("Corriente records by classification: " + ("; ".join(f"{k}={v}" for k, v in sorted(corriente_counts.items())) or "none identified in published descriptions"))
     DATA.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({
-        "schema_version": 4, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows,
+        "schema_version": 5, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows, "qa_report_url": "data/market_data_qa.json",
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
