@@ -30,6 +30,18 @@
 <div class="field"><label>Category</label><select id="histCategory"><option value="Feeder steer">Feeder steer</option><option value="Feeder heifer">Feeder heifer</option><option value="Replacement heifer">Replacement heifer</option><option value="Corriente steer">Corriente steer</option><option value="Corriente heifer">Corriente heifer</option><option value="Cull cow">Cull cow</option><option value="Bull">Bull</option></select></div>
 <div class="field"><label>Source series</label><select id="histRecordType"><option value="all">All types (exploratory only)</option><option value="auction_lot_average">Auction lot averages</option><option value="published_weight_class_range">Published weight-class ranges</option><option value="published_price_range">Published price ranges</option><option value="video_lot_contract">Video lot contracts</option><option value="usda_auction">USDA auction reports</option><option value="usda_state_summary">USDA state summaries</option><option value="usda_direct_trade">USDA direct trades</option></select></div><div class="field"><label>Weight range</label><select id="histWeight"><option value="all">All recorded weights</option><option value="300">300–399 lb</option><option value="400">400–499 lb</option><option value="500">500–599 lb</option><option value="600">600–699 lb</option><option value="700">700–799 lb</option><option value="800">800–899 lb</option><option value="900">900–999 lb</option></select></div>
 </div></div>
+<div class="card span-12" id="geoComparison">
+<h2>Geographic market comparison</h2>
+<p class="sub">Compare recorded average prices by state, then drill into counties within a selected state. Results use the same cattle category, source series, and weight filters above. Markets without a verified county and multi-state reports are not assigned to a county.</p>
+<div class="fieldgrid">
+<div class="field"><label>Comparison level</label><select id="geoLevel"><option value="state">Compare states</option><option value="county">Compare counties</option></select></div>
+<div class="field"><label>State (for county comparison)</label><select id="geoState"><option value="">All states</option></select></div>
+<div class="field"><label>Sort results by</label><select id="geoSort"><option value="avg_desc">Highest average first</option><option value="avg_asc">Lowest average first</option><option value="count_desc">Most records first</option><option value="name_asc">Geography A–Z</option></select></div>
+</div>
+<div class="sub" id="geoSummary" aria-live="polite">Waiting for market data…</div>
+<div class="tablewrap"><table><thead><tr><th>State / County</th><th>Markets</th><th class="num">Avg $/cwt</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th><th class="num">Head reported</th></tr></thead><tbody id="geoBody"><tr><td colspan="7" class="empty">No geographic records available.</td></tr></tbody></table></div>
+<div class="notice" id="geoCaveat" style="margin-top:12px">Averages are unweighted averages of published observation records, not head-weighted sale averages. Published ranges, video contracts, direct trades, and auction averages should be compared separately.</div>
+</div>
 <div class="card span-7"><h2>Seasonal price pattern</h2><p class="sub">Average recorded $/cwt by calendar month. This is descriptive history, not a forecast.</p><canvas class="chart" id="seasonChart"></canvas><div id="seasonNote" class="sub"></div></div>
 <div class="card span-5"><h2>Year-over-year</h2><p class="sub">Annual average of matching observations.</p><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Avg $/cwt</th><th class="num">Records</th></tr></thead><tbody id="yearBody"><tr><td colspan="3" class="empty">No data.</td></tr></tbody></table></div></div>
 <div class="card span-12"><h2>Monthly detail</h2><p class="sub">Monthly average, range, and sample size across all available years.</p><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Avg $/cwt</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No data.</td></tr></tbody></table></div></div>
@@ -324,9 +336,58 @@ function parseCsv(text){var rows=[],row=[],field='',q=false;for(var i=0;i<text.l
 $('importCsv').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){var rows=parseCsv(String(reader.result)),headers=rows.shift().map(x=>x.trim().toLowerCase()),added=0;rows.forEach(row=>{var o={};headers.forEach((h,i)=>o[h]=row[i]||'');var r={id:Date.now()+Math.random()+added,date:o.date,market:o.market||'Other',category:o.category||'Other',breed:o.breed||'Mixed / unknown',sex:o.sex||'Mixed',weight:parseFloat(o.weight),price:parseFloat(o.price),head:parseFloat(o.head)||0,sale:o.sale||'Unknown',notes:o.notes||''};if(r.date&&r.weight>0&&r.price>0){records.push(r);added++}});save();renderRecords();$('dataMessage').textContent='Imported '+added+' valid rows.';e.target.value=''};reader.readAsText(file)});
 function drawChart(canvasId,data){var c=$(canvasId),ctx=c.getContext('2d'),w=c.clientWidth||600,h=230,dpr=window.devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;ctx.scale(dpr,dpr);ctx.clearRect(0,0,w,h);ctx.font='12px system-ui';ctx.fillStyle='#69736c';if(!data.length){ctx.textAlign='center';ctx.fillText('Add market observations to see price history',w/2,h/2);return}var vals=data.map(x=>x.price),min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);if(min===max){min-=10;max+=10}var left=48,right=12,top=15,bottom=32,plotW=w-left-right,plotH=h-top-bottom;ctx.strokeStyle='#e3e8e2';ctx.fillStyle='#69736c';for(var i=0;i<5;i++){var y=top+plotH*i/4,val=max-(max-min)*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.textAlign='right';ctx.fillText('$'+Math.round(val),left-7,y+4)}var pts=data.map((r,i)=>({x:left+(data.length===1?plotW/2:plotW*i/(data.length-1)),y:top+(max-r.price)/(max-min)*plotH}));ctx.strokeStyle='#3d6b4c';ctx.lineWidth=2.5;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();pts.forEach(p=>{ctx.fillStyle='#254c37';ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill()});ctx.fillStyle='#69736c';ctx.textAlign='left';ctx.fillText(data[0].date,left,h-8);ctx.textAlign='right';ctx.fillText(data[data.length-1].date,w-right,h-8)}
 function drawCharts(){var cat=$('filterCategory')&&$('filterCategory').value;var arr=filtered();drawChart('marketChart',arr);var focus=records.filter(r=>r.category==='Feeder steer').sort((a,b)=>a.date.localeCompare(b.date));drawChart('overviewChart',focus)}
+function renderGeoComparison(){
+var category=$('histCategory')?$('histCategory').value:'Feeder steer';
+var seriesType=$('histRecordType')?$('histRecordType').value:'all';
+var band=$('histWeight')?$('histWeight').value:'all';
+var level=$('geoLevel')?$('geoLevel').value:'state';
+var previousState=$('geoState')?$('geoState').value:'';
+var eligible=records.filter(function(r){
+if(r.category!==category)return false;
+if(seriesType!=='all'&&r.record_type!==seriesType)return false;
+if(band!=='all'){var low=Number(band);if(!(Number(r.weight)>=low&&Number(r.weight)<low+100))return false}
+return Number.isFinite(Number(r.price))&&r.date;
+});
+var states=Array.from(new Set(eligible.map(function(r){return r.state}).filter(Boolean))).sort();
+$('geoState').innerHTML='<option value="">Select a state</option>'+states.map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>'}).join('');
+$('geoState').value=states.includes(previousState)?previousState:(states.includes('California')?'California':(states[0]||''));
+$('geoState').disabled=level!=='county';
+var state=$('geoState').value;
+var geoRecords=eligible.filter(function(r){
+if(level==='county')return r.state===state&&!!r.county;
+return !!r.state;
+});
+var groups={};
+geoRecords.forEach(function(r){
+var name=level==='state'?r.state:r.county;
+if(!name)return;
+if(!groups[name])groups[name]={name:name,values:[],markets:new Set(),heads:0,headCount:0};
+var g=groups[name];g.values.push(Number(r.price));if(r.market)g.markets.add(r.market);
+if(Number.isFinite(Number(r.head))&&Number(r.head)>0){g.heads+=Number(r.head);g.headCount++}
+});
+var rows=Object.values(groups).map(function(g){
+var avg=g.values.reduce(function(a,b){return a+b},0)/g.values.length;
+return {name:g.name,avg:avg,low:Math.min.apply(null,g.values),high:Math.max.apply(null,g.values),n:g.values.length,markets:g.markets.size,heads:g.headCount?g.heads:null};
+});
+var sort=$('geoSort').value;
+rows.sort(function(a,b){
+if(sort==='avg_asc')return a.avg-b.avg;
+if(sort==='count_desc')return b.n-a.n;
+if(sort==='name_asc')return a.name.localeCompare(b.name);
+return b.avg-a.avg;
+});
+$('geoBody').innerHTML=rows.length?rows.map(function(r){
+return '<tr><td>'+esc(r.name)+'</td><td class="num">'+r.markets+'</td><td class="num">'+money(r.avg)+'</td><td class="num">'+money(r.low)+'</td><td class="num">'+money(r.high)+'</td><td class="num">'+fmt(r.n)+'</td><td class="num">'+(r.heads===null?'—':fmt(r.heads))+'</td></tr>'
+}).join(''):'<tr><td colspan="7" class="empty">No comparable geographic records match these filters.</td></tr>';
+$('geoSummary').textContent=level==='state'
+? rows.length+' states represented · '+geoRecords.length+' observations · '+(seriesType==='all'?'All source types (exploratory; not recommended for price benchmarking)':seriesType.replaceAll('_',' '))+'.'
+: (state||'No state selected')+' · '+rows.length+' counties with verified auction locations · '+geoRecords.length+' observations.';
+$('geoCaveat').textContent='Averages are unweighted means of the '+geoRecords.length+' individual observation records, not head-weighted sale averages. Each source record may represent a lot average or a published range midpoint. '+(level==='county'?'Only markets with a verified physical auction county are included; state summaries and multi-state direct reports are excluded.':'County-unassigned and multi-state records are excluded. Compare one source series at a time; "All types" is exploratory only.');
+}
 function renderHistorical(){
 var previousMarket=$('histMarket').value;
 var marketOptions=Array.from(new Set(records.map(r=>r.market).filter(Boolean))).sort();
+renderGeoComparison();
 $('histMarket').innerHTML='<option value="">All available markets</option>'+marketOptions.map(m=>'<option value="'+esc(m)+'">'+esc(m)+'</option>').join('');
 $('histMarket').value=marketOptions.includes(previousMarket)?previousMarket:'';
 var market=$('histMarket')?$('histMarket').value:'';
@@ -357,6 +418,7 @@ $('histCaveat').textContent=arr.length
 : 'No records match these filters yet. Broaden the weight range or market selection, or wait for the scheduled collector to populate the history.';
 }
 ['histMarket','histCategory','histWeight','histRecordType'].forEach(function(id){if($(id))$(id).addEventListener('change',renderHistorical)});
+['geoLevel','geoState','geoSort'].forEach(function(id){if($(id))$(id).addEventListener('change',renderGeoComparison)});
 function heifers(){var p=num('hWeight')*num('hPrice')/100, cost=p+num('hDevelop')+num('hVet')+num('hOther'), rev=num('hCull')+num('hCalf')*num('hCalves'),net=rev-cost,calves=num('hCalves'),be=calves>0?Math.max(0,(cost-num('hCull'))/calves):0;$('hPurchase').textContent=money(p);$('hTotal').textContent=money(cost);$('hRevenue').textContent=money(rev);$('hNet').textContent=money(net);$('hNet').className='kpi '+(net>=0?'positive':'negative');$('hBreakEven').textContent=calves>0?'Break-even calf value: '+money(be)+' per weaned calf, assuming the entered cull value is realized and all other costs are included.':'Enter expected weaned calves greater than zero to calculate break-even calf value.'}
 ['hWeight','hPrice','hDevelop','hVet','hOther','hCull','hCalf','hCalves'].forEach(id=>$(id).addEventListener('input',heifers));
 var months=[['January',['Review winter feed inventory and forage reserves','Assess body condition and late-gestation needs','Watch local bred-cow and replacement offerings']],['February',['Prepare calving supplies and records','Evaluate feed costs and projected calf crop','Review feeder purchase ceiling']],['March',['Monitor calving and cow health','Record birth weights, calving ease, and dam data','Track early spring calf market']],['April',['Continue calving and identify replacements','Evaluate pasture turnout and water','Compare local calf sale reports']],['May',['Plan breeding season and bull soundness exams','Assess forage availability and stocking rate','Track spring calf prices by weight']],['June',['Breeding season; monitor bull performance','Record pasture condition and grazing pressure','Review replacement heifer development']],['July',['Pregnancy / breeding follow-up as scheduled','Plan fall marketing and feed needs','Compare feeder and replacement values']],['August',['Wean / precondition plan as appropriate','Vaccination and health records','Evaluate fall feeder purchase opportunities']],['September',['Wean and sort calves by sex and weight','Price marketing alternatives and sale dates','Update replacement selection']],['October',['Market calves or retain based on economics','Pregnancy-check cows if scheduled','Review winter feed and water systems']],['November',['Cull open, aged, or unsound cows as appropriate','Secure winter feed and bedding','Review annual cost per cow and calf']],['December',['Close out weights, sales, and expenses','Review herd performance and replacement rate','Set next year’s breeding and marketing plan']]];
