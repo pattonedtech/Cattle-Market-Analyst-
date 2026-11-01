@@ -533,23 +533,23 @@ def fetch_usda_outlook():
         for a in page.find_all("a", href=True):
             href = urljoin(index_url, a["href"])
             label = a.get_text(" ", strip=True).lower()
-            if "report" in label and "/publications" in href:
-                series_url = href
+            # ERS topic pages link the latest LDP report with its report title, not
+            # necessarily the word "report" (e.g. "Livestock, Dairy, and Poultry Outlook").
+            if "/publications" in href and ("livestock" in label or "poultry outlook" in label or "ldp-m" in label):
                 if re.search(r"/publications/\d+", href):
                     report_page_url = href
                     break
-        # The current ERS topic page links to a series listing (/publications?series=LDPM),
-        # not directly to an individual report. Resolve the newest LDP report from that list.
+                series_url = href
         if not report_page_url and series_url:
             series_page = BeautifulSoup(fetch(series_url).text, "html.parser")
             for a in series_page.find_all("a", href=True):
                 href = urljoin(series_url, a["href"])
                 label = a.get_text(" ", strip=True).lower()
-                if "livestock, dairy, and poultry outlook" in label and re.search(r"/publications/\d+", href):
+                if ("livestock, dairy, and poultry outlook" in label or "ldp-m-" in label) and re.search(r"/publications/\d+", href):
                     report_page_url = href
                     break
         if not report_page_url:
-            raise ValueError("Latest ERS Outlook publication link not found on the LDP series page")
+            raise ValueError("Latest ERS Livestock, Dairy, and Poultry Outlook publication not found")
         report_page = BeautifulSoup(fetch(report_page_url).text, "html.parser")
         pdf_url = None
         for a in report_page.find_all("a", href=True):
