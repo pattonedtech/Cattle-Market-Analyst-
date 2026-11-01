@@ -45,7 +45,7 @@
 <div class="fieldgrid">
 <div class="field"><label>Comparison level</label><select id="geoLevel"><option value="state">Western states</option><option value="county">Counties within a state</option><option value="yard">Auction / stock yards</option></select></div>
 <div class="field"><label>State</label><select id="geoState"><option value="">Select a state</option></select></div>
-<div class="field"><label>County (yard view)</label><select id="geoCounty"><option value="">Select a county</option></select></div>
+<div class="field"><label>County filter (optional)</label><select id="geoCounty"><option value="">All counties</option></select></div>
 <div class="field"><label>Sort results by</label><select id="geoSort"><option value="avg_desc">Highest average first</option><option value="avg_asc">Lowest average first</option><option value="count_desc">Most records first</option><option value="name_asc">Geography A–Z</option></select></div>
 </div>
 <div class="sub" id="geoSummary" aria-live="polite">Waiting for market data…</div>
@@ -452,13 +452,13 @@ $('geoState').value=states.includes(previousState)?previousState:(states.include
 $('geoState').disabled=level==='state';
 var state=$('geoState').value;
 var counties=Array.from(new Set(eligible.filter(function(r){return r.state===state&&r.county}).map(function(r){return r.county}))).sort();
-$('geoCounty').innerHTML='<option value="">Select a county</option>'+counties.map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>'}).join('');
-$('geoCounty').value=counties.includes(previousCounty)?previousCounty:(counties[0]||'');
+$('geoCounty').innerHTML='<option value="">All counties</option>'+counties.map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>'}).join('');
+$('geoCounty').value=counties.includes(previousCounty)?previousCounty:'';
 $('geoCounty').disabled=level!=='yard'||!state;
 var county=$('geoCounty').value;
 var stateRecords=eligible.filter(function(r){return r.state===state});
 var countyRecords=stateRecords.filter(function(r){return r.county===county});
-var geoRecords=level==='state'?eligible:level==='county'?stateRecords.filter(function(r){return !!r.county}):countyRecords.filter(function(r){return !!r.market});
+var geoRecords=level==='state'?eligible:level==='county'?stateRecords.filter(function(r){return !!r.county}):stateRecords.filter(function(r){return !!r.market&&(!county||r.county===county)});
 function stats(items){
 if(!items.length)return null;
 var vals=items.map(function(r){return Number(r.price)}),heads=items.filter(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))});
@@ -473,7 +473,9 @@ groups[name].push(r);
 });
 var rows=Object.keys(groups).map(function(name){
 var a=stats(groups[name]),role=level==='yard'?marketRole(name):'—';
-var countyBenchmark=level==='yard'?stats(countyRecords):null;
+var yardCounty=level==='yard'?groups[name][0].county:null;
+var yardCountyRecords=level==='yard'?stateRecords.filter(function(r){return r.county===yardCounty}):[];
+var countyBenchmark=level==='yard'?stats(yardCountyRecords):null;
 var stateBenchmark=level==='yard'?stats(stateRecords):null;
 return {name:name,stats:a,role:role,county:countyBenchmark,state:stateBenchmark};
 });
