@@ -555,7 +555,12 @@ def parse_cattle_channel_west():
         except Exception:
             continue
     records, seen = [], set()
-    for url in sorted(urls):
+    def report_date_from_url(url):
+        match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
+        return match.group(1) if match else ""
+    # Keep the newest reports for each state; do not crawl the entire archive daily.
+    urls = sorted(urls, key=report_date_from_url, reverse=True)[:40]
+    for url in urls:
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
             body = soup.get_text("\n", strip=True)
