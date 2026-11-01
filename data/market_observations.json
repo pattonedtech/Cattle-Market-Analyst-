@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "generated_at": "2026-11-01T20:53:00.194429+00:00",
+  "generated_at": "2026-11-01T20:54:47.509931+00:00",
   "record_count": 17533,
   "cow_record_count": 1523,
   "sources": [
@@ -170,7 +170,7 @@
       "state": "ID",
       "kind": "third-party auction summaries",
       "url": "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
-      "status": "automated: public weight-class weighted averages; third-party source"
+      "status": "automated fetch of published report pages; new report URLs need periodic discovery"
     },
     {
       "name": "Cattle Channel \u2014 Oregon sale reports",
