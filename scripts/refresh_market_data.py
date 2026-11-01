@@ -545,12 +545,15 @@ def parse_cattle_channel_west():
         "https://cattlechannel.com/wp-sitemap.xml",
         "https://cattlechannel.com/sitemap_index.xml",
         "https://cattlechannel.com/wp-sitemap-posts-market-report-1.xml",
+        "https://cattlechannel.com/sitemap.xml",
+        "https://cattlechannel.com/feed/",
     ]:
         try:
             sitemap = BeautifulSoup(fetch(sitemap_url).text, "xml")
-            for loc in sitemap.find_all("loc"):
-                href = loc.get_text(strip=True)
-                if re.search(r"/market-report/(?:idaho|oregon)/", href, re.I):
+            nodes = sitemap.find_all(["loc", "link"])
+            for node in nodes:
+                href = node.get_text(strip=True) or node.get("href", "")
+                if href and re.search(r"/market-report/(?:idaho|oregon)/", href, re.I):
                     urls.add(href)
         except Exception:
             continue
