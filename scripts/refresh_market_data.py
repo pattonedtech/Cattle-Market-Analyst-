@@ -50,11 +50,43 @@ def parse_date(text):
     except ValueError:
         return None
 
+# Geographic attribution is based on the physical location of the reporting auction,
+# not the origin of cattle in the lots. State-level and multi-state reports remain
+# county-neutral rather than being assigned an invented county.
+STATE_NAMES = {
+    "CA": "California", "AZ": "Arizona", "NV": "Nevada", "NM": "New Mexico",
+    "California": "California", "Arizona": "Arizona", "Nevada": "Nevada", "New Mexico": "New Mexico"
+}
+MARKET_COUNTIES = [
+    ("visalia", "California", "Tulare"),
+    ("overland", "California", "Kings"),
+    ("marana", "Arizona", "Pima"),
+    ("willcox", "Arizona", "Cochise"),
+    ("fallon", "Nevada", "Churchill"),
+    ("roswell", "New Mexico", "Chaves"),
+    ("clovis", "New Mexico", "Curry"),
+    ("cattlemen's livestock auction", "New Mexico", "Valencia"),
+    ("santa teresa", "New Mexico", "Doña Ana")
+]
+
+def geographic_fields(market, region):
+    raw_state = str(region or "").strip()
+    state = STATE_NAMES.get(raw_state, STATE_NAMES.get(raw_state.upper()))
+    county = None
+    if state:
+        label = str(market or "").lower()
+        for marker, market_state, market_county in MARKET_COUNTIES:
+            if marker in label and market_state == state:
+                county = market_county
+                break
+    return state, county
+
 def record(date, market, region, category, sex, breed, weight, price, head, source, url,
            record_type, price_low=None, price_high=None, sale_type="Auction", notes=""):
+    state, county = geographic_fields(market, region)
     return {
         "id": stable_id(market, date, category, sex, weight, price, head, url),
-        "date": date, "market": market, "region": region, "category": category,
+        "date": date, "market": market, "region": region, "state": state, "county": county, "category": category,
         "sex": sex, "breed": breed, "weight": float(weight), "price": float(price),
         "price_low": float(price_low if price_low is not None else price),
         "price_high": float(price_high if price_high is not None else price),
@@ -725,7 +757,14 @@ def main():
             old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
-    by_id = {r["id"]: r for r in old}
+    by_id = {}
+    # Backfill geography on previously published observations so the feature
+    # works across the full historical archive, not only new daily records.
+    for r in old:
+        state, county = geographic_fields(r.get("market"), r.get("region"))
+        r["state"] = state
+        r["county"] = county
+        by_id[r["id"]] = r
     for r in records:
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
