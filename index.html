@@ -17,6 +17,7 @@
 <section class="page active" id="overview"><div class="grid">
 <div class="card span-12"><h2>Western cattle market overview</h2><p class="sub">State-by-state averages across the ten contiguous Western states west of Colorado. Select a cattle class and period. State rows are shown even when no qualifying observations are available.</p>
 <div class="fieldgrid">
+<div class="field"><label>Weight class</label><select id="westWeight"><option value="all">All weights</option><option value="200-299">200–299 lb</option><option value="300-399">300–399 lb</option><option value="400-499">400–499 lb</option><option value="500-599">500–599 lb</option><option value="600-699">600–699 lb</option><option value="700-799">700–799 lb</option><option value="800-899">800–899 lb</option><option value="900-999">900–999 lb</option><option value="1000-1099">1,000–1,099 lb</option><option value="1100-1199">1,100–1,199 lb</option><option value="1200-1299">1,200–1,299 lb</option><option value="1300-1399">1,300–1,399 lb</option><option value="1400-1499">1,400–1,499 lb</option><option value="1500-1599">1,500–1,599 lb</option><option value="1600-1699">1,600–1,699 lb</option><option value="1700-1899">1,700–1,899 lb</option><option value="1900-9999">1,900+ lb</option></select></div>
 <div class="field"><label>Cattle category</label><select id="westCategory"><option value="Feeder steer">Feeder steers ($/cwt)</option><option value="Feeder heifer">Feeder heifers ($/cwt)</option><option value="Replacement heifer">Replacement heifers — open / unbred ($/cwt)</option><option value="Bred heifer">Replacement heifers — bred ($/head)</option><option value="Bred cow">Bred cows ($/head)</option><option value="Cow-calf pair">Cow-calf pairs ($/pair)</option><option value="Corriente steer">Corriente steers ($/cwt)</option><option value="Corriente heifer">Corriente heifers ($/cwt)</option><option value="Corriente cattle (unclassified)">Corriente cattle — unclassified ($/cwt)</option><option value="Fresh Corriente">Fresh Corriente — origin unspecified ($/head)</option></select></div>
 <div class="field"><label>Corriente classification</label><select id="westCorriente"><option value="all">All Corriente types</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not recorded</option></select></div>
 <div class="field"><label>Reporting period</label><select id="westPeriod"><option value="90">Latest 90 days</option><option value="365">Latest 12 months</option><option value="all">All available history</option></select></div>
@@ -365,7 +366,7 @@ var type=record.record_type||"";
 if(mode==="all")return true;
 if(mode==="range")return type==="published_price_range"||type==="published_weight_class_range";
 if(mode==="video")return type==="video_lot_contract"||type==="usda_direct_trade"||type==="usda_video_regional";
-return !type||["auction_lot_average","usda_auction","usda_state_summary","usda_replacement_weighted_average"].indexOf(type)>=0;
+return !type||["auction_lot_average","usda_auction","usda_state_summary","usda_replacement_weighted_average","third_party_auction_weighted_average"].indexOf(type)>=0;
 }
 function westernAverage(items){
 if(!items.length)return null;
@@ -378,15 +379,19 @@ return {avg:avg,low:Math.min.apply(null,used.map(function(r){return Number(r.pri
 }
 function renderWesternOverview(){
 if(!$("westCategory"))return;
-var category=$("westCategory").value,period=$("westPeriod").value,sourceMode=$("westSource").value,corriente=$("westCorriente").value;
+var category=$("westCategory").value,period=$("westPeriod").value,sourceMode=$("westSource").value,corriente=$("westCorriente").value,weightBand=$("westWeight").value;
 var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";$("westCorriente").disabled=!isCorriente;
 var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
 var unit=category==="Bred cow"||category==="Bred heifer"||category==="Fresh Corriente"?"USD/head":category==="Cow-calf pair"?"pair":"USD/cwt";
+var weightApplicable=unit==="USD/cwt"&&category!=="Corriente cattle (unclassified)";
+$("westWeight").disabled=!weightApplicable;
+if(!weightApplicable)weightBand="all";
 function normalize(record){
 var state=westernState(record),recordUnit=record.price_unit||"USD/cwt";
 if(category==="Cow-calf pair"&&(recordUnit==="USD/head"||recordUnit==="USD/family"))recordUnit="pair";
 if(recordUnit!==unit)return null;
 if(record.category!==category)return null;
+if(weightBand!=="all"){var band=weightBand.split("-").map(Number),w=Number(record.weight);if(!Number.isFinite(w)||w<band[0]||w>band[1])return null;}
 if(isCorriente){
 var breed=String(record.breed||"").toLowerCase();
 if(corriente==="Native Corriente"&&breed.indexOf("native corriente")<0)return null;
@@ -409,7 +414,7 @@ $("westOverallCell").textContent=overall?priceText(overall.avg):"—";
 $("westOverallMeta").textContent=overall?fmt(overall.count)+" observations ("+fmt(overall.averageCount)+" used in average) · "+fmt(overall.head||0)+" reported head · "+overall.markets+" markets · "+overall.method:"No qualifying state-level observations for this category and filter.";
 $("westStateBody").innerHTML=stateRows.map(function(row){var a=row.stats;return "<tr><td>"+esc(row.state)+"</td><td class='num'>"+(a?priceText(a.avg):"—")+"</td><td class='num'>"+(a?priceText(a.low):"—")+"</td><td class='num'>"+(a?priceText(a.high):"—")+"</td><td class='num'>"+(a?fmt(a.count):"0")+"</td><td class='num'>"+(a&&a.head!==null?fmt(a.head):"—")+"</td><td>"+(a?a.markets+" market(s) · "+a.averageCount+"/"+a.count+" observations used":"No data")+"</td></tr>"}).join("");
 $("westLow").textContent=overall?priceText(overall.low):"—";$("westHigh").textContent=overall?priceText(overall.high):"—";$("westCount").textContent=overall?fmt(overall.count):"0";$("westHead").textContent=overall&&overall.head!==null?fmt(overall.head):"—";$("westCoverage").textContent=stateRows.filter(function(x){return !!x.stats}).length+"/10 states";
-$("westMethod").textContent=(overall?overall.method+" average across state-tagged records; "+overall.averageCount+" of "+overall.count+" observations were used. ":"No average calculated. ")+(sourceMode==="range"?"Published range midpoints are not the same as lot-weighted sale prices. ":sourceMode==="video"?"Video and direct trades are benchmarks and are not blended with local auction averages. ":sourceMode==="all"?"All state-specific source types are selected; mixed methodologies make this an exploratory comparison. ":"Auction and USDA weighted-average sources are selected. ")+"The Western overall is weighted by reported head where available, not an average of the ten state averages. It excludes multi-state reports to avoid double-counting.";
+$("westMethod").textContent=(overall?overall.method+" average across state-tagged records; "+overall.averageCount+" of "+overall.count+" observations were used. ":"No average calculated. ")+(sourceMode==="range"?"Published range midpoints are not the same as lot-weighted sale prices. ":sourceMode==="video"?"Video and direct trades are benchmarks and are not blended with local auction averages. ":sourceMode==="all"?"All state-specific source types are selected; mixed methodologies make this an exploratory comparison. ":"Auction and USDA weighted-average sources are selected. ")+"The Western overall is weighted by reported head where available, not an average of the ten state averages. It excludes multi-state reports to avoid double-counting. "+(weightBand==="all"&&unit==="USD/cwt"?"All weights are combined; select a weight class for a tighter like-for-like comparison.":"");
 var regions={};candidates.forEach(function(r){if(r.state)return;var label=String(r.region||"").trim();if(!label||!/(region|multi-state|western|northwest|southwest)/i.test(label))return;if(!regions[label])regions[label]=[];regions[label].push(r)});
 var regionRows=Object.keys(regions).map(function(label){return {label:label,items:regions[label],stats:westernAverage(regions[label])}});
 $("westRegionalBody").innerHTML=regionRows.length?regionRows.map(function(row){var types=Array.from(new Set(row.items.map(function(r){return r.record_type||"auction report"}))).join(", ");return "<tr><td>"+esc(row.label)+"</td><td class='num'>"+priceText(row.stats.avg)+"</td><td class='num'>"+fmt(row.stats.count)+"</td><td class='num'>"+(row.stats.head===null?"—":fmt(row.stats.head))+"</td><td>"+esc(types)+"</td></tr>"}).join(""):"<tr><td colspan='5' class='empty'>No regional benchmark for this category and source filter.</td></tr>";
@@ -503,7 +508,7 @@ $('histCaveat').textContent=arr.length
 }
 ['histMarket','histCategory','histWeight','histRecordType'].forEach(function(id){if($(id))$(id).addEventListener('change',renderHistorical)});
 ['geoLevel','geoState','geoSort'].forEach(function(id){if($(id))$(id).addEventListener('change',renderGeoComparison)});
-['westCategory','westCorriente','westPeriod','westSource'].forEach(function(id){if($(id))$(id).addEventListener('change',renderWesternOverview)});
+['westCategory','westCorriente','westPeriod','westSource','westWeight'].forEach(function(id){if($(id))$(id).addEventListener('change',renderWesternOverview)});
 $('mCategory').addEventListener('change',function(){var cat=$('mCategory').value,unit=$('mUnit');if(['Bred heifer','Bred cow','Fresh Corriente'].includes(cat)){unit.value='USD/head'}else if(cat==='Cow-calf pair'){unit.value='USD/family'}else{unit.value='USD/cwt'}$('mPriceLabel').textContent='Average price ('+(unit.value==='USD/cwt'?'$/cwt':unit.value==='USD/head'?'$/head':'$/pair')+')'});
 $('mUnit').addEventListener('change',function(){$('mPriceLabel').textContent='Average price ('+($('mUnit').value==='USD/cwt'?'$/cwt':$('mUnit').value==='USD/head'?'$/head':'$/pair')+')'});
 function heifers(){var p=num('hWeight')*num('hPrice')/100, cost=p+num('hDevelop')+num('hVet')+num('hOther'), rev=num('hCull')+num('hCalf')*num('hCalves'),net=rev-cost,calves=num('hCalves'),be=calves>0?Math.max(0,(cost-num('hCull'))/calves):0;$('hPurchase').textContent=money(p);$('hTotal').textContent=money(cost);$('hRevenue').textContent=money(rev);$('hNet').textContent=money(net);$('hNet').className='kpi '+(net>=0?'positive':'negative');$('hBreakEven').textContent=calves>0?'Break-even calf value: '+money(be)+' per weaned calf, assuming the entered cull value is realized and all other costs are included.':'Enter expected weaned calves greater than zero to calculate break-even calf value.'}
