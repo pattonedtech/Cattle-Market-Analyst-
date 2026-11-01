@@ -426,6 +426,9 @@ function renderGeoComparison(){
 var category=$('histCategory')?$('histCategory').value:'Feeder steer';
 var seriesType=$('histRecordType')?$('histRecordType').value:'all';
 var band=$('histWeight')?$('histWeight').value:'all';
+var originFilter=$('histCorrienteOrigin')?$('histCorrienteOrigin').value:'all';
+var isCorriente=category.indexOf('Corriente')===0||category==='Fresh Corriente';
+if($('histCorrienteOrigin'))$('histCorrienteOrigin').disabled=!isCorriente;
 var level=$('geoLevel')?$('geoLevel').value:'state';
 var previousState=$('geoState')?$('geoState').value:'';
 var eligible=records.map(function(r){
@@ -434,6 +437,7 @@ var geo=clientGeography(r.market||'');
 return Object.assign({},r,{state:geo.state,county:geo.county});
 }).filter(function(r){
 if(r.category!==category)return false;
+if(isCorriente&&originFilter!=='all'&&corrienteOrigin(r)!==originFilter)return false;
 if(seriesType!=='all'&&r.record_type!==seriesType)return false;
 if(band!=='all'){var low=Number(band);if(!(Number(r.weight)>=low&&Number(r.weight)<low+100))return false}
 return Number.isFinite(Number(r.price))&&r.date;
