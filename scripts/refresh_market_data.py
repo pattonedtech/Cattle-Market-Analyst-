@@ -8,7 +8,7 @@ from __future__ import annotations
 import json, re, hashlib, sys
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urljoin, quote
+from urllib.parse import urljoin, quote, urlparse
 from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
