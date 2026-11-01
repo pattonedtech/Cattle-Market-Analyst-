@@ -566,7 +566,17 @@ def fetch_usda_outlook():
         text = pdf_text(pdf_url)
         result["report_page_url"] = report_page_url
         result["source_url"] = pdf_url
-        result["report_date"] = parse_date(text[:3000])
+        # Prefer the publication date shown on the ERS HTML report page. The PDF
+        # front matter also contains its next-release date, which can be mistaken
+        # for the report date by a first-match text parser.
+        page_text = report_page.get_text(" ", strip=True)
+        publication_date = re.search(r"\b(\d{1,2})/(\d{1,2})/(20\d{2})\b", page_text)
+        if publication_date:
+            result["report_date"] = datetime.strptime(
+                "/".join(publication_date.groups()), "%m/%d/%Y"
+            ).date().isoformat()
+        else:
+            result["report_date"] = parse_date(text[:3000])
         normalized = re.sub(r"\s+", " ", text)
         fed_q4 = re.search(
             r"slaughter steer price forecast for fourth quarter 2026[^.]*\$([\d.]+) per cwt",
