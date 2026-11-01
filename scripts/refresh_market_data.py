@@ -532,6 +532,67 @@ def parse_roswell_web():
     return []
 
 
+def parse_belen():
+    """Capture Corriente, fresh Corriente, bred-cow and pair ranges from Belen NM."""
+    url = "https://belenlivestockauction.com/"
+    records, cow_records = [], []
+    try:
+        soup = BeautifulSoup(fetch(url).text, "html.parser")
+        body = soup.get_text("\\n", strip=True)
+        headers = list(re.finditer(
+            r"SALE OF\\s+((?:JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\\s+\\d{1,2},\\s*20\\d{2})",
+            body, flags=re.I
+        ))
+        state, county = geographic_fields("Cattlemen's Livestock Auction - Belen", "New Mexico")
+        for i, header in enumerate(headers):
+            segment_end = headers[i+1].start() if i+1 < len(headers) else len(body)
+            segment = body[header.start():segment_end]
+            date = parse_date(header.group(1))
+            if not date:
+                continue
+
+            def add_head_range(label, category, unit="USD/head"):
+                m = re.search(
+                    rf"{label}\\s*\\$?\\s*([\\d,]+(?:\\.\\d{{1,2}})?)\\s*[-–]\\s*\\$?\\s*([\\d,]+(?:\\.\\d{{1,2}})?)\\s*hd\\b",
+                    segment, flags=re.I
+                )
+                if not m:
+                    return
+                lo, hi = (float(x.replace(",", "")) for x in m.groups())
+                if lo <= 0 or hi < lo:
+                    return
+                cow_records.append({
+                    "id": stable_id("belen", date, category, lo, hi, url),
+                    "date": date, "market": "Cattlemen's Livestock Auction - Belen",
+                    "region": "New Mexico", "state": state, "county": county,
+                    "category": category, "description": "Published auction price range; origin/type not specified",
+                    "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
+                    "price_unit": unit, "source": "Cattlemen's Livestock Auction - Belen",
+                    "source_url": url, "record_type": "published_price_range",
+                    "head": None, "breed": "Corriente — type not specified" if "Corriente" in category else "Not specified"
+                })
+
+            m = re.search(r"\\bCorrientes\\s+\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s*[-–]\\s*\\$?([\\d,]+(?:\\.\\d{1,2})?)\\s*cwt\\b", segment, flags=re.I)
+            if m:
+                lo, hi = (float(x.replace(",", "")) for x in m.groups())
+                if lo > 0 and hi >= lo:
+                    records.append(record(
+                        date, "Cattlemen's Livestock Auction - Belen", "New Mexico",
+                        "Corriente cattle (unclassified)", "Mixed", "Corriente — type not specified",
+                        0, (lo+hi)/2, None, "Cattlemen's Livestock Auction - Belen", url,
+                        "published_price_range", lo, hi, "Live auction",
+                        notes="Published Corrientes range; source does not distinguish native vs Mexican M-branded origin"
+                    ))
+            add_head_range(r"Fresh Corrientes", "Fresh Corriente")
+            add_head_range(r"Old Bred Cows?", "Bred cow")
+            add_head_range(r"Young Cow/Calf Prs", "Cow-calf pair")
+            add_head_range(r"Older Cow/Calf Pairs?", "Cow-calf pair")
+    except Exception as e:
+        print(f"Belen market report failed: {e}", file=sys.stderr)
+    print(f"Belen: {len(records)} unclassified Corriente $/cwt observations and {len(cow_records)} per-head replacement/Corriente records")
+    return records, cow_records
+
+
 def parse_overland():
     index_url = "https://www.overlandstockyard.com/market-reports"
     records, report_urls = [], {}
@@ -781,6 +842,7 @@ SOURCES = [
     {"name":"A&M Livestock Auction","state":"CA","kind":"live / video auction","url":"https://www.amlivestockauction.com/","status":"listed; historical parser pending"},
     {"name":"Western Stockman's Market","state":"CA","kind":"live auction","url":"https://www.westernstockmans.com/","status":"listed; historical parser pending"},
     {"name":"Marana Stockyards","state":"AZ","kind":"live auction","url":"https://www.maranastockyards.com/market-report-archives","status":"automated: archive backfill from 2022 plus current reports"},
+    {"name":"Cattlemen's Livestock Auction - Belen","state":"NM","kind":"live auction","url":"https://belenlivestockauction.com/","status":"automated: current weekly Corriente, bred-cow and pair price ranges; Corriente origin not distinguished"},
     {"name":"Montana Weekly Livestock Auction Summary","state":"MT","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/1778","status":"automated: current USDA state report"},
     {"name":"Utah Weekly Cattle Auction Summary","state":"UT","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/2039","status":"automated: current USDA state report"},
     {"name":"Wyoming Weekly Cattle Auction Summary","state":"WY","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/2106","status":"automated: current USDA state report"},
@@ -826,6 +888,8 @@ def main():
     records += parse_usda_report(3241, "Cattle Country Video Auction (USDA)", "Multi-state video auction", "usda_video_regional", usda_cow_records)
     records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "Southwest Region (AZ/CA/NV)", "usda_direct_trade", usda_cow_records)
     parse_roswell_web()
+    belen_records, belen_cows = parse_belen()
+    records += belen_records
     fallon_records, fallon_cows = parse_fallon()
     records += fallon_records
     old = []
@@ -849,7 +913,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records:
+    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     category_counts = {}
