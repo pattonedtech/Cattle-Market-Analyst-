@@ -786,7 +786,6 @@ SOURCES = [
     {"name":"Wyoming Weekly Cattle Auction Summary","state":"WY","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/2106","status":"automated: current USDA state report"},
     {"name":"Toppenish Livestock Commission","state":"WA","kind":"local auction","url":"https://mymarketnews.ams.usda.gov/viewReport/2132","status":"automated: current USDA auction report"},
     {"name":"Northwest Direct Cattle Report","state":"WA/OR/ID/UT","kind":"multi-state direct trade","url":"https://mymarketnews.ams.usda.gov/viewReport/3059","status":"automated: regional only; not assigned to individual states"},
-    {"name":"Northern Livestock Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/2772","status":"automated: multi-region report; not assigned to individual states"},
     {"name":"Western Video Market","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3242","status":"automated: western regional report; not assigned to individual states"},
     {"name":"Cattle Country Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3241","status":"automated: multi-state lots; not assigned to Wyoming"},
     {"name":"Idaho / Oregon local auction feeds","state":"ID/OR","kind":"local auction","url":"https://www.ams.usda.gov/market-news/feeder-and-replacement-cattle-auctions","status":"coverage gap: state-specific parser not yet available"},
@@ -812,21 +811,20 @@ def main():
     marana_records, marana_cows = parse_marana()
     willcox_records, willcox_cows = parse_willcox()
     records += marana_records + willcox_records
-    records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico")
-    records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico")
-    records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico")
-    records += parse_usda_report(1290, "Santa Teresa Livestock Auction (USDA)", "New Mexico")
     usda_cow_records = []
+    records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)
+    records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)
+    records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)
+    records += parse_usda_report(1290, "Santa Teresa Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)
     records += parse_usda_report(1784, "New Mexico Weekly Cattle Summary (USDA)", "New Mexico", "usda_state_summary", usda_cow_records)
     records += parse_usda_report(1778, "Montana Weekly Livestock Auction Summary (USDA)", "Montana", "usda_state_summary", usda_cow_records)
     records += parse_usda_report(2039, "Utah Weekly Cattle Auction Summary (USDA)", "Utah", "usda_state_summary", usda_cow_records)
     records += parse_usda_report(2106, "Wyoming Weekly Cattle Auction Summary (USDA)", "Wyoming", "usda_state_summary", usda_cow_records)
     records += parse_usda_report(2132, "Toppenish Livestock Commission (USDA)", "Washington", "usda_auction", usda_cow_records)
     records += parse_usda_report(3059, "Northwest Direct Cattle Report (USDA)", "Northwest Region (WA/OR/ID/UT)", "usda_direct_trade", usda_cow_records)
-    records += parse_usda_report(2772, "Northern Livestock Video Auction (USDA)", "Multi-state Western and North Central", "usda_video_regional", usda_cow_records)
     records += parse_usda_report(3242, "Western Video Market (USDA)", "Multi-state Western Region (AZ/CA/ID/NV/OR/UT/WA)", "usda_video_regional", usda_cow_records)
     records += parse_usda_report(3241, "Cattle Country Video Auction (USDA)", "Multi-state video auction", "usda_video_regional", usda_cow_records)
-    records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "Southwest Region (AZ/CA/NV)", "usda_direct_trade")
+    records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "Southwest Region (AZ/CA/NV)", "usda_direct_trade", usda_cow_records)
     parse_roswell_web()
     fallon_records, fallon_cows = parse_fallon()
     records += fallon_records
