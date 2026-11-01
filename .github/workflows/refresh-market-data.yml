@@ -43,12 +43,51 @@ jobs:
           if [ -n "$(git status --porcelain -- data/market_observations.json data/futures.json data/usda_outlook.json)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/market_observations.json data/futures.json data/usda_outlook.json
-            git commit -m "Refresh published cattle market history"
-            # The dashboard HTML may be committed while collection is running.
-            # Rebase the generated-data commit onto the latest main before pushing.
-            git pull --rebase origin main
-            git push
+            cp data/market_observations.json /tmp/local_market.json
+
+            # Another refresh may have pushed while this run was collecting.
+            # Merge observations by stable ID instead of rebasing conflicting JSON blobs.
+            for attempt in 1 2 3 4 5; do
+              echo "Publishing market data, attempt $attempt"
+              git fetch origin main
+              git show origin/main:data/market_observations.json > /tmp/remote_market.json
+              python - <<'PY'
+          import json
+          from pathlib import Path
+
+          local = json.loads(Path("/tmp/local_market.json").read_text(encoding="utf-8"))
+          remote = json.loads(Path("/tmp/remote_market.json").read_text(encoding="utf-8"))
+          for key in ("records", "cow_records"):
+              merged = {item["id"]: item for item in remote.get(key, [])}
+              for item in local.get(key, []):
+                  merged[item["id"]] = item
+              local[key] = sorted(
+                  merged.values(),
+                  key=lambda item: (item.get("date", ""), item.get("market", ""), item.get("id", ""))
+              )
+          local["record_count"] = len(local.get("records", []))
+          local["cow_record_count"] = len(local.get("cow_records", []))
+          Path("/tmp/merged_market.json").write_text(
+              json.dumps(local, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+              git reset --mixed origin/main
+              cp /tmp/merged_market.json data/market_observations.json
+              git add data/market_observations.json data/futures.json data/usda_outlook.json
+              if git diff --cached --quiet; then
+                echo "No new market observations."
+                exit 0
+              fi
+              git commit -m "Refresh published cattle market history"
+              if git push origin HEAD:main; then
+                echo "Market data commit pushed successfully."
+                exit 0
+              fi
+              cp data/market_observations.json /tmp/local_market.json
+              echo "Main advanced during push; retrying with the newest published records."
+            done
+            echo "Could not publish market data after five attempts."
+            exit 1
           else
             echo "No new market observations."
           fi
