@@ -532,6 +532,91 @@ def parse_roswell_web():
     return []
 
 
+def parse_cattle_channel_west():
+    """Add public Idaho/Oregon sale summaries from Cattle Channel."""
+    fallback_urls = [
+        "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
+        "https://cattlechannel.com/market-report/idaho/twin-falls-livestock-commission/2026-08-26",
+        "https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06",
+        "https://cattlechannel.com/market-report/oregon/producers-vale/2026-09-09",
+    ]
+    urls = set(fallback_urls)
+    for sitemap_url in [
+        "https://cattlechannel.com/wp-sitemap.xml",
+        "https://cattlechannel.com/sitemap_index.xml",
+        "https://cattlechannel.com/wp-sitemap-posts-market-report-1.xml",
+    ]:
+        try:
+            sitemap = BeautifulSoup(fetch(sitemap_url).text, "xml")
+            for loc in sitemap.find_all("loc"):
+                href = loc.get_text(strip=True)
+                if re.search(r"/market-report/(?:idaho|oregon)/", href, re.I):
+                    urls.add(href)
+        except Exception:
+            continue
+    records, seen = [], set()
+    for url in sorted(urls):
+        try:
+            soup = BeautifulSoup(fetch(url).text, "html.parser")
+            body = soup.get_text("\n", strip=True)
+            title = soup.find(["h1", "h2"])
+            title_text = title.get_text(" ", strip=True) if title else url
+            date_match = re.search(
+                r"Cattle Market Report\s*[—-]\s*([A-Z][a-z]+\s+\d{1,2},\s+20\d{2})",
+                title_text, flags=re.I
+            )
+            if date_match:
+                date = parse_date(date_match.group(1))
+            else:
+                url_date = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
+                date = url_date.group(1) if url_date else None
+            if not date:
+                date = parse_date(body[:1000])
+            path_parts = urlparse(url).path.strip("/").split("/")
+            state_slug = path_parts[1] if len(path_parts) > 1 else ""
+            state = {"idaho": "Idaho", "oregon": "Oregon"}.get(state_slug.lower())
+            if not date or not state or (url, date) in seen:
+                continue
+            seen.add((url, date))
+            market = title_text.split(" Cattle Market Report")[0].strip()
+            if not market:
+                market = "Cattle Channel sale report"
+            sections = list(re.finditer(r"(Steers|Heifers|Bulls|Cows) By Weight|Questions about this sale", body, flags=re.I))
+            for idx, section_match in enumerate(sections):
+                section = section_match.group(1).lower() if section_match.group(1) else ""
+                if section not in ("steers", "heifers"):
+                    continue
+                segment_end = sections[idx+1].start() if idx+1 < len(sections) else len(body)
+                segment = body[section_match.end():segment_end]
+                row_re = re.compile(
+                    r"(\d{3,4})\s*-\s*(\d{3,4})\s+(\d{1,4})\s+([\d,.]+)\s+\$([\d,.]+)",
+                    re.I
+                )
+                for row in row_re.finditer(segment):
+                    low_wt, high_wt, head, avg_wt, avg_price = row.groups()
+                    try:
+                        head_n = int(head)
+                        avg_weight = float(avg_wt.replace(",", ""))
+                        price = float(avg_price.replace(",", ""))
+                    except ValueError:
+                        continue
+                    if head_n <= 0 or avg_weight <= 0 or price <= 0:
+                        continue
+                    sex = "Steer" if section == "steers" else "Heifer"
+                    category = "Feeder steer" if sex == "Steer" else "Feeder heifer"
+                    records.append(record(
+                        date, market, state, category, sex, "Not specified",
+                        avg_weight, price, head_n, "Cattle Channel (sale report)",
+                        url, "third_party_auction_weighted_average",
+                        sale_type="Live auction",
+                        notes=f"Cattle Channel reported weighted average; {low_wt}-{high_wt} lb class"
+                    ))
+        except Exception as e:
+            print(f"Cattle Channel state report failed {url}: {e}", file=sys.stderr)
+    print(f"Cattle Channel: {len(records)} Idaho/Oregon feeder weight-class observations")
+    return records
+
+
 def parse_belen():
     """Capture Corriente, fresh Corriente, bred-cow and pair ranges from Belen NM."""
     url = "https://belenlivestockauction.com/"
@@ -850,7 +935,8 @@ SOURCES = [
     {"name":"Northwest Direct Cattle Report","state":"WA/OR/ID/UT","kind":"multi-state direct trade","url":"https://mymarketnews.ams.usda.gov/viewReport/3059","status":"automated: regional only; not assigned to individual states"},
     {"name":"Western Video Market","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3242","status":"automated: western regional report; not assigned to individual states"},
     {"name":"Cattle Country Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3241","status":"automated: multi-state lots; not assigned to Wyoming"},
-    {"name":"Idaho / Oregon local auction feeds","state":"ID/OR","kind":"local auction","url":"https://www.ams.usda.gov/market-news/feeder-and-replacement-cattle-auctions","status":"coverage gap: state-specific parser not yet available"},
+    {"name":"Cattle Channel — Idaho sale reports","state":"ID","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08","status":"automated: public weight-class weighted averages; third-party source"},
+    {"name":"Cattle Channel — Oregon sale reports","state":"OR","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06","status":"automated: public weight-class weighted averages; third-party source"},
     {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
     {"name":"Fallon Livestock","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"automated: archived weekly weight-class ranges and bred-cow/pair values"},
@@ -890,6 +976,7 @@ def main():
     parse_roswell_web()
     belen_records, belen_cows = parse_belen()
     records += belen_records
+    records += parse_cattle_channel_west()
     fallon_records, fallon_cows = parse_fallon()
     records += fallon_records
     old = []
