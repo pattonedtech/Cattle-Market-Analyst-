@@ -127,7 +127,7 @@ def parse_usda_pdf(url, report_id, market, region, record_type):
     records = []
     normalized = re.sub(r"\s+", " ", text)
     section_matches = list(re.finditer(
-        r"(DAIRY STEERS?|BRED COWS?|COW-CALF PAIRS?|STEERS?|HEIFERS?|COWS?|BULLS?)\s*-\s*"
+        r"(DAIRY STEERS?|REPLACEMENT HEIFERS?|BRED COWS?|BRED HEIFERS?|COW-CALF PAIRS?|STEERS?|HEIFERS?|COWS?|BULLS?)\s*-\s*"
         r"(?:Medium|Large|Small|Utility|Boner|Lean|Breaker|Cutter)[^:]{0,100}?\(Per Cwt[^)]*\)",
         normalized, flags=re.I
     ))
@@ -140,7 +140,9 @@ def parse_usda_pdf(url, report_id, market, region, record_type):
         segment_end = section_matches[idx+1].start() if idx+1 < len(section_matches) else len(normalized)
         segment = normalized[section_match.end():segment_end]
         section = section_match.group(1).upper()
-        if "HEIFER" in section:
+        if "REPLACEMENT" in section:
+            sex, category = "Heifer", "Replacement heifer"
+        elif "HEIFER" in section:
             sex, category = "Heifer", "Feeder heifer"
         elif "STEER" in section:
             sex, category = "Steer", "Feeder steer"
@@ -553,7 +555,7 @@ def parse_overland():
                 chunk = body[match.start(): matches[i+1].start() if i+1 < len(matches) else len(body)]
                 price_match = re.search(r"\$\s*([\d,]+(?:\.\d+)?)", chunk)
                 weight_match = re.search(r"(\d+)\s*Hd\s*\(\s*([\d,]+)\s*lbs?\s*\)", chunk, flags=re.I)
-                desc_match = re.search(r"\b(HOL\s*(?:STR|HFR)|HOLSTEIN\s*(?:STEER|HEIFER)?|NATIVE\s*(?:STR|HFR|STEER|HEIFER)|BEEF\s*(?:STR|HFR|STEER|HEIFER)|ANGUS\s*(?:STR|HFR|STEER|HEIFER)|HOL\s*BEEF\s*(?:STR|HFR))\b", chunk, flags=re.I)
+                desc_match = re.search(r"\b(MEXICAN\s+BRANDED\s+CORRIENTE|NATIVE\s+CORRIENTE|CORRIENTE\s*(?:STR|HFR|STEER|HEIFER)?|HOL\s*(?:STR|HFR)|HOLSTEIN\s*(?:STEER|HEIFER)?|NATIVE\s*(?:STR|HFR|STEER|HEIFER)|BEEF\s*(?:STR|HFR|STEER|HEIFER)|ANGUS\s*(?:STR|HFR|STEER|HEIFER)|HOL\s*BEEF\s*(?:STR|HFR))\b", chunk, flags=re.I)
                 if not price_match or not weight_match:
                     continue
                 price = float(price_match.group(1).replace(",", ""))
@@ -565,7 +567,7 @@ def parse_overland():
                     sex, category = "Steer", "Feeder steer"
                 else:
                     sex, category = "Unknown", "Other"
-                breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown"))
+                breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Mexican-branded Corriente" if "MEXICAN" in desc and "CORRIENTE" in desc else ("Native Corriente" if "NATIVE CORRIENTE" in desc else ("Corriente — type not specified" if "CORRIENTE" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown")))))
                 if price <= 0 or weight <= 0 or head <= 0:
                     continue
                 records.append(record(date, "Overland Stock Yard", "California", category, sex, breed, weight, price, head,
@@ -777,6 +779,15 @@ SOURCES = [
     {"name":"A&M Livestock Auction","state":"CA","kind":"live / video auction","url":"https://www.amlivestockauction.com/","status":"listed; historical parser pending"},
     {"name":"Western Stockman's Market","state":"CA","kind":"live auction","url":"https://www.westernstockmans.com/","status":"listed; historical parser pending"},
     {"name":"Marana Stockyards","state":"AZ","kind":"live auction","url":"https://www.maranastockyards.com/market-report-archives","status":"automated: archive backfill from 2022 plus current reports"},
+    {"name":"Montana Weekly Livestock Auction Summary","state":"MT","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/1778","status":"automated: current USDA state report"},
+    {"name":"Utah Weekly Cattle Auction Summary","state":"UT","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/2039","status":"automated: current USDA state report"},
+    {"name":"Wyoming Weekly Cattle Auction Summary","state":"WY","kind":"state auction summary","url":"https://mymarketnews.ams.usda.gov/viewReport/2106","status":"automated: current USDA state report"},
+    {"name":"Toppenish Livestock Commission","state":"WA","kind":"local auction","url":"https://mymarketnews.ams.usda.gov/viewReport/2132","status":"automated: current USDA auction report"},
+    {"name":"Northwest Direct Cattle Report","state":"WA/OR/ID/UT","kind":"multi-state direct trade","url":"https://mymarketnews.ams.usda.gov/viewReport/3059","status":"automated: regional only; not assigned to individual states"},
+    {"name":"Northern Livestock Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/2772","status":"automated: multi-region report; not assigned to individual states"},
+    {"name":"Western Video Market","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3242","status":"automated: western regional report; not assigned to individual states"},
+    {"name":"Cattle Country Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3241","status":"automated: multi-state lots; not assigned to Wyoming"},
+    {"name":"Idaho / Oregon local auction feeds","state":"ID/OR","kind":"local auction","url":"https://www.ams.usda.gov/market-news/feeder-and-replacement-cattle-auctions","status":"coverage gap: state-specific parser not yet available"},
     {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
     {"name":"Fallon Livestock","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"automated: archived weekly weight-class ranges and bred-cow/pair values"},
