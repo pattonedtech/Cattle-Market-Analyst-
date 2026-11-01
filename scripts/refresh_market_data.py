@@ -55,7 +55,9 @@ def parse_date(text):
 # county-neutral rather than being assigned an invented county.
 STATE_NAMES = {
     "CA": "California", "AZ": "Arizona", "NV": "Nevada", "NM": "New Mexico",
-    "California": "California", "Arizona": "Arizona", "Nevada": "Nevada", "New Mexico": "New Mexico"
+    "ID": "Idaho", "MT": "Montana", "WY": "Wyoming", "UT": "Utah", "WA": "Washington", "OR": "Oregon",
+    "California": "California", "Arizona": "Arizona", "Nevada": "Nevada", "New Mexico": "New Mexico",
+    "Idaho": "Idaho", "Montana": "Montana", "Wyoming": "Wyoming", "Utah": "Utah", "Washington": "Washington", "Oregon": "Oregon"
 }
 MARKET_COUNTIES = [
     ("visalia", "California", "Tulare"),
@@ -176,7 +178,64 @@ def parse_usda_pdf(url, report_id, market, region, record_type):
     return records
 
 
-def parse_usda_report(report_id, market, region, record_type="usda_auction"):
+def parse_usda_replacement_pdf(url, report_id, market, region):
+    """Parse USDA replacement cattle tables quoted per head or per family."""
+    try:
+        text = pdf_text(url)
+    except Exception as e:
+        print(f"USDA {report_id} replacement table fetch failed: {e}", file=sys.stderr)
+        return []
+    date = parse_date(text[:1800]) or parse_date(text)
+    if not date:
+        return []
+    normalized = re.sub(r"\\s+", " ", text)
+    heading_re = re.compile(
+        r"(BRED COWS?|BRED HEIFERS?|COW-CALF PAIRS?)\\s*-\\s*"
+        r".{0,160}?\\(Per (Head|Family)[^)]*\\)", re.I
+    )
+    headings = list(heading_re.finditer(normalized))
+    out = []
+    row_re = re.compile(
+        r"(Current|[A-Z][a-z]{2}(?:-[A-Z][a-z]{2})?)\\s+"
+        r"((?:\\d{1,2}-\\d{1,2})|<2|>8)\\s+"
+        r"(T1-3|T1-2|T2-3|T1|T2|T3|O|E|B)\\s+"
+        r"(\\d{1,4})\\s+([\\d,]+(?:\\s*-\\s*[\\d,]+)?)\\s+"
+        r"([\\d,]+)\\s+([\\d,.]+(?:\\s*-\\s*[\\d,.]+)?)\\s+([\\d,.]+)",
+        re.I
+    )
+    for i, heading in enumerate(headings):
+        end = headings[i+1].start() if i+1 < len(headings) else len(normalized)
+        segment = normalized[heading.end():end]
+        label = heading.group(1).upper()
+        unit = "USD/family" if heading.group(2).lower() == "family" else "USD/head"
+        category = "Bred cow" if "COW" in label and "PAIR" not in label else ("Bred heifer" if "HEIFER" in label else "Cow-calf pair")
+        for m in row_re.finditer(segment):
+            delivery, age, stage, head, wt_range, avg_wt, price_range, avg_price = m.groups()
+            try:
+                price = float(avg_price.replace(",", ""))
+                count = int(head.replace(",", ""))
+                weight = float(avg_wt.replace(",", ""))
+            except ValueError:
+                continue
+            if price <= 0 or count <= 0:
+                continue
+            range_values = [float(x.replace(",", "")) for x in re.findall(r"[\\d,.]+", price_range)]
+            state, county = geographic_fields(market, region)
+            out.append({
+                "id": stable_id(report_id, date, category, age, stage, delivery, price, url),
+                "date": date, "market": market, "region": region, "state": state, "county": county,
+                "category": category, "description": f"Age {age}; pregnancy stage {stage}; delivery {delivery}",
+                "age": age, "pregnancy_stage": stage, "delivery": delivery,
+                "weight": weight, "head": count, "price": price,
+                "price_low": min(range_values) if range_values else price,
+                "price_high": max(range_values) if range_values else price,
+                "price_unit": unit, "source": "USDA AMS Market News", "source_url": url,
+                "record_type": "usda_replacement_weighted_average"
+            })
+    return out
+
+
+def parse_usda_report(report_id, market, region, record_type="usda_auction", cow_records_out=None):
     page_url = f"https://mymarketnews.ams.usda.gov/viewReport/{report_id}"
     fallback_url = f"https://www.ams.usda.gov/mnreports/ams_{report_id}.pdf"
     report_urls = []
@@ -201,6 +260,8 @@ def parse_usda_report(report_id, market, region, record_type="usda_auction"):
     records = []
     for url in report_urls:
         records.extend(parse_usda_pdf(url, report_id, market, region, record_type))
+        if cow_records_out is not None:
+            cow_records_out.extend(parse_usda_replacement_pdf(url, report_id, market, region))
     print(f"USDA {report_id} {market}: {len(records)} normalized rows from {len(report_urls)} reports")
     return records
 
@@ -743,8 +804,16 @@ def main():
     records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1783, "Cattlemen's Livestock Auction (USDA)", "New Mexico")
     records += parse_usda_report(1290, "Santa Teresa Livestock Auction (USDA)", "New Mexico")
-    records += parse_usda_report(1784, "New Mexico Weekly Cattle Summary (USDA)", "New Mexico", "usda_state_summary")
-    records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "AZ/CA/NV", "usda_direct_trade")
+    usda_cow_records = []
+    records += parse_usda_report(1784, "New Mexico Weekly Cattle Summary (USDA)", "New Mexico", "usda_state_summary", usda_cow_records)
+    records += parse_usda_report(1778, "Montana Weekly Cattle Auction Summary (USDA)", "Montana", "usda_state_summary", usda_cow_records)
+    records += parse_usda_report(2039, "Utah Weekly Cattle Auction Summary (USDA)", "Utah", "usda_state_summary", usda_cow_records)
+    records += parse_usda_report(2106, "Wyoming Weekly Cattle Auction Summary (USDA)", "Wyoming", "usda_state_summary", usda_cow_records)
+    records += parse_usda_report(2132, "Toppenish Livestock Commission (USDA)", "Washington", "usda_auction", usda_cow_records)
+    records += parse_usda_report(3059, "Northwest Direct Cattle Report (USDA)", "Northwest Region (WA/OR/ID/UT)", "usda_direct_trade")
+    records += parse_usda_report(3242, "Western Video Market (USDA)", "Western Region (AZ/CA/ID/NV/OR/UT/WA)", "usda_video_west", usda_cow_records)
+    records += parse_usda_report(3241, "Cattle Country Video Auction (USDA)", "Wyoming", "usda_video_wyoming", usda_cow_records)
+    records += parse_usda_report(2940, "Southwest Direct Cattle Report (USDA)", "Southwest Region (AZ/CA/NV)", "usda_direct_trade")
     parse_roswell_web()
     fallon_records, fallon_cows = parse_fallon()
     records += fallon_records
@@ -769,7 +838,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows + willcox_cows + fallon_cows:
+    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     DATA.mkdir(parents=True, exist_ok=True)
