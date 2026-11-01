@@ -584,6 +584,7 @@ def parse_cattle_channel_west():
     urls = []
     for state_key in ("idaho", "oregon"):
         urls.extend(sorted(urls_by_state[state_key], key=report_date_from_url, reverse=True)[:20])
+    print("Cattle Channel report pages selected: " + "; ".join(f"{k}={len(v)}" for k, v in urls_by_state.items()))
     for url in urls:
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
