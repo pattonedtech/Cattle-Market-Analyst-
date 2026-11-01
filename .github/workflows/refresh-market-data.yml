@@ -17,7 +17,9 @@ permissions:
 
 concurrency:
   group: market-data-refresh-v3
-  cancel-in-progress: true
+  # Never overlap two writers to the same generated JSON files. Queue refreshes
+  # instead of cancelling a run during its commit/rebase phase.
+  cancel-in-progress: false
 
 jobs:
   refresh:
