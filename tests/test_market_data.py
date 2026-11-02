@@ -203,6 +203,9 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["attempts"], 2)
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["successes"], 1)
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_requests"], 0)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_attempts"], 1)
+        self.assertIn("temporary", collector.SOURCE_FETCH_HEALTH[domain]["last_error"])
+        self.assertIn("report.pdf", collector.SOURCE_FETCH_HEALTH[domain]["last_failure_url"])
 
     def test_fetch_does_not_retry_permanent_http_404(self):
         from types import SimpleNamespace
