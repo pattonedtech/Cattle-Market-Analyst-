@@ -146,6 +146,22 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(accepted, [])
         self.assertIn("price_outside_sanity_bounds", rejected[0]["issues"])
 
+    def test_quality_check_adds_sale_regionality_and_origin_fields(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Corriente steer", breed="Corriente")], "records"
+        )
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["corriente_origin"], "unspecified")
+        self.assertIn("Kings County, California", accepted[0]["sale_regionality"])
+        self.assertIsNone(accepted[0]["animal_origin"])
+
+    def test_quality_check_respects_explicit_corriente_origin(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Corriente steer", breed="Native Corriente")], "records"
+        )
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["corriente_origin"], "Native Corriente")
+
 
 if __name__ == "__main__":
     unittest.main()
