@@ -13,7 +13,7 @@ from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
-from market_model import normalize_observation, build_benchmarks
+from market_model import normalize_observation, build_benchmarks, merge_quarantine_history
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -1600,23 +1600,10 @@ def main():
     # stable ID is now accepted or a fresh validation produced an updated rejection.
     accepted_market_ids = {r.get("id") for r in merged}
     accepted_cow_ids = {r.get("id") for r in merged_cows}
-    current_reject_keys = {
-        (r.get("collection"), r.get("id")) for r in rejected_records + rejected_cows
-    }
-    prior_market = []
-    prior_cows = []
-    for old_reject in old_quarantine:
-        collection = old_reject.get("collection")
-        rid = old_reject.get("id")
-        key = (collection, rid)
-        if key in current_reject_keys:
-            continue
-        if collection == "records" and rid not in accepted_market_ids:
-            prior_market.append(old_reject)
-        elif collection == "cow_records" and rid not in accepted_cow_ids:
-            prior_cows.append(old_reject)
-    rejected_records.extend(prior_market)
-    rejected_cows.extend(prior_cows)
+    rejected_records, rejected_cows = merge_quarantine_history(
+        rejected_records, rejected_cows, old_quarantine,
+        accepted_market_ids, accepted_cow_ids
+    )
     rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
     rejection_reasons = {}
     for rejected in rejected_records:
