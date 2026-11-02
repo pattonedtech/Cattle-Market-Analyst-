@@ -651,7 +651,7 @@ def parse_ranchers_choice():
         cow_per_lb = bool(re.search(r"Top Cow\s*[-–]\s*\d[\d,]*\s*lbs?\s*[-–]\s*\$?[\d,.]+\s*/\s*lb", text, re.I))
         for line in lines:
             low_line = line.lower()
-            if "steers" in low_line and "heifers" in low_line and ("300" in low_line or "on on" in low_line):
+            if "steers" in low_line and "heifers" in low_line:
                 feeder_mode, bull_class_mode, highlight_mode = True, False, False
             if "feeder bulls" in low_line:
                 feeder_mode, bull_class_mode, highlight_mode = False, True, False
@@ -1310,6 +1310,8 @@ def quality_check(rows, collection):
                     issues.append("weight_outside_50_3000_lb")
             except (TypeError, ValueError):
                 issues.append("weight_not_numeric")
+        if weight is None and unit == "USD/cwt" and row.get("record_type") not in ("published_price_range", "published_weight_class_range"):
+            issues.append("missing_weight_for_cwt_record")
         if row.get("weight_low") is not None or row.get("weight_high") is not None:
             try:
                 weight_low = float(row.get("weight_low"))
@@ -1318,8 +1320,6 @@ def quality_check(rows, collection):
                     issues.append("invalid_weight_class_bounds")
             except (TypeError, ValueError):
                 issues.append("weight_class_bounds_not_numeric")
-        elif unit == "USD/cwt" and row.get("record_type") != "published_price_range":
-            issues.append("missing_weight_for_cwt_record")
         head = row.get("head")
         if head not in (None, ""):
             try:
