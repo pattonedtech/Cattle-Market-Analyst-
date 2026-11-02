@@ -406,7 +406,7 @@ if(!items.length)return null;
 var allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
 var head=allHaveHead?items.reduce(function(a,r){return a+Number(r.head)},0):null;
 var avg=allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/head:items.reduce(function(a,r){return a+Number(r.price)},0)/items.length;
-return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:items.length,head:head,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean)).length,method:allHaveHead?"head-weighted (all records have head counts)":"observation average (head counts incomplete)",weightedCount:allHaveHead?items.length:0};
+return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:items.length,head:head,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:allHaveHead?"head-weighted (all records have head counts)":"observation average (head counts incomplete)",weightedCount:allHaveHead?items.length:0};
 }
 function renderWesternOverview(){
 if(!$("westCategory"))return;
