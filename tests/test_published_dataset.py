@@ -16,6 +16,9 @@ class PublishedDatasetTests(unittest.TestCase):
         path = ROOT / "data" / "market_observations.json"
         with path.open(encoding="utf-8") as handle:
             cls.payload = json.load(handle)
+        qa_path = ROOT / "data" / "market_data_qa.json"
+        with qa_path.open(encoding="utf-8") as handle:
+            cls.qa = json.load(handle)
 
     def check_collection(self, rows, require_record_type):
         ids = set()
@@ -64,6 +67,11 @@ class PublishedDatasetTests(unittest.TestCase):
 
     def test_cow_market_records_are_source_linked_and_unique(self):
         self.check_collection(self.payload.get("cow_records", []), False)
+
+    def test_qa_report_matches_published_arrays(self):
+        self.assertEqual(self.qa["market_observations"]["accepted"], len(self.payload.get("records", [])))
+        self.assertEqual(self.qa["cow_market_observations"]["accepted"], len(self.payload.get("cow_records", [])))
+        self.assertTrue(all(row.get("source_url", "").startswith("https://") for row in self.qa["rejected_observations"]))
 
     def test_published_counts_match_arrays(self):
         self.assertEqual(
