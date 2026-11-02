@@ -1712,11 +1712,11 @@ def main():
     for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows + cottonwood_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
-    new_ids = {
-        r.get("id") for r in records
-        + marana_cows + willcox_cows + fallon_cows + usda_cow_records
+    new_records = (
+        records + marana_cows + willcox_cows + fallon_cows + usda_cow_records
         + belen_cows + ranchers_cows + cottonwood_cows
-    }
+    )
+    new_ids = {r.get("id") for r in new_records}
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
     # Quarantine is durable history. Keep prior rejected rows unless the same
