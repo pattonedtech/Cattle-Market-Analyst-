@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-02T01:14:58.397766+00:00",
-  "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county. Historical quarantined observations are retained across refreshes until a stable-ID observation passes validation; they are never silently discarded.",
+  "generated_at": "2026-11-02T01:38:39.801472+00:00",
+  "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
     "accepted": 18325,
     "rejected": 211
@@ -33,7 +33,7 @@
       "New Mexico / Chaves": 199,
       "New Mexico / County not identified": 414,
       "New Mexico / Curry": 217,
-      "New Mexico / Doña Ana": 6,
+      "New Mexico / Do\u00f1a Ana": 6,
       "New Mexico / Valencia": 153,
       "Oregon / Malheur": 17,
       "Oregon / Umatilla": 19,
@@ -86,6 +86,59 @@
     "Willcox Livestock Auction": 160,
     "Wyoming Weekly Cattle Auction Summary (USDA)": 52
   },
+  "accepted_by_category": {
+    "Bull": 236,
+    "Corriente cattle (unclassified)": 2,
+    "Cull cow": 546,
+    "Feeder heifer": 3554,
+    "Feeder steer": 6971,
+    "Other": 7016
+  },
+  "accepted_by_record_type": {
+    "auction_lot_average": 3896,
+    "published_lot_highlight": 13,
+    "published_price_range": 95,
+    "published_weight_class_range": 2569,
+    "third_party_auction_weighted_average": 78,
+    "usda_auction": 609,
+    "usda_direct_trade": 12,
+    "usda_state_summary": 1066,
+    "usda_video_regional": 173,
+    "video_lot_contract": 9814
+  },
+  "accepted_corriente_origin": {
+    "unspecified": 2
+  },
+  "accepted_sale_regionality": {
+    "Burley Livestock Auction, Cassia County, Idaho": 134,
+    "Cattle Country Video Auction (USDA) \u2014 Multi-state video auction (state/county not assigned)": 3,
+    "Cattlemen's Livestock Auction (USDA), Valencia County, New Mexico": 151,
+    "Cattlemen's Livestock Auction - Belen, Valencia County, New Mexico": 2,
+    "Clovis Livestock Auction (USDA), Curry County, New Mexico": 217,
+    "Cottonwood Livestock Auction, Idaho County, Idaho": 569,
+    "Fallon Livestock, Churchill County, Nevada": 2019,
+    "Marana Stockyards, Pima County, Arizona": 3620,
+    "Montana Weekly Cattle Auction Summary (USDA), Montana (county not identified)": 227,
+    "Montana Weekly Livestock Auction Summary (USDA), Montana (county not identified)": 227,
+    "New Mexico Weekly Cattle Summary (USDA), New Mexico (county not identified)": 414,
+    "Northern Livestock Video Auction (USDA) \u2014 Multi-state Western and North Central (state/county not assigned)": 78,
+    "Northwest Direct Cattle Report (USDA) \u2014 Northwest Region (WA/OR/ID/UT) (state/county not assigned)": 4,
+    "Northwest Livestock Commission, Umatilla County, Oregon": 19,
+    "Overland Stock Yard, Kings County, California": 9814,
+    "Overland Stockyard (USDA), Kings County, California": 50,
+    "Producers Livestock Vale, OR, Malheur County, Oregon": 17,
+    "Ranchers Choice Stockyard, San Benito County, California": 59,
+    "Roswell Livestock Auction (USDA), Chaves County, New Mexico": 199,
+    "Santa Teresa Livestock Auction (USDA), Do\u00f1a Ana County, New Mexico": 6,
+    "Southwest Direct Cattle Report (USDA) \u2014 Southwest Region (AZ/CA/NV) (state/county not assigned)": 8,
+    "Toppenish Livestock Commission (USDA), Washington (county not identified)": 36,
+    "Twin Falls Livestock Commission, Twin Falls County, Idaho": 24,
+    "Utah Weekly Cattle Auction Summary (USDA), Utah (county not identified)": 146,
+    "Visalia Livestock Market, Tulare County, California": 28,
+    "Western Video Market (USDA) \u2014 Multi-state Western Region (AZ/CA/ID/NV/OR/UT/WA) (state/county not assigned)": 42,
+    "Willcox Livestock Auction, Cochise County, Arizona": 160,
+    "Wyoming Weekly Cattle Auction Summary (USDA), Wyoming (county not identified)": 52
+  },
   "accepted_by_source": {
     "Burley Livestock Auction": 116,
     "Cattle Channel (sale report)": 78,
@@ -111,6 +164,106 @@
     "www.maranastockyards.us": 3620,
     "www.overlandstockyard.com": 9814,
     "www.visalialivestock.com": 28
+  },
+  "source_fetch_health": {
+    "belenlivestockauction.com": {
+      "requests": 1,
+      "attempts": 1,
+      "successes": 1,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "burleylivestock.auction": {
+      "requests": 2,
+      "attempts": 2,
+      "successes": 2,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "cattlechannel.com": {
+      "requests": 12,
+      "attempts": 18,
+      "successes": 6,
+      "failed_requests": 6,
+      "last_error": null
+    },
+    "cottonwoodlivestock.com": {
+      "requests": 4,
+      "attempts": 4,
+      "successes": 4,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "rancherschoicestockyard.com": {
+      "requests": 18,
+      "attempts": 18,
+      "successes": 18,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "test.willcoxlivestockauction.com": {
+      "requests": 3,
+      "attempts": 3,
+      "successes": 3,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "willcoxlivestockauction.com": {
+      "requests": 2,
+      "attempts": 2,
+      "successes": 2,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.ams.usda.gov": {
+      "requests": 26,
+      "attempts": 26,
+      "successes": 26,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.fallonlivestock.com": {
+      "requests": 2,
+      "attempts": 2,
+      "successes": 2,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.maranastockyards.com": {
+      "requests": 1,
+      "attempts": 1,
+      "successes": 1,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.maranastockyards.us": {
+      "requests": 1,
+      "attempts": 1,
+      "successes": 1,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.overlandstockyard.com": {
+      "requests": 11,
+      "attempts": 11,
+      "successes": 11,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.roswelllivestockauction.com": {
+      "requests": 1,
+      "attempts": 1,
+      "successes": 1,
+      "failed_requests": 0,
+      "last_error": null
+    },
+    "www.visalialivestock.com": {
+      "requests": 3,
+      "attempts": 3,
+      "successes": 3,
+      "failed_requests": 0,
+      "last_error": null
+    }
   },
   "rejected_observations": [
     {
@@ -4066,14 +4219,14 @@
       "status": "automated: multi-state lots; not assigned to Wyoming"
     },
     {
-      "name": "Cattle Channel — Idaho sale reports",
+      "name": "Cattle Channel \u2014 Idaho sale reports",
       "state": "ID",
       "kind": "third-party auction summaries",
       "url": "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
       "status": "automated third-party summaries; official Burley reports are collected separately"
     },
     {
-      "name": "Cattle Channel — Oregon sale reports",
+      "name": "Cattle Channel \u2014 Oregon sale reports",
       "state": "OR",
       "kind": "third-party auction summaries",
       "url": "https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06",
@@ -4129,7 +4282,7 @@
       "status": "automated: current USDA report"
     },
     {
-      "name": "USDA Cattlemen’s Livestock Auction - Belen",
+      "name": "USDA Cattlemen\u2019s Livestock Auction - Belen",
       "state": "NM",
       "kind": "USDA auction report",
       "url": "https://mymarketnews.ams.usda.gov/viewReport/1783",
@@ -4163,6 +4316,5 @@
       "url": "https://www.cattlemenslivestock.com/",
       "status": "listed; historical parser pending"
     }
-  ],
-  "quarantine_history_preserved_from": "6e9f9cdba626f04f33b5047e59600b90988c8694"
+  ]
 }
