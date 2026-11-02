@@ -1,0 +1,406 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-02T00:02:25.424843+00:00",
+  "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
+  "market_observations": {
+    "accepted": 17589,
+    "rejected": 2
+  },
+  "cow_market_observations": {
+    "accepted": 1522,
+    "rejected": 1
+  },
+  "accepted_by_state": {
+    "Arizona": 3780,
+    "California": 9842,
+    "Idaho": 100,
+    "Montana": 454,
+    "Nevada": 2019,
+    "New Mexico": 989,
+    "Oregon": 36,
+    "Regional / unassigned": 135,
+    "Utah": 146,
+    "Washington": 36,
+    "Wyoming": 52
+  },
+  "accepted_by_market": {
+    "Burley Livestock Auction": 76,
+    "Cattle Country Video Auction (USDA)": 3,
+    "Cattlemen's Livestock Auction (USDA)": 151,
+    "Cattlemen's Livestock Auction - Belen": 2,
+    "Clovis Livestock Auction (USDA)": 217,
+    "Fallon Livestock": 2019,
+    "Marana Stockyards": 3620,
+    "Montana Weekly Cattle Auction Summary (USDA)": 227,
+    "Montana Weekly Livestock Auction Summary (USDA)": 227,
+    "New Mexico Weekly Cattle Summary (USDA)": 414,
+    "Northern Livestock Video Auction (USDA)": 78,
+    "Northwest Direct Cattle Report (USDA)": 4,
+    "Northwest Livestock Commission": 19,
+    "Overland Stock Yard": 9814,
+    "Producers Livestock Vale, OR": 17,
+    "Roswell Livestock Auction (USDA)": 199,
+    "Santa Teresa Livestock Auction (USDA)": 6,
+    "Southwest Direct Cattle Report (USDA)": 8,
+    "Toppenish Livestock Commission (USDA)": 36,
+    "Twin Falls Livestock Commission": 24,
+    "Utah Weekly Cattle Auction Summary (USDA)": 146,
+    "Visalia Livestock Market": 28,
+    "Western Video Market (USDA)": 42,
+    "Willcox Livestock Auction": 160,
+    "Wyoming Weekly Cattle Auction Summary (USDA)": 52
+  },
+  "accepted_by_source": {
+    "Burley Livestock Auction": 58,
+    "Cattle Channel (sale report)": 78,
+    "Cattlemen's Livestock Auction - Belen": 2,
+    "Fallon Livestock": 2019,
+    "Marana Stockyards": 3620,
+    "Overland Stock Yard": 9814,
+    "USDA AMS Market News": 1810,
+    "Visalia Livestock Market": 28,
+    "Willcox Livestock Auction": 160
+  },
+  "rejected_observations": [
+    {
+      "id": "2a75b7dacb97d61357",
+      "date": "2024-03-12",
+      "market": "Fallon Livestock",
+      "state": "Nevada",
+      "county": "Churchill",
+      "category": "Feeder heifer",
+      "weight": 350.0,
+      "price": 351.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_2-13-2024.pdf",
+      "issues": [
+        "invalid_price_range_or_average"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ae4098f18534b8807b",
+      "date": "2025-09-09",
+      "market": "Fallon Livestock",
+      "state": "Nevada",
+      "county": "Churchill",
+      "category": "Feeder heifer",
+      "weight": 950.0,
+      "price": 1242.23,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_8-19-2025.pdf",
+      "issues": [
+        "invalid_price_range_or_average"
+      ],
+      "warnings": [
+        "unusual_cwt_price_review_source"
+      ]
+    },
+    {
+      "id": "f66104611ea1819372",
+      "date": "2026-10-01",
+      "market": "Willcox Livestock Auction",
+      "state": "Arizona",
+      "county": "Cochise",
+      "category": "Bred cow",
+      "weight": null,
+      "price": 0.0,
+      "price_unit": "USD/head",
+      "source_url": "https://test.willcoxlivestockauction.com/wp-content/uploads/2026/10/10-01-26-Market-Report.pdf",
+      "issues": [
+        "invalid_price_range_or_average",
+        "price_outside_sanity_bounds"
+      ],
+      "warnings": []
+    }
+  ],
+  "source_registry": [
+    {
+      "name": "Visalia Livestock Market",
+      "state": "CA",
+      "kind": "auction snapshot",
+      "url": "https://www.visalialivestock.com/market-snapshot.html",
+      "status": "automated: published price ranges; current public archive is limited to recent snapshots"
+    },
+    {
+      "name": "Dos Palos Y Auction",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.dpyauction.com/market-reports",
+      "status": "official weekly archive verified; parser pending QA; reports currently include dated downloadable PDFs"
+    },
+    {
+      "name": "Burley Livestock Auction",
+      "state": "ID",
+      "kind": "live auction",
+      "url": "https://burleylivestock.auction/reports",
+      "status": "automated: public weekly lot tables; archived reports"
+    },
+    {
+      "name": "Idaho Farm Bureau Beef Market Reports",
+      "state": "ID",
+      "kind": "market report directory",
+      "url": "https://www.idahofb.org/commodities/beef-market-reports/",
+      "status": "official industry directory for Caldwell, Vale, Emmett, Burley, Jerome, Twin Falls, Blackfoot, Cottonwood and Lewiston; individual parsers pending"
+    },
+    {
+      "name": "Idaho Public Livestock Markets",
+      "state": "ID",
+      "kind": "government market directory",
+      "url": "https://agri.idaho.gov/wp-content/uploads/animal-industries/livestock-market-list.pdf",
+      "status": "official state market registry; used to verify market names and physical locations"
+    },
+    {
+      "name": "Overland Stock Yard",
+      "state": "CA",
+      "kind": "auction / video lots",
+      "url": "https://www.overlandstockyard.com/market-reports",
+      "status": "automated: video lots; dairy and beef types remain separate"
+    },
+    {
+      "name": "Tulare County Stockyard",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://tularecountystockyard.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Escalon Livestock Market",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.escalonlivestockmarket.com/",
+      "status": "listed; weekly reports available; parser pending"
+    },
+    {
+      "name": "Producers Livestock Marketing Association",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.producerslivestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Turlock Livestock Auction Yard",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.turlocklivestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Tulare Sales Yard",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://tularesalesyard.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "101 Livestock Market",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.101livestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Modesto Livestock Commission",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.modestolivestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Dos Palos Y Auction",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.dpyauction.com/market-reports",
+      "status": "listed; weekly report PDFs identified; parser pending"
+    },
+    {
+      "name": "Producers Livestock Marketing Association",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.producerslivestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Fresno Livestock Commission",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.fresnolivestock.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "A&M Livestock Auction",
+      "state": "CA",
+      "kind": "live / video auction",
+      "url": "https://www.amlivestockauction.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Western Stockman's Market",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://www.westernstockmans.com/",
+      "status": "listed; historical parser pending"
+    },
+    {
+      "name": "Marana Stockyards",
+      "state": "AZ",
+      "kind": "live auction",
+      "url": "https://www.maranastockyards.com/market-report-archives",
+      "status": "automated: archive backfill from 2022 plus current reports"
+    },
+    {
+      "name": "Cattlemen's Livestock Auction - Belen",
+      "state": "NM",
+      "kind": "live auction",
+      "url": "https://belenlivestockauction.com/",
+      "status": "automated: current weekly Corriente, bred-cow and pair price ranges; Corriente origin not distinguished"
+    },
+    {
+      "name": "Montana Weekly Livestock Auction Summary",
+      "state": "MT",
+      "kind": "state auction summary",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1778",
+      "status": "automated: current USDA state report"
+    },
+    {
+      "name": "Utah Weekly Cattle Auction Summary",
+      "state": "UT",
+      "kind": "state auction summary",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/2039",
+      "status": "automated: current USDA state report"
+    },
+    {
+      "name": "Wyoming Weekly Cattle Auction Summary",
+      "state": "WY",
+      "kind": "state auction summary",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/2106",
+      "status": "automated: current USDA state report"
+    },
+    {
+      "name": "Toppenish Livestock Commission",
+      "state": "WA",
+      "kind": "local auction",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/2132",
+      "status": "automated: current USDA auction report"
+    },
+    {
+      "name": "Northwest Direct Cattle Report",
+      "state": "WA/OR/ID/UT",
+      "kind": "multi-state direct trade",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/3059",
+      "status": "automated: regional only; not assigned to individual states"
+    },
+    {
+      "name": "Western Video Market",
+      "state": "Multi-state",
+      "kind": "video auction",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/3242",
+      "status": "automated: western regional report; not assigned to individual states"
+    },
+    {
+      "name": "Cattle Country Video Auction",
+      "state": "Multi-state",
+      "kind": "video auction",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/3241",
+      "status": "automated: multi-state lots; not assigned to Wyoming"
+    },
+    {
+      "name": "Cattle Channel \u2014 Idaho sale reports",
+      "state": "ID",
+      "kind": "third-party auction summaries",
+      "url": "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
+      "status": "automated third-party summaries; official Burley reports are collected separately"
+    },
+    {
+      "name": "Cattle Channel \u2014 Oregon sale reports",
+      "state": "OR",
+      "kind": "third-party auction summaries",
+      "url": "https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06",
+      "status": "automated fetch of published report pages; new report URLs need periodic discovery"
+    },
+    {
+      "name": "Willcox Livestock Auction",
+      "state": "AZ",
+      "kind": "live auction",
+      "url": "https://willcoxlivestockauction.com/",
+      "status": "automated: published weekly report PDFs"
+    },
+    {
+      "name": "USDA Southwest Direct Cattle (AZ/CA/NV)",
+      "state": "AZ/CA/NV",
+      "kind": "direct trade weighted average",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/2940",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "Fallon Livestock",
+      "state": "NV",
+      "kind": "live auction",
+      "url": "https://www.fallonlivestock.com/market-reports.html",
+      "status": "automated: archived weekly weight-class ranges and bred-cow/pair values"
+    },
+    {
+      "name": "Nevada Livestock Marketing",
+      "state": "NV",
+      "kind": "live auction",
+      "url": "https://www.nevadalivestock.us/cattle/",
+      "status": "listed; weekly feeder sale and public price parser pending"
+    },
+    {
+      "name": "Roswell Livestock Auction",
+      "state": "NM",
+      "kind": "live auction",
+      "url": "https://www.roswelllivestockauction.com/market-report.html",
+      "status": "report page tracked; USDA series ingested"
+    },
+    {
+      "name": "USDA Roswell Livestock Auction",
+      "state": "NM",
+      "kind": "USDA auction report",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1782",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "USDA Clovis Livestock Auction",
+      "state": "NM",
+      "kind": "USDA auction report",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1781",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "USDA Cattlemen\u2019s Livestock Auction - Belen",
+      "state": "NM",
+      "kind": "USDA auction report",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1783",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "USDA Santa Teresa Livestock Auction",
+      "state": "NM",
+      "kind": "USDA auction report",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1290",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "USDA New Mexico Weekly Cattle Summary",
+      "state": "NM",
+      "kind": "state auction summary",
+      "url": "https://mymarketnews.ams.usda.gov/viewReport/1784",
+      "status": "automated: current USDA report"
+    },
+    {
+      "name": "Clovis Livestock Auction",
+      "state": "NM",
+      "kind": "live auction",
+      "url": "https://esmis.nal.usda.gov/publication/clovis-livestock-cattle-auction-clovis-nm",
+      "status": "archive found; historical import pending"
+    },
+    {
+      "name": "Cattlemen's Livestock Auction",
+      "state": "NM",
+      "kind": "live auction",
+      "url": "https://www.cattlemenslivestock.com/",
+      "status": "listed; historical parser pending"
+    }
+  ]
+}\n
