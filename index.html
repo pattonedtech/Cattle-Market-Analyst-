@@ -398,47 +398,30 @@ var type=record.record_type||"";
 if(mode==="all")return true;
 if(mode==="range")return type==="published_price_range"||type==="published_weight_class_range";
 if(mode==="video")return type==="video_lot_contract"||type==="usda_direct_trade"||type==="usda_video_regional";
-return !type||["auction_lot_average","published_lot_highlight","usda_auction","usda_state_summary","usda_replacement_weighted_average","third_party_auction_weighted_average"].indexOf(type)>=0;
+if(mode==="auction")return ["auction_lot_average","usda_auction","usda_replacement_weighted_average","third_party_auction_weighted_average"].indexOf(type)>=0;
+return false;
 }
 function westernAverage(items){
 if(!items.length)return null;
-// A head-weighted mean is valid only when every included observation has a
-// positive reported head count. Weighting only the subset with head counts
-// silently discards the other observations and biases the result.
 var allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
-var avg,head=null,method;
-if(allHaveHead){
-head=items.reduce(function(a,r){return a+Number(r.head)},0);
-avg=items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/head;
-method="head-weighted (all records have head counts)";
-}else{
-avg=items.reduce(function(a,r){return a+Number(r.price)},0)/items.length;
-method="observation average (head counts incomplete)";
-}
-return {
-avg:avg,
-low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),
-high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),
-count:items.length,averageCount:items.length,head:head,
-markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,
-method:method,weightedCount:allHaveHead?items.length:0
-};
+var head=allHaveHead?items.reduce(function(a,r){return a+Number(r.head)},0):null;
+var avg=allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/head:items.reduce(function(a,r){return a+Number(r.price)},0)/items.length;
+return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:items.length,head:head,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean)).length,method:allHaveHead?"head-weighted (all records have head counts)":"observation average (head counts incomplete)",weightedCount:allHaveHead?items.length:0};
 }
 function renderWesternOverview(){
 if(!$("westCategory"))return;
 var category=$("westCategory").value,period=$("westPeriod").value,sourceMode=$("westSource").value,corriente=$("westCorriente").value,weightBand=$("westWeight").value;
 var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";$("westCorriente").disabled=!isCorriente;
 var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
-var unit=category==="Bred cow"||category==="Bred heifer"||category==="Fresh Corriente"?"USD/head":category==="Cow-calf pair"?"pair":"USD/cwt";
+var unit=category==="Bred cow"||category==="Bred heifer"||category==="Fresh Corriente"?"USD/head":category==="Cow-calf pair"?"USD/family":"USD/cwt";
 var weightApplicable=unit==="USD/cwt"&&category!=="Corriente cattle (unclassified)";
 $("westWeight").disabled=!weightApplicable;
 if(!weightApplicable){weightBand="all";$("westWeight").value="all";}
 function normalize(record){
 var state=westernState(record),recordUnit=record.price_unit||"USD/cwt";
-if(category==="Cow-calf pair"&&(recordUnit==="USD/head"||recordUnit==="USD/family"))recordUnit="pair";
 if(recordUnit!==unit)return null;
 if(record.category!==category)return null;
-if(weightBand!=="all"){var band=weightBand.split("-").map(Number),w=Number(record.weight);if(!Number.isFinite(w)||w<band[0]||w>band[1])return null;}
+if(weightBand!=="all"){var band=weightBand.split("-").map(Number),wlo=record.weight_low!=null?Number(record.weight_low):Number(record.weight),whi=record.weight_high!=null?Number(record.weight_high):Number(record.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<band[0]||wlo>band[1])return null;}
 if(isCorriente){
 var origin=corrienteOrigin(record);
 if(corriente!=="all"&&origin!==corriente)return null;
@@ -480,8 +463,9 @@ return Object.assign({},r,{state:r.state||geo.state,county:r.county||geo.county}
 }).filter(function(r){
 if(r.category!==category)return false;
 if(isCorriente&&originFilter!=='all'&&corrienteOrigin(r)!==originFilter)return false;
-if(seriesType!=='all'&&r.record_type!==seriesType)return false;
-if(band!=='all'){var low=Number(band);if(!(Number(r.weight)>=low&&Number(r.weight)<low+100))return false}
+if(seriesType==='auction'&&!['auction_lot_average','usda_auction','usda_replacement_weighted_average','third_party_auction_weighted_average'].includes(r.record_type))return false;
+if(seriesType!=='all'&&seriesType!=='auction'&&r.record_type!==seriesType)return false;
+if(band!=='all'){var low=Number(band),wlo=r.weight_low!=null?Number(r.weight_low):Number(r.weight),whi=r.weight_high!=null?Number(r.weight_high):Number(r.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<low||wlo>=low+100)return false}
 return WEST_STATES.indexOf(r.state)>=0&&Number.isFinite(Number(r.price))&&r.date;
 });
 var states=Array.from(new Set(eligible.map(function(r){return r.state}).filter(Boolean))).sort();
@@ -499,8 +483,10 @@ var countyRecords=stateRecords.filter(function(r){return r.county===county});
 var geoRecords=level==='state'?eligible:level==='county'?stateRecords.filter(function(r){return !!r.county}):stateRecords.filter(function(r){return !!r.market&&(!county||r.county===county)});
 function stats(items){
 if(!items.length)return null;
-var vals=items.map(function(r){return Number(r.price)}),heads=items.filter(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))});
-return {avg:vals.reduce(function(a,b){return a+b},0)/vals.length,low:Math.min.apply(null,vals),high:Math.max.apply(null,vals),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads.length?heads.reduce(function(a,r){return a+Number(r.head)},0):null};
+var vals=items.map(function(r){return Number(r.price)}),allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
+var heads=allHaveHead?items.reduce(function(a,r){return a+Number(r.head)},0):null;
+var avg=allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/heads:vals.reduce(function(a,b){return a+b},0)/vals.length;
+return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads,method:allHaveHead?'head-weighted (all records)':'observation mean (head counts incomplete)'};
 }
 var groups={};
 geoRecords.forEach(function(r){
@@ -533,7 +519,7 @@ var a=r.stats;
 return '<tr><td>'+esc(r.name)+'</td><td class="num">'+a.markets+'</td><td class="num">'+price(a.avg)+'</td><td class="num">'+price(a.low)+'</td><td class="num">'+price(a.high)+'</td><td class="num">'+fmt(a.n)+'</td><td class="num">'+(a.heads===null?'—':fmt(a.heads))+'</td><td>'+esc(r.role)+'</td><td class="num">'+(level==='yard'?price(r.county&&r.county.avg)+' <span class="muted">('+delta(a,r.county)+')</span>':'—')+'</td><td class="num">'+(level==='yard'?price(r.state&&r.state.avg)+' <span class="muted">('+delta(a,r.state)+')</span>':'—')+'</td></tr>';
 }).join(''):'<tr><td colspan="10" class="empty">No comparable records match these filters. Check that records have a verified state, county, and market.</td></tr>';
 $('geoSummary').textContent=level==='state'?rows.length+' western states represented · '+geoRecords.length+' observations · '+(seriesType==='all'?'All source types (exploratory)':seriesType.replaceAll('_',' '))+'.':level==='county'?(state||'No state selected')+' · '+rows.length+' counties · '+geoRecords.length+' observations.':(county?county+', ':'')+(state||'No state selected')+' · '+rows.length+' yards · '+geoRecords.length+' observations. Yard differences are shown against matching county and state averages.';
-$('geoCaveat').textContent='Averages are unweighted means of the '+geoRecords.length+' matching observation records, not head-weighted sale averages. County and state benchmarks use the same category, source type, weight band, and Corriente-origin filter. Yard comparisons require market records with a known county; unlocated and multi-state records are not assigned to a yard.';
+$('geoCaveat').textContent=(geoRecords.length?stats(geoRecords).method:'No average')+' across '+geoRecords.length+' matching records. Price unit is '+unit+'. County and state benchmarks use the same category, source type, weight band, and Corriente-origin filter. Auction comparisons include weighted-average auction series only; choose All types for exploratory review. Yard comparisons require a known county; unlocated and multi-state reports are not assigned to a yard.';
 var known=Array.from(new Set(['Visalia Livestock Market','Overland Stock Yard'].concat(records.map(function(r){return r.market}).filter(Boolean)))).sort();
 $('geoRoleManager').innerHTML=known.map(function(m){return '<div class="field"><label>'+esc(m)+'</label><select data-market-role="'+esc(m)+'"><option value="none"'+(marketRole(m)==='none'?' selected':'')+'>No preference</option><option value="buy"'+(marketRole(m)==='buy'?' selected':'')+'>Preferred buying yard</option><option value="sell"'+(marketRole(m)==='sell'?' selected':'')+'>Preferred selling yard</option><option value="both"'+(marketRole(m)==='both'?' selected':'')+'>Buying and selling</option></select></div>'}).join('');
 }
@@ -551,9 +537,10 @@ var originFilter=$('histCorrienteOrigin')?$('histCorrienteOrigin').value:'all';
 var arr=records.filter(function(r){
 if(r.category!==category)return false;
 if((category.indexOf('Corriente')===0||category==='Fresh Corriente')&&originFilter!=='all'&&corrienteOrigin(r)!==originFilter)return false;
-if(seriesType!=='all'&&r.record_type!==seriesType)return false;
+if(seriesType==='auction'&&!['auction_lot_average','usda_auction','usda_replacement_weighted_average','third_party_auction_weighted_average'].includes(r.record_type))return false;
+if(seriesType!=='all'&&seriesType!=='auction'&&r.record_type!==seriesType)return false;
 if(market&&r.market!==market)return false;
-if(band!=='all'){var low=Number(band);if(!(r.weight>=low&&r.weight<low+100))return false}
+if(band!=='all'){var low=Number(band),wlo=r.weight_low!=null?Number(r.weight_low):Number(r.weight),whi=r.weight_high!=null?Number(r.weight_high):Number(r.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<low||wlo>=low+100)return false}
 return Number.isFinite(Number(r.price))&&r.date;
 });
 var months=Array.from({length:12},(_,i)=>({name:new Date(2000,i,1).toLocaleString('en-US',{month:'short'}),values:[]}));
