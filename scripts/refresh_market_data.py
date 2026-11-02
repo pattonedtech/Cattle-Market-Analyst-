@@ -66,13 +66,9 @@ MARKET_COUNTIES = [
     ("dos palos", "California", "Merced"),
     ("escalon", "California", "San Joaquin"),
     ("turlock", "California", "Stanislaus"),
-    ("fresno livestock", "California", "Fresno"),
-    ("fresno", "California", "Fresno"),
     ("modesto livestock", "California", "Stanislaus"),
     ("tulare sales yard", "California", "Tulare"),
     ("tulare county stockyard", "California", "Tulare"),
-    ("101 livestock", "California", "San Benito"),
-    ("producers livestock marketing", "California", "Madera"),
     ("burley", "Idaho", "Cassia"),
     ("twin falls", "Idaho", "Twin Falls"),
     ("jerome", "Idaho", "Jerome"),
@@ -572,9 +568,11 @@ def parse_burley():
             for table in soup.find_all("table"):
                 heading = table.find_previous(["h2", "h3", "h4"])
                 section = heading.get_text(" ", strip=True).lower() if heading else ""
+                if "heiferette" in section or "calvy" in section or "calf" in section:
+                    continue
                 if "steer" in section:
                     category, sex = "Feeder steer", "Steer"
-                elif "heifer" in section and "ette" not in section:
+                elif "heifer" in section:
                     category, sex = "Feeder heifer", "Heifer"
                 elif "cow" in section:
                     category, sex = "Cull cow", "Cow"
@@ -1037,7 +1035,7 @@ def fetch_futures():
 
 SOURCES = [
     {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges; current public archive is limited to recent snapshots"},
-    {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"official weekly archive verified; parser pending QA"},
+    {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"official weekly archive verified; parser pending QA; reports currently include dated downloadable PDFs"},
     {"name":"Burley Livestock Auction","state":"ID","kind":"live auction","url":"https://burleylivestock.auction/reports","status":"automated: public weekly lot tables; archived reports"},
     {"name":"Overland Stock Yard","state":"CA","kind":"auction / video lots","url":"https://www.overlandstockyard.com/market-reports","status":"automated: video lots; dairy and beef types remain separate"},
     {"name":"Tulare County Stockyard","state":"CA","kind":"live auction","url":"https://tularecountystockyard.com/","status":"listed; historical parser pending"},
@@ -1210,7 +1208,6 @@ def main():
     records += parse_overland()
     records += parse_visalia()
     records += parse_burley()
-    records += parse_usda_report(3922, "Overland Stockyard (USDA)", "California", "usda_video_regional")
     marana_records, marana_cows = parse_marana()
     willcox_records, willcox_cows = parse_willcox()
     records += marana_records + willcox_records
