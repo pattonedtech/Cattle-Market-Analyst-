@@ -22,6 +22,7 @@ BENCHMARKABLE_TYPES = AUCTION_AVERAGE_TYPES | {
     "usda_direct_trade",
     "usda_video_regional",
     "usda_state_summary",
+    "published_individual_price",
 }
 
 
@@ -45,7 +46,15 @@ def normalize_observation(original: dict) -> dict:
     """Add canonical metadata without changing the source-reported values."""
     row = deepcopy(original)
     category = str(row.get("category") or "")
-    record_type = str(row.get("record_type") or "manual_unclassified")
+    record_type = str(row.get("record_type") or "")
+    if not record_type:
+        if row.get("price_low") is not None or row.get("price_high") is not None:
+            record_type = "published_price_range"
+        elif row.get("source_url") and row.get("source"):
+            record_type = "published_individual_price"
+        else:
+            record_type = "manual_unclassified"
+        row["record_type"] = record_type
     unit = str(row.get("price_unit") or "")
     row["corriente_origin"] = corriente_origin(row)
 
@@ -80,6 +89,8 @@ def normalize_observation(original: dict) -> dict:
         row["price_basis"] = "published_range_midpoint"
     elif record_type == "published_lot_highlight":
         row["price_basis"] = "individual_lot_highlight"
+    elif record_type == "published_individual_price":
+        row["price_basis"] = "individual_sale_price"
     elif record_type in {"video_lot_contract", "usda_video_regional"}:
         row["price_basis"] = "video_contract"
     elif record_type == "usda_direct_trade":
