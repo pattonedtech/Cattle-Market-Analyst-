@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from market_model import normalize_observation, build_benchmarks, summarize_observations
+from market_model import normalize_observation, build_benchmarks, summarize_observations, merge_quarantine_history
 
 
 def row(**overrides):
@@ -90,6 +90,20 @@ class MarketModelTests(unittest.TestCase):
         ])
         bands = {(x["weight_low"], x["weight_high"]) for x in result["groups"]}
         self.assertEqual(bands, {(300, 399), (400, 499)})
+
+    def test_quarantine_history_persists_until_revalidated(self):
+        prior = [
+            {"id": "bad1", "collection": "records", "issues": ["missing_source"]},
+            {"id": "bad2", "collection": "cow_records", "issues": ["missing_source"]},
+            {"id": "fixed", "collection": "records", "issues": ["old_reason"]},
+        ]
+        current_market = [{"id": "bad1", "collection": "records", "issues": ["new_reason"]}]
+        market, cows = merge_quarantine_history(
+            current_market, [], prior, {"fixed"}, set()
+        )
+        self.assertEqual(len(market), 1)
+        self.assertEqual(market[0]["issues"], ["new_reason"])
+        self.assertEqual([x["id"] for x in cows], ["bad2"])
 
 
 if __name__ == "__main__":
