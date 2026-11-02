@@ -191,7 +191,7 @@ if(!payload||!Array.isArray(payload.records))throw new Error('Published data did
 var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];publishedBenchmarks=payload.benchmarks&&Array.isArray(payload.benchmarks.groups)?payload.benchmarks.groups:[];
 var sources=Array.isArray(payload.sources)?payload.sources:[];
 $('sourceList').innerHTML=sources.map(function(x){var u=safeSourceUrl(x.url);return '<p>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>':esc(x.name))+' ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
-if(payload.qa_summary)$('sourceList').innerHTML+='<p><strong>Data QA:</strong> '+fmt(payload.qa_summary.market_records_accepted)+' accepted; '+fmt(payload.qa_summary.market_records_rejected)+' quarantined. <a href="data/market_data_qa.json" target="_blank" rel="noopener">Open QA report</a>.</p>';
+if(payload.qa_summary)$('sourceList').innerHTML+='<p><strong>Data QA:</strong> '+fmt(payload.qa_summary.market_records_accepted)+' accepted; '+fmt(payload.qa_summary.market_records_rejected)+' quarantined. <a href="data/market_data_qa.json" target="_blank" rel="noopener">Open QA summary</a> · <a href="data/quarantine_observations.json" target="_blank" rel="noopener">Open quarantine details</a>.</p>';
 try{
 var qaResponse=await fetch('data/market_data_qa.json?refresh='+Date.now(),{cache:'no-store'});
 if(qaResponse.ok){
