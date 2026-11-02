@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "scripts/refresh_market_data.py"
+      - "tests/**"
       - ".github/workflows/refresh-market-data.yml"
   schedule:
     - cron: "17 14 * * *"
@@ -36,7 +37,7 @@ jobs:
           python-version: "3.12"
       - name: Install data collection dependencies
         run: pip install requests beautifulsoup4 pypdf
-      - name: Collect and normalize published market data
+      - name: Run market-data quality tests
         run: python -m unittest discover -s tests -v
       - name: Collect, normalize, and quality-check published market data
         run: python scripts/refresh_market_data.py
