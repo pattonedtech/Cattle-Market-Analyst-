@@ -1,6 +1,10 @@
 name: Refresh cattle market history
 
 on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/refresh_market_data.py"
   schedule:
     - cron: "17 14 * * *"
   workflow_dispatch:
