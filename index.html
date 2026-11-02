@@ -574,6 +574,7 @@ var seriesType=$('histRecordType')?$('histRecordType').value:'all';
 var band=$('histWeight')?$('histWeight').value:'all';
 var originFilter=$('histCorrienteOrigin')?$('histCorrienteOrigin').value:'all';
 var arr=records.filter(function(r){
+if(r.source==='User-entered')return false;
 if(r.category!==category)return false;
 var expectedUnit=category==='Bred cow'||category==='Bred heifer'||category==='Fresh Corriente'?'USD/head':category==='Cow-calf pair'?'USD/family':'USD/cwt';
 if((r.price_unit||'USD/cwt')!==expectedUnit)return false;
@@ -597,7 +598,7 @@ $('yearBody').innerHTML=ys.length?ys.map(function(y){var st=stats(years[y]);retu
 $('monthBody').innerHTML=monthly.map(function(m){return '<tr><td>'+m.name+'</td><td class="num">'+(m.n&&m.avg!==null?money(m.avg):'—')+'</td><td class="num">'+(m.n&&m.low!==null?money(m.low):'—')+'</td><td class="num">'+(m.n&&m.high!==null?money(m.high):'—')+'</td><td class="num">'+(m.n?m.n:0)+'</td></tr>'}).join('');
 var sources=Array.from(new Set(arr.map(r=>r.market+' ('+(r.record_type||'manual')+')')));var types=Array.from(new Set(arr.map(r=>r.record_type||'manual')));
 $('histCaveat').textContent=arr.length
-? 'Included sources: '+sources.join('; ')+'. Series types present: '+types.join(', ')+'. When this filter is set to All, price ranges, weighted averages and video contracts may be mixed; use a single series type and market for like-for-like seasonal analysis.'
+? 'Included sources: '+sources.join('; ')+'. Series types present: '+types.join(', ')+'. All types and published ranges are displayed without a pooled average; use a single comparable series and market for like-for-like seasonal analysis.'
 : 'No records match these filters yet. Broaden the weight range or market selection, or wait for the scheduled collector to populate the history.';
 }
 ['histMarket','histCategory','histWeight','histRecordType'].forEach(function(id){if($(id))$(id).addEventListener('change',renderHistorical)});
