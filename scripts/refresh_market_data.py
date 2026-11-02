@@ -145,6 +145,25 @@ def geographic_fields(market, region):
                 break
     return state, county
 
+def backfill_market_geography(row):
+    """Backfill only verified registry facts; never erase source-reported geography."""
+    state, county = geographic_fields(row.get("market"), row.get("region") or row.get("state"))
+    if state:
+        row["state"] = state
+    elif not row.get("state"):
+        row["state"] = None
+    if county:
+        row["county"] = county
+        row["geography_method"] = "verified_market_registry"
+    elif row.get("state"):
+        row["geography_method"] = row.get("geography_method") or "source_report_state_only"
+    else:
+        row["geography_method"] = row.get("geography_method") or "not_verified"
+    if row.get("market") and not row.get("market_id"):
+        row["market_id"] = stable_id("market", row["market"])
+    return row
+
+
 def record(date, market, region, category, sex, breed, weight, price, head, source, url,
            record_type, price_low=None, price_high=None, sale_type="Auction", notes=""):
     state, county = geographic_fields(market, region)
@@ -1669,13 +1688,13 @@ def main():
     # Backfill geography on previously published observations so the feature
     # works across the full historical archive, not only new daily records.
     for r in old:
-        state, county = geographic_fields(r.get("market"), r.get("region"))
-        r["state"] = state
-        r["county"] = county
+        backfill_market_geography(r)
         by_id[r["id"]] = r
     for r in records:
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
+    for r in old_cows:
+        backfill_market_geography(r)
     cow_by_id = {r["id"]: r for r in old_cows}
     for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows + cottonwood_cows:
         cow_by_id[r["id"]] = r
