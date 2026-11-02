@@ -132,6 +132,27 @@ def summarize_observations(rows: list[dict]) -> dict | None:
     }
 
 
+def merge_quarantine_history(current_market: list[dict], current_cows: list[dict],
+                            prior: list[dict], accepted_market_ids: set,
+                            accepted_cow_ids: set) -> tuple[list[dict], list[dict]]:
+    """Keep prior quarantine rows until accepted or replaced by a fresh rejection."""
+    market = list(current_market)
+    cows = list(current_cows)
+    current_keys = {
+        (row.get("collection"), row.get("id")) for row in market + cows
+    }
+    for row in prior:
+        collection, rid = row.get("collection"), row.get("id")
+        key = (collection, rid)
+        if key in current_keys:
+            continue
+        if collection == "records" and rid not in accepted_market_ids:
+            market.append(row)
+        elif collection == "cow_records" and rid not in accepted_cow_ids:
+            cows.append(row)
+    return market, cows
+
+
 def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None) -> dict:
     """Build independent benchmark cohorts; never pool units, geographies, or source types."""
     groups: dict[tuple, list[dict]] = defaultdict(list)
