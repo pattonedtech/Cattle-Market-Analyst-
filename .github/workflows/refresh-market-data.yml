@@ -37,10 +37,10 @@ jobs:
           python-version: "3.12"
       - name: Install data collection dependencies
         run: pip install requests beautifulsoup4 pypdf
-      - name: Run market-data quality tests
-        run: python -m unittest discover -s tests -v
       - name: Collect, normalize, and quality-check published market data
         run: python scripts/refresh_market_data.py
+      - name: Run market-data quality tests against the freshly collected data
+        run: python -m unittest discover -s tests -v
       - name: Commit updated market history
         run: |
           if [ -n "$(git status --porcelain -- data/market_observations.json data/market_data_qa.json data/futures.json data/usda_outlook.json)" ]; then
@@ -102,6 +102,7 @@ jobs:
           PY
               git reset --mixed origin/main
               cp /tmp/merged_market.json data/market_observations.json
+              python -m unittest discover -s tests -v
               git add data/market_observations.json data/market_data_qa.json data/futures.json data/usda_outlook.json
               if git diff --cached --quiet; then
                 echo "No new market observations."
