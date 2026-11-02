@@ -94,6 +94,22 @@ class MarketModelTests(unittest.TestCase):
         bands = {(x["weight_low"], x["weight_high"]) for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] != "all"}
         self.assertEqual(bands, {(300, 399), (400, 499)})
 
+    def test_breeding_stock_individual_prices_get_their_own_series(self):
+        cow = row(id="cow", category="Bred cow", price_unit="USD/head",
+                  record_type=None, price_low=None, price_high=None, head=None)
+        item = normalize_observation(cow)
+        self.assertEqual(item["record_type"], "published_individual_price")
+        self.assertEqual(item["price_basis"], "individual_sale_price")
+        result = build_benchmarks([], [cow], as_of=__import__("datetime").date(2026, 11, 1))
+        self.assertTrue(any(x["category"] == "Bred cow" and x["record_type"] == "published_individual_price" for x in result["groups"]))
+
+    def test_breeding_stock_price_ranges_are_not_converted_to_individual_price_series(self):
+        cow = row(id="cow-range", category="Cow-calf pair", price_unit="USD/family",
+                  record_type=None, price_low=1500, price_high=2000, head=None)
+        item = normalize_observation(cow)
+        self.assertEqual(item["record_type"], "published_price_range")
+        self.assertEqual(item["price_basis"], "published_range_midpoint")
+
     def test_benchmarks_include_periods_and_separate_corriente_origin(self):
         rows = [
             row(id="native", category="Corriente steer", breed="Native Corriente", date="2026-10-30"),
