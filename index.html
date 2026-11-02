@@ -185,19 +185,28 @@ function load(){try{records=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Arra
 async function loadPublishedData(){
 try{
 var response=await fetch('data/market_observations.json?refresh='+Date.now(),{cache:'no-store'});
-if(!response.ok)return;
-var payload=await response.json(),published=Array.isArray(payload.records)?payload.records:[];cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];var sources=Array.isArray(payload.sources)?payload.sources:[];$('sourceList').innerHTML=sources.map(function(x){return '<p><a href=\"'+safeSourceUrl(x.url)+'\" target=\"_blank\" rel=\"noopener\">'+esc(x.name)+'</a> ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
+if(!response.ok)throw new Error('HTTP '+response.status+' while loading published market data');
+var payload=await response.json();
+if(!payload||!Array.isArray(payload.records))throw new Error('Published data did not contain a records array');
+var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];
+var sources=Array.isArray(payload.sources)?payload.sources:[];
+$('sourceList').innerHTML=sources.map(function(x){var u=safeSourceUrl(x.url);return '<p>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>':esc(x.name))+' ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
 if(payload.qa_summary)$('sourceList').innerHTML+='<p><strong>Data QA:</strong> '+fmt(payload.qa_summary.market_records_accepted)+' accepted; '+fmt(payload.qa_summary.market_records_rejected)+' quarantined. <a href="data/market_data_qa.json" target="_blank" rel="noopener">Open QA report</a>.</p>';
-var ids=new Set(records.map(r=>String(r.id)));
-published.forEach(function(r){if(!ids.has(String(r.id))){records.push(r);ids.add(String(r.id))}});
-records.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
-$('overviewStatus').textContent=published.length
-? 'Auto-updated source history: '+published.length+' published observations. Last data refresh: '+(payload.generated_at||'timestamp unavailable')+'. Manually entered records are retained on this device.'
-: 'The automatic collector has not published any observations yet. Manual entry remains available.';
+publishedIds=new Set(published.map(function(r){return String(r.id)}));
+records=records.filter(function(r){return !publishedIds.has(String(r.id))});
+published.forEach(function(r){records.push(r)});
+records.sort(function(a,b){return String(a.date||'').localeCompare(String(b.date||''))});
+recordsPage=0;
+$('overviewStatus').textContent='Loaded '+fmt(published.length)+' published observations. Last refresh: '+(payload.generated_at||'timestamp unavailable')+'. Local entries are stored separately on this device.';
 renderRecords();renderHistorical();renderWesternOverview();investment();
-}catch(e){$('overviewStatus').textContent='Published market data is not available yet. Manual observations are still available.'}
+}catch(e){
+console.error('Published market data load failed:',e);
+$('overviewStatus').textContent='Market data load failed: '+(e&&e.message?e.message:'unknown error')+'. Saved local observations remain available; reload to retry.';
+$('sourceList').innerHTML='<p class="sub">Latest published data unavailable. See browser console for technical details.</p>';
+renderRecords();
 }
-function save(){localStorage.setItem(KEY,JSON.stringify(records))}
+}
+function save(){try{var manual=records.filter(function(r){return !publishedIds.has(String(r.id))});localStorage.setItem(KEY,JSON.stringify(manual));return true}catch(e){console.error('Could not save local observations:',e);var m='Could not save this change on this device: '+(e&&e.message?e.message:'local storage unavailable');if($('formMessage'))$('formMessage').textContent=m;if($('dataMessage'))$('dataMessage').textContent=m;return false}}
 function today(){var d=new Date();$('today').textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});$('mDate').value=d.toISOString().slice(0,10)}
 function activatePage(page){
 var target=$(page);
