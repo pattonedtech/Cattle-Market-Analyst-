@@ -58,7 +58,7 @@ The scheduled collector retrieves public auction and USDA market reports. Each p
 
 - The collector validates dates, required fields, HTTPS source links, state and county attribution, market identity, category, weight, head count, price, price range, and unit.
 - Public-source fetches receive one bounded retry; final failures are recorded by source domain in the QA report. Prior quarantined observations remain visible until they are revalidated or superseded by a fresh rejection.
-- Invalid records are excluded from the published observation arrays and recorded in `data/market_data_qa.json` with source URL and machine-readable rejection reasons.
+- Invalid records are excluded from the published observation arrays and recorded in `data/market_data_qa.json` with source URL and machine-readable rejection reasons.\n- Records that cannot be assigned a meaningful cattle category are quarantined; Corriente can remain in an unclassified Corriente category when origin or sex is not identified, with sale regionality preserved.
 - Unusual prices are warnings for review, not automatic proof of an error.
 - The refresh workflow runs unit tests before publication, quarantines invalid observations, emits a warning when at least 5% of newly collected market records fail hard validation, and blocks publication when at least 20% fail. These thresholds are circuit breakers, not permission to accept invalid rows.
 - Source report types (live auction averages, published ranges, video contracts, direct trades, and state summaries) remain distinct. Do not pool unlike sale channels or units into a single benchmark.
