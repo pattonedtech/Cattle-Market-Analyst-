@@ -341,7 +341,7 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
 
     def test_cattle_channel_report_urls_are_canonical_and_date_validated(self):
         pattern = re.compile(
-            r"/market-report/(?:idaho|oregon)/[^/]+/20\\d{2}-\\d{2}-\\d{2}/?",
+            r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?",
             re.I,
         )
         normalize = collector.normalize_cattle_channel_report_url
@@ -357,6 +357,7 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
             "http://cattlechannel.com/market-report/idaho/burley/2026-10-08",
             "https://cattlechannel.com.evil.example/market-report/idaho/burley/2026-10-08",
             "https://cattlechannel.com:8443/market-report/idaho/burley/2026-10-08",
+            "https://cattlechannel.com:bad/market-report/idaho/burley/2026-10-08",
             "https://user@cattlechannel.com/market-report/idaho/burley/2026-10-08",
             "https://cattlechannel.com/market-report/idaho/burley/2026-02-30",
             "https://cattlechannel.com/market-report/idaho/burley/not-a-date",
