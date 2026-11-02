@@ -431,7 +431,8 @@ def parse_marana():
                             "id": stable_id("marana", date, cow_type, desc, value, url),
                             "date": date, "market": "Marana Stockyards", "region": "Arizona",
                             "category": "Bred cow" if cow_type == "bred" else "Cow-calf pair",
-                            "description": desc, "price": value, "price_unit": "USD/head",
+                            "description": desc, "price": value, "price_unit": "USD/head" if cow_type == "bred" else "USD/family",
+                            "record_type": "published_individual_price",
                             "source": "Marana Stockyards", "source_url": url
                         })
         except Exception as e:
@@ -505,7 +506,9 @@ def parse_fallon():
                                 "date": date, "market": "Fallon Livestock", "region": "Nevada",
                                 "category": category, "description": "Published per-head range",
                                 "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
-                                "price_unit": "USD/head", "source": "Fallon Livestock", "source_url": url
+                                "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head",
+                                "record_type": "published_price_range",
+                                "source": "Fallon Livestock", "source_url": url
                             })
         except Exception as e:
             print(f"Fallon report failed {url}: {e}", file=sys.stderr)
@@ -584,7 +587,9 @@ def parse_willcox():
                             "date": date, "market": "Willcox Livestock Auction", "region": "Arizona",
                             "category": "Bred cow" if n == 0 else "Cow-calf pair",
                             "description": f"{head} {desc}", "price": float(price.replace(",", "")),
-                            "price_unit": "USD/head", "source": "Willcox Livestock Auction", "source_url": pdf_url
+                            "price_unit": "USD/head" if n == 0 else "USD/family",
+                            "record_type": "published_individual_price",
+                            "source": "Willcox Livestock Auction", "source_url": pdf_url
                         })
         except Exception as e:
             print(f"Willcox report failed {page_url}: {e}", file=sys.stderr)
@@ -1065,7 +1070,7 @@ def parse_belen():
                     "region": "New Mexico", "state": state, "county": county,
                     "category": category, "description": "Published auction price range; origin/type not specified",
                     "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
-                    "price_unit": "USD/head", "source": "Cattlemen's Livestock Auction - Belen",
+                    "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head", "source": "Cattlemen's Livestock Auction - Belen",
                     "source_url": url, "record_type": "published_price_range",
                     "head": None, "breed": "Corriente — type not specified" if "Corriente" in category else "Not specified"
                 })
