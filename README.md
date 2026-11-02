@@ -77,3 +77,6 @@ The scheduled collector retrieves public auction and USDA market reports. Each p
 ### Contributing market observations
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the required source evidence and review process. See [SECURITY.md](SECURITY.md) for vulnerability reporting. The source register and live QA summary are displayed in the dashboard; open the linked original report to verify any value before relying on it for a transaction.
+
+
+See [DATA_PLATFORM_ARCHITECTURE.md](docs/DATA_PLATFORM_ARCHITECTURE.md) for the production architecture and [schema.sql](db/schema.sql) for the PostgreSQL migration target. The database schema is not deployed; provisioning and credentials are required before shared writes can be enabled.
