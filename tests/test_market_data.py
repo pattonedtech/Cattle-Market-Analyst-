@@ -193,6 +193,24 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["successes"], 1)
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_requests"], 0)
 
+    def test_fetch_does_not_retry_permanent_http_404(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from requests import HTTPError
+
+        domain = "missing-test.example.org"
+        collector.SOURCE_FETCH_HEALTH.pop(domain, None)
+        error = HTTPError("404 Not Found", response=SimpleNamespace(status_code=404))
+        with patch.object(collector.S, "get", side_effect=error) as get, patch.object(collector.time, "sleep") as sleep:
+            with self.assertRaises(HTTPError):
+                collector.fetch("https://missing-test.example.org/missing.pdf")
+        get.assert_called_once()
+        sleep.assert_not_called()
+        health = collector.SOURCE_FETCH_HEALTH[domain]
+        self.assertEqual(health["failed_requests"], 1)
+        self.assertIn("missing.pdf", health["failed_urls"][0])
+        self.assertIn("404", health["last_error"])
+
 
 if __name__ == "__main__":
     unittest.main()
