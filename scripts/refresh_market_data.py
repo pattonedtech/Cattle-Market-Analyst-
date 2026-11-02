@@ -1112,6 +1112,10 @@ def parse_overland():
                     sex, category = "Heifer", "Corriente heifer" if "CORRIENTE" in desc else "Feeder heifer"
                 elif "STR" in desc or "STEER" in desc:
                     sex, category = "Steer", "Corriente steer" if "CORRIENTE" in desc else "Feeder steer"
+                elif "CORRIENTE" in desc:
+                    # Origin may be identifiable even when sex/class is not.
+                    # Preserve it as unclassified Corriente, never infer a sex.
+                    sex, category = "Mixed", "Corriente cattle (unclassified)"
                 else:
                     sex, category = "Unknown", "Other"
                 breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Mexican M-branded Corriente" if ("MEXICAN" in desc or "M-BRANDED" in desc or "M BRANDED" in desc) and "CORRIENTE" in desc else ("Native Corriente" if "NATIVE CORRIENTE" in desc else ("Corriente — type not specified" if "CORRIENTE" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown")))))
@@ -1393,6 +1397,8 @@ def quality_check(rows, collection):
         for field in ("market", "category", "source"):
             if not str(row.get(field) or "").strip():
                 issues.append("missing_" + field)
+        if collection == "records" and (row.get("category") == "Other" or row.get("sex") == "Unknown"):
+            issues.append("animal_category_not_classifiable")
         source_url = str(row.get("source_url") or "")
         parsed_url = urlparse(source_url)
         if parsed_url.scheme != "https" or not parsed_url.netloc:
@@ -1604,12 +1610,21 @@ def main():
         rejected_records, rejected_cows, old_quarantine,
         accepted_market_ids, accepted_cow_ids
     )
-    rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
+    rejected_new = sum(
+        1 for r in rejected_records
+        if r.get("id") in new_ids and "animal_category_not_classifiable" not in r.get("issues", [])
+    )
+    newly_unclassified = sum(
+        1 for r in rejected_records
+        if r.get("id") in new_ids and "animal_category_not_classifiable" in r.get("issues", [])
+    )
     rejection_reasons = {}
     for rejected in rejected_records:
-        if rejected.get("id") in new_ids:
+        if rejected.get("id") in new_ids and "animal_category_not_classifiable" not in rejected.get("issues", []):
             for reason in rejected.get("issues", []):
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
+    if newly_unclassified:
+        print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     # Record-level failures are quarantined; the batch threshold below is a circuit breaker.
