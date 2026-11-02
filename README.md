@@ -41,3 +41,31 @@ A GitHub Actions workflow runs the public-source collector daily (and can be run
 The collector now includes the USDA AMS Roswell (1782), Clovis (1781), Cattlemen's/Belen (1783), Santa Teresa (1290), New Mexico Weekly Summary (1784), and Southwest Direct Cattle AZ/CA/NV (2940) report families, plus the Marana Stockyards archive (historical weekly reports back to 2022), Visalia snapshots, and Overland video lots. A source register also lists other California, Arizona, Nevada, and New Mexico sale barns; a listed source is not represented as automatically parsed until its parser is enabled. Marana bred-cow and cow-calf-pair sale prices are stored separately as USD/head, not mixed with feeder $/cwt records.
 
 The Investment Outlook supports feeder cattle bought at 400–600 lb, a backgrounding period to 600 lb, finishing days/costs, live-auction or direct-beef sale channels, target net margin, local basis inputs, and a cow ownership cash-flow/NPV worksheet. Deferred feeder and live cattle futures are shown by contract month. Futures are exchange benchmarks, not guaranteed cash sale prices; local basis, grade, weight, shrink, health, and sale channel matter. The cow worksheet's payback estimate is simple cash-flow payback; NPV is separately discounted. No automatic buy/sell recommendation should be treated as validated until sufficient comparable history and basis observations exist.
+
+## Public data, provenance, and quality assurance
+
+The public Pages site is a read-only presentation of the repository's published dataset. It is not a shared multi-user database. Observations manually entered in a browser are stored in that browser's local storage and are not automatically shared with other visitors or written to GitHub. Export a CSV to back up local entries. Do not enter personal, confidential, customer, or payment information.
+
+The scheduled collector retrieves public auction and USDA market reports. Each published observation should retain its sale date, market name, state, county when independently established, category, weight, price, price unit, record type, source name, and direct source URL. Regional or multi-state reports remain regional; they are not assigned to a yard or county. A source listed as "parser pending" is a discovery lead, not an automated data source.
+
+### Quality controls
+
+- The collector validates dates, required fields, HTTPS source links, state and county attribution, market identity, category, weight, head count, price, price range, and unit.
+- Invalid records are excluded from the published observation arrays and recorded in `data/market_data_qa.json` with source URL and machine-readable rejection reasons.
+- Unusual prices are warnings for review, not automatic proof of an error.
+- The refresh workflow runs unit tests and blocks publication when more than 5% of newly collected records fail the hard validation gate.
+- Source report types (live auction averages, published ranges, video contracts, direct trades, and state summaries) remain distinct. Do not pool unlike sale channels or units into a single benchmark.
+- The QA report is a screening process, not a guarantee that every source parser interpreted every PDF correctly. Human review of the linked original report remains necessary.
+
+### Multi-user and security model
+
+- Visitors can read and download the public site and data. Browser-local entries and preferences remain local to that browser unless a user deliberately exports and shares them.
+- Public visitors do not receive repository write credentials. Never put GitHub tokens, API keys, passwords, private customer records, or other secrets in HTML, JavaScript, JSON, issues, or pull requests.
+- Shared dataset changes must be submitted as a GitHub pull request with direct report URLs and a description of the parsing or correction. Maintainers review the source and QA results before merging.
+- Keep `main` protected: require pull requests and at least one maintainer review, require the market-data test check, block force pushes and branch deletion, and restrict direct pushes to trusted maintainers. These repository settings must be enabled by a repository administrator; documentation alone does not enforce them.
+- The market refresh workflow is the only automated writer of generated market JSON. Its GitHub Actions token is scoped to this repository and its write permission is needed to publish scheduled updates. Do not add public form submissions that write directly to the repository.
+- Treat all imported CSVs and external report text as untrusted input. Never execute uploaded files or remote scripts.
+
+### Contributing market observations
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the required source evidence and review process. See [SECURITY.md](SECURITY.md) for vulnerability reporting. The source register and live QA summary are displayed in the dashboard; open the linked original report to verify any value before relying on it for a transaction.
