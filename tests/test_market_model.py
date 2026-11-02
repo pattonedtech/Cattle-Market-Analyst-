@@ -83,6 +83,14 @@ class MarketModelTests(unittest.TestCase):
         ])
         self.assertEqual(len(result["groups"]), 2)
 
+    def test_reported_weights_are_binned_into_100_lb_cohorts(self):
+        result = build_benchmarks([
+            row(id="a", weight=350, weight_low=None, weight_high=None),
+            row(id="b", weight=450, weight_low=None, weight_high=None),
+        ])
+        bands = {(x["weight_low"], x["weight_high"]) for x in result["groups"]}
+        self.assertEqual(bands, {(300, 399), (400, 499)})
+
 
 if __name__ == "__main__":
     unittest.main()
