@@ -599,13 +599,15 @@ def parse_burley():
                     # X-weight / cull-only entries are not feeder weight observations.
                     if not (head > 0 and 100 <= weight <= 3000 and 20 <= price <= 1500):
                         continue
-                    out.append(record(
+                    row = record(
                         date, "Burley Livestock Auction", "Idaho", category, sex,
                         "Not specified", weight, price, head,
                         "Burley Livestock Auction", url, "auction_lot_average",
                         sale_type="Live auction",
                         notes=f"Published lot; consignor town {town}; source type code {kind}"
-                    ))
+                    )
+                    row["id"] = stable_id("burley", date, category, town, head, kind, weight, price, url)
+                    out.append(row)
         except Exception as e:
             print(f"Burley report failed {url}: {e}", file=sys.stderr)
     print(f"Burley: {len(out)} lot observations from {min(len(urls), 40 if needs_backfill() else 1)} report pages")
@@ -1037,6 +1039,8 @@ SOURCES = [
     {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges; current public archive is limited to recent snapshots"},
     {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"official weekly archive verified; parser pending QA; reports currently include dated downloadable PDFs"},
     {"name":"Burley Livestock Auction","state":"ID","kind":"live auction","url":"https://burleylivestock.auction/reports","status":"automated: public weekly lot tables; archived reports"},
+    {"name":"Idaho Farm Bureau Beef Market Reports","state":"ID","kind":"market report directory","url":"https://www.idahofb.org/commodities/beef-market-reports/","status":"official industry directory for Caldwell, Vale, Emmett, Burley, Jerome, Twin Falls, Blackfoot, Cottonwood and Lewiston; individual parsers pending"},
+    {"name":"Idaho Public Livestock Markets","state":"ID","kind":"government market directory","url":"https://agri.idaho.gov/wp-content/uploads/animal-industries/livestock-market-list.pdf","status":"official state market registry; used to verify market names and physical locations"},
     {"name":"Overland Stock Yard","state":"CA","kind":"auction / video lots","url":"https://www.overlandstockyard.com/market-reports","status":"automated: video lots; dairy and beef types remain separate"},
     {"name":"Tulare County Stockyard","state":"CA","kind":"live auction","url":"https://tularecountystockyard.com/","status":"listed; historical parser pending"},
     {"name":"Escalon Livestock Market","state":"CA","kind":"live auction","url":"https://www.escalonlivestockmarket.com/","status":"listed; weekly reports available; parser pending"},
