@@ -29,7 +29,7 @@ The public collector output is `data/market_observations.json` (schema version 7
 | `source`, `source_url` | Publisher and direct URL to the original report. |
 | `qa_status`, `qa_warnings` | Collector validation outcome and non-fatal review flags. |
 
-The QA report also includes `source_fetch_health` by domain: logical requests, attempts, successes, transient failures, final failed requests, failed URLs, and the most recent failure details. Network/timeouts, rate limits, and server errors are retried once; permanent 4xx errors are not retried. Historical quarantined observations remain in the QA report until a stable-ID record is accepted or a new rejection replaces the old reason.
+`published_individual_price` identifies a single published sale price (often breeding-stock lots) when the source does not provide a market weighted average or explicit range. It is benchmarked as a separate observation-mean series and is never pooled with auction weighted averages.\n\nThe QA report also includes `source_fetch_health` by domain: logical requests, attempts, successes, transient failures, final failed requests, failed URLs, and the most recent failure details. Network/timeouts, rate limits, and server errors are retried once; permanent 4xx errors are not retried. Historical quarantined observations remain in the QA report until a stable-ID record is accepted or a new rejection replaces the old reason.
 
 ## Interpretation rules
 
