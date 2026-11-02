@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import defaultdict
 from copy import deepcopy
 import re
+from datetime import date, datetime, timedelta
 
 AUCTION_AVERAGE_TYPES = {
     "auction_lot_average",
@@ -153,33 +154,84 @@ def merge_quarantine_history(current_market: list[dict], current_cows: list[dict
     return market, cows
 
 
-def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None) -> dict:
-    """Build independent benchmark cohorts; never pool units, geographies, or source types."""
+WESTERN_STATES = {
+    "Washington", "Oregon", "California", "Nevada", "Idaho",
+    "Montana", "Wyoming", "Utah", "Arizona", "New Mexico",
+}
+
+
+def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None,
+                     as_of: date | None = None) -> dict:
+    """Build published benchmark cohorts for the dashboard.
+
+    Cohorts are separated by geography, category, exact unit, source series,
+    Corriente origin, period, and weight class. The composite auction series
+    includes auction weighted-average record types only; video/direct/range
+    series are never included in it.
+    """
+    as_of = as_of or date.today()
     groups: dict[tuple, list[dict]] = defaultdict(list)
+    group_sources: dict[tuple, set] = defaultdict(set)
+    periods = (
+        ("all", None),
+        ("365", as_of - timedelta(days=365)),
+        ("90", as_of - timedelta(days=90)),
+    )
     all_rows = list(records) + list(cow_records or [])
     for original in all_rows:
         row = normalize_observation(original)
-        record_type = row.get("record_type")
+        record_type = str(row.get("record_type") or "")
         if record_type not in BENCHMARKABLE_TYPES:
             continue
         if not row.get("state") or not row.get("category") or not row.get("price_unit"):
             continue
-        key = (
-            row["state"], row["category"], row["price_unit"], record_type,
-            row.get("benchmark_weight_low"), row.get("benchmark_weight_high"),
-        )
-        groups[key].append(row)
+        try:
+            sale_date = datetime.strptime(str(row.get("date")), "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            continue
+        origin = row.get("corriente_origin") or "not_applicable"
+        source_series = [record_type]
+        if record_type in AUCTION_AVERAGE_TYPES:
+            source_series.append("auction_weighted_average")
+        weight_cohorts = [("all", None, None)]
+        if row["price_unit"] == "USD/cwt" and row.get("benchmark_weight_low") is not None:
+            lo = int(row["benchmark_weight_low"])
+            hi = int(row["benchmark_weight_high"])
+            weight_cohorts.append((f"{lo}-{hi}", lo, hi))
+        geographies = [row["state"]]
+        if row["state"] in WESTERN_STATES:
+            geographies.append("Western")
+        for period_days, cutoff in periods:
+            if cutoff is not None and sale_date < cutoff:
+                continue
+            for series in source_series:
+                for weight_cohort, weight_low, weight_high in weight_cohorts:
+                    for geography in geographies:
+                        key = (
+                            geography, row["category"], row["price_unit"], series,
+                            origin, period_days, weight_cohort, weight_low, weight_high,
+                        )
+                        groups[key].append(row)
+                        group_sources[key].add(record_type)
     output = []
     for key in sorted(groups, key=lambda k: tuple("" if v is None else str(v) for v in k)):
-        state, category, unit, record_type, weight_low, weight_high = key
+        state, category, unit, series, origin, period_days, weight_cohort, weight_low, weight_high = key
         output.append({
-            "state": state, "category": category, "price_unit": unit,
-            "record_type": record_type, "weight_low": weight_low,
+            "state": state,
+            "category": category,
+            "price_unit": unit,
+            "record_type": series,
+            "corriente_origin": origin,
+            "period_days": period_days,
+            "weight_cohort": weight_cohort,
+            "weight_low": weight_low,
             "weight_high": weight_high,
+            "source_record_types": sorted(group_sources[key]),
             **summarize_observations(groups[key]),
         })
     return {
-        "schema_version": 1,
-        "methodology": "Benchmarks are grouped by state, category, exact price unit, source record type, and published weight class. No cross-method pooling. Head weighting is used only when every observation has a positive head count; otherwise all observations contribute equally.",
+        "schema_version": 2,
+        "as_of": as_of.isoformat(),
+        "methodology": "Benchmarks are grouped by state/Western, category, exact price unit, source series, Corriente origin, reporting period, and weight cohort. Auction weighted-average types may be combined only in the explicit auction_weighted_average series. Video, direct trade, ranges, and state summaries remain separate. Head weighting is used only when every observation has a positive head count; otherwise all observations contribute equally.",
         "groups": output,
     }
