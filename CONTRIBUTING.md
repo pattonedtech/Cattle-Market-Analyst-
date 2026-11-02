@@ -4,7 +4,7 @@ Thank you for helping improve the Flying P Cattle Market Analyst.
 
 ## Data submission requirements
 
-Submit data changes through a pull request. Do not edit the published JSON directly without also providing the original evidence and explaining the normalization.
+Submit data suggestions through the **Submit a market observation** GitHub issue form, or submit a pull request if you are comfortable editing the dataset and collector. Issues are public and are not an automated write path; maintainers verify the report and decide whether to merge a change. Do not edit the published JSON directly without also providing the original evidence and explaining the normalization.
 
 Every proposed observation must include:
 
