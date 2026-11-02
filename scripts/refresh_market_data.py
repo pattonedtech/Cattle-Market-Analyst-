@@ -353,6 +353,7 @@ def parse_marana():
     except Exception as e:
         print(f"Marana archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Marana Stockyards", "Arizona")
     for url in (report_urls[:220] if needs_backfill() else report_urls[:1]):
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
@@ -430,7 +431,10 @@ def parse_marana():
                         described_head = re.search(r"\b(\d+)\s*(?:hd|head)\b", desc, re.I)
                         cow_records.append({
                             "id": stable_id("marana", date, cow_type, desc, value, url),
-                            "date": date, "market": "Marana Stockyards", "region": "Arizona",
+                            "date": date, "market": "Marana Stockyards",
+                            "market_id": stable_id("market", "Marana Stockyards"),
+                            "region": "Arizona", "state": cow_state, "county": cow_county,
+                            "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
                             "category": "Bred cow" if cow_type == "bred" else "Cow-calf pair",
                             "description": desc, "price": value, "price_unit": "USD/head" if cow_type == "bred" else "USD/family",
                             "head": int(described_head.group(1)) if described_head else None,
@@ -456,6 +460,7 @@ def parse_fallon():
     except Exception as e:
         print(f"Fallon archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Fallon Livestock", "Nevada")
     for url in (report_urls[:150] if needs_backfill() else report_urls[:1]):
         try:
             text = pdf_text(url)
@@ -493,7 +498,7 @@ def parse_fallon():
                                               "Fallon Livestock", url, "published_weight_class_range",
                                               lo, hi, "Live auction",
                                               notes=f"Published weight class {low_w}-{high_w} lb; range, not weighted average"))
-                # Bred cow and pair prices are per head and remain separate from cwt series.
+                # Bred cows are priced per head; cow-calf pairs are priced per pair.
                 if "BRED COWS (HD)" in upper or "PAIRS (HD)" in upper:
                     for category, pattern in [
                         ("Bred cow", r"Bred Cows?\s*\(HD\)\s*([\d,.]+)(?:\s*-\s*([\d,.]+))?"),
@@ -505,7 +510,9 @@ def parse_fallon():
                             hi = float((m.group(2) or m.group(1)).replace(",", ""))
                             cow_records.append({
                                 "id": stable_id("fallon", date, category, lo, hi, url),
-                                "date": date, "market": "Fallon Livestock", "region": "Nevada",
+                                "date": date, "market": "Fallon Livestock", "market_id": stable_id("market", "Fallon Livestock"),
+                                "region": "Nevada", "state": cow_state, "county": cow_county,
+                                "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
                                 "category": category, "description": "Published per-head range",
                                 "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
                                 "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head",
@@ -538,6 +545,7 @@ def parse_willcox():
     except Exception as e:
         print(f"Willcox archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Willcox Livestock Auction", "Arizona")
     for page_url in (report_pages[:100] if needs_backfill() else report_pages[:1]):
         try:
             page = BeautifulSoup(fetch(page_url).text, "html.parser")
@@ -586,7 +594,10 @@ def parse_willcox():
                         head, desc, price = m.groups()
                         cow_records.append({
                             "id": stable_id("willcox", date, n, desc, price, pdf_url),
-                            "date": date, "market": "Willcox Livestock Auction", "region": "Arizona",
+                            "date": date, "market": "Willcox Livestock Auction",
+                            "market_id": stable_id("market", "Willcox Livestock Auction"),
+                            "region": "Arizona", "state": cow_state, "county": cow_county,
+                            "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
                             "category": "Bred cow" if n == 0 else "Cow-calf pair",
                             "description": f"{head} {desc}", "price": float(price.replace(",", "")),
                             "price_unit": "USD/head" if n == 0 else "USD/family",
