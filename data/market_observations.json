@@ -1,8 +1,8 @@
 {
   "schema_version": 5,
-  "generated_at": "2026-11-02T00:07:14.186814+00:00",
-  "record_count": 17758,
-  "cow_record_count": 1527,
+  "generated_at": "2026-11-02T00:10:27.689328+00:00",
+  "record_count": 17756,
+  "cow_record_count": 1526,
   "sources": [
     {
       "name": "Visalia Livestock Market",
@@ -193238,28 +193238,6 @@
       "qa_warnings": []
     },
     {
-      "id": "2a75b7dacb97d61357",
-      "date": "2024-03-12",
-      "market": "Fallon Livestock",
-      "region": "Nevada",
-      "category": "Feeder heifer",
-      "sex": "Heifer",
-      "breed": "Choice; breed not specified",
-      "weight": 350.0,
-      "price": 351.0,
-      "price_low": 372.0,
-      "price_high": 330.0,
-      "head": null,
-      "sale": "Live auction",
-      "source": "Fallon Livestock",
-      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_2-13-2024.pdf",
-      "price_unit": "USD/cwt",
-      "record_type": "published_weight_class_range",
-      "notes": "Published weight class 300-400 lb; range, not weighted average",
-      "state": "Nevada",
-      "county": "Churchill"
-    },
-    {
       "id": "2a7874a3d6b639bd76",
       "date": "2024-03-12",
       "market": "Fallon Livestock",
@@ -309066,28 +309044,6 @@
       "geography_method": "verified_market_registry",
       "qa_status": "passed",
       "qa_warnings": []
-    },
-    {
-      "id": "ae4098f18534b8807b",
-      "date": "2025-09-09",
-      "market": "Fallon Livestock",
-      "region": "Nevada",
-      "category": "Feeder heifer",
-      "sex": "Heifer",
-      "breed": "Choice; breed not specified",
-      "weight": 950.0,
-      "price": 1242.23,
-      "price_low": 2235.46,
-      "price_high": 249.0,
-      "head": null,
-      "sale": "Live auction",
-      "source": "Fallon Livestock",
-      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_8-19-2025.pdf",
-      "price_unit": "USD/cwt",
-      "record_type": "published_weight_class_range",
-      "notes": "Published weight class 900-1000 lb; range, not weighted average",
-      "state": "Nevada",
-      "county": "Churchill"
     },
     {
       "id": "b60ad62f968821de55",
@@ -491938,18 +491894,6 @@
       "geography_method": "verified_market_registry",
       "qa_status": "passed",
       "qa_warnings": []
-    },
-    {
-      "id": "f66104611ea1819372",
-      "date": "2026-10-01",
-      "market": "Willcox Livestock Auction",
-      "region": "Arizona",
-      "category": "Bred cow",
-      "description": "00 NO TEST",
-      "price": 0.0,
-      "price_unit": "USD/head",
-      "source": "Willcox Livestock Auction",
-      "source_url": "https://test.willcoxlivestockauction.com/wp-content/uploads/2026/10/10-01-26-Market-Report.pdf"
     },
     {
       "id": "070ec70c53ec791240",

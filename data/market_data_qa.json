@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-02T00:07:14.170941+00:00",
+  "generated_at": "2026-11-02T00:10:32.357443+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
     "accepted": 17756,
@@ -120,6 +120,7 @@
       "price": 351.0,
       "price_unit": "USD/cwt",
       "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_2-13-2024.pdf",
+      "collection": "records",
       "issues": [
         "invalid_price_range_or_average"
       ],
@@ -136,6 +137,7 @@
       "price": 1242.23,
       "price_unit": "USD/cwt",
       "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_8-19-2025.pdf",
+      "collection": "records",
       "issues": [
         "invalid_price_range_or_average"
       ],
@@ -154,6 +156,7 @@
       "price": 0.0,
       "price_unit": "USD/head",
       "source_url": "https://test.willcoxlivestockauction.com/wp-content/uploads/2026/10/10-01-26-Market-Report.pdf",
+      "collection": "cow_records",
       "issues": [
         "invalid_price_range_or_average",
         "price_outside_sanity_bounds"
