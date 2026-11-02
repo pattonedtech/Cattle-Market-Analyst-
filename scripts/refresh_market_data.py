@@ -513,7 +513,7 @@ def parse_fallon():
                                 "date": date, "market": "Fallon Livestock", "market_id": stable_id("market", "Fallon Livestock"),
                                 "region": "Nevada", "state": cow_state, "county": cow_county,
                                 "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
-                                "category": category, "description": "Published per-head range",
+                                "category": category, "description": "Published breeding-stock price range",
                                 "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
                                 "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head",
                                 "record_type": "published_price_range",
@@ -1080,6 +1080,7 @@ def parse_belen():
                 cow_records.append({
                     "id": stable_id("belen", date, category, lo, hi, url),
                     "date": date, "market": "Cattlemen's Livestock Auction - Belen",
+                    "market_id": stable_id("market", "Cattlemen's Livestock Auction - Belen"),
                     "region": "New Mexico", "state": state, "county": county,
                     "category": category, "description": "Published auction price range; origin/type not specified",
                     "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
