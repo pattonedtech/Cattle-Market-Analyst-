@@ -1,28 +1,29 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-02T00:05:08.444657+00:00",
+  "generated_at": "2026-11-02T00:07:14.170941+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
-    "accepted": 17697,
+    "accepted": 17756,
     "rejected": 2
   },
   "cow_market_observations": {
-    "accepted": 1522,
+    "accepted": 1526,
     "rejected": 1
   },
   "geographic_quality": {
     "market_records_missing_state": 135,
     "market_records_missing_county": 1237,
-    "market_records_with_warnings": 1307,
+    "market_records_with_warnings": 1314,
     "accepted_by_geography_method": {
       "regional_report_unassigned": 135,
       "source_report_state_only": 1102,
-      "verified_market_registry": 16460
+      "verified_market_registry": 16519
     },
     "accepted_by_county": {
       "Arizona / Cochise": 160,
       "Arizona / Pima": 3620,
       "California / Kings": 9864,
+      "California / San Benito": 59,
       "California / Tulare": 28,
       "Idaho / Cassia": 134,
       "Idaho / Twin Falls": 24,
@@ -43,7 +44,7 @@
   },
   "accepted_by_state": {
     "Arizona": 3780,
-    "California": 9892,
+    "California": 9951,
     "Idaho": 158,
     "Montana": 454,
     "Nevada": 2019,
@@ -71,6 +72,7 @@
     "Overland Stock Yard": 9814,
     "Overland Stockyard (USDA)": 50,
     "Producers Livestock Vale, OR": 17,
+    "Ranchers Choice Stockyard": 59,
     "Roswell Livestock Auction (USDA)": 199,
     "Santa Teresa Livestock Auction (USDA)": 6,
     "Southwest Direct Cattle Report (USDA)": 8,
@@ -89,6 +91,7 @@
     "Fallon Livestock": 2019,
     "Marana Stockyards": 3620,
     "Overland Stock Yard": 9814,
+    "Ranchers Choice Stockyard": 59,
     "USDA AMS Market News": 1860,
     "Visalia Livestock Market": 28,
     "Willcox Livestock Auction": 160
@@ -97,6 +100,7 @@
     "belenlivestockauction.com": 2,
     "burleylivestock.auction": 116,
     "cattlechannel.com": 78,
+    "rancherschoicestockyard.com": 59,
     "test.willcoxlivestockauction.com": 160,
     "www.ams.usda.gov": 1860,
     "www.fallonlivestock.com": 2019,
@@ -173,6 +177,20 @@
       "status": "official weekly archive verified; parser pending QA; reports currently include dated downloadable PDFs"
     },
     {
+      "name": "Ranchers Choice Stockyard",
+      "state": "CA",
+      "kind": "live auction",
+      "url": "https://rancherschoicestockyard.com/market-reports/",
+      "status": "automated: dated 2026 PDF reports; weight-class ranges, lot highlights, cow/bull ranges and breeding prices kept distinct"
+    },
+    {
+      "name": "California Wool Growers Market Reports",
+      "state": "CA",
+      "kind": "auction market directory",
+      "url": "https://californiawoolgrowers.org/resources/market-reports/",
+      "status": "industry directory used to verify California auction yards and source report links"
+    },
+    {
       "name": "Burley Livestock Auction",
       "state": "ID",
       "kind": "live auction",
@@ -236,11 +254,11 @@
       "status": "listed; historical parser pending"
     },
     {
-      "name": "101 Livestock Market",
+      "name": "101 Livestock Market (historical)",
       "state": "CA",
       "kind": "live auction",
-      "url": "https://www.101livestock.com/",
-      "status": "listed; historical parser pending"
+      "url": "https://101livestock.com/market-report/",
+      "status": "historical archive through December 2025; same Aromas facility now operates as Ranchers Choice Stockyard"
     },
     {
       "name": "Modesto Livestock Commission",
@@ -446,4 +464,4 @@
       "status": "listed; historical parser pending"
     }
   ]
-}\n
+}
