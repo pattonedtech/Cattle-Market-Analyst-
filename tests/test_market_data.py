@@ -139,6 +139,17 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
             (None, None),
         )
 
+    def test_qa_report_counts_breeding_categories_separately(self):
+        cow = {
+            "id": "cow1", "date": "2026-10-30", "market": "Test Auction",
+            "state": "California", "county": "Fresno", "category": "Cow-calf pair",
+            "price": 1800, "price_unit": "USD/family", "source": "Test",
+            "source_url": "https://example.org/cows.pdf", "record_type": "published_price_range",
+        }
+        qa = collector.build_qa_report([], [cow], [], [])
+        self.assertEqual(qa["accepted_by_cow_category"]["Cow-calf pair"], 1)
+        self.assertEqual(qa["accepted_by_category"], {})
+
     def test_price_outside_sanity_bounds_is_rejected(self):
         accepted, rejected = collector.quality_check(
             [feeder_record(price=0)], "records"
