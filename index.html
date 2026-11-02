@@ -585,7 +585,7 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
   if(!selectedHistoricalMarkets.some(function(m){return marketKey(m)===key}))selectedHistoricalMarkets.push(entry.label);
   saveHistoricalMarkets();select.value='';historicalDetailPage=0;renderHistorical();
  }
- function historicalFilteredRecords(){
+ function historicalFilteredRecords(ignoreMarketSelection){
   var category=$('histCategory')?$('histCategory').value:'Feeder steer';
   var seriesType=$('histRecordType')?$('histRecordType').value:'auction';
   var band=$('histWeight')?$('histWeight').value:'all';
@@ -599,7 +599,7 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
    if(isCorriente&&originFilter!=='all'&&corrienteOrigin(r)!==originFilter)return false;
    if(seriesType==='auction'&&!['auction_lot_average','usda_auction','usda_replacement_weighted_average','third_party_auction_weighted_average'].includes(r.record_type))return false;
    if(seriesType!=='all'&&seriesType!=='auction'&&r.record_type!==seriesType)return false;
-   if(selectedKeys.size&&!selectedKeys.has(r.market_key))return false;
+   if(!ignoreMarketSelection&&selectedKeys.size&&!selectedKeys.has(r.market_key))return false;
    if(band!=='all'){var low=Number(band),wlo=r.weight_low!=null?Number(r.weight_low):Number(r.weight),whi=r.weight_high!=null?Number(r.weight_high):Number(r.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<low||wlo>=low+100)return false}
    return Number.isFinite(Number(r.price))&&Number(r.price)>0&&!!r.date;
   }).sort(function(a,b){return String(a.date).localeCompare(String(b.date))});
@@ -684,7 +684,6 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
   }).join(''):'<tr><td colspan="10" class="empty">No comparable records match the selected analysis. Check the market selection, category, weight range, and source series.</td></tr>';
   $('geoSummary').textContent=level==='state'?rows.length+' western states represented · '+geoRecords.length+' observations · '+(seriesType==='all'?'All source types (exploratory)':seriesType.replaceAll('_',' '))+'.':level==='county'?(state||'No state selected')+' · '+rows.length+' counties · '+geoRecords.length+' observations.':(county?county+', ':'')+(state||'No state selected')+' · '+rows.length+' physical yards · '+geoRecords.length+' observations. Yard differences are shown against matching county and state averages.';
   $('geoCaveat').textContent=(geoRecords.length?stats(geoRecords).method:'No average')+' across '+geoRecords.length+' matching records. Price unit is '+unit+'. Geographic summaries use the same source, weight, origin, category, and selected-market filters as the graph. Physical-market aliases are grouped; original source names are retained in the detailed observations.';
-  renderMarketSelection();
  }
  function drawBarChart(canvasId,data){
   var canvas=$(canvasId),ctx=canvas.getContext('2d'),width=canvas.clientWidth||700,height=230,dpr=window.devicePixelRatio||1;
@@ -707,8 +706,8 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
  }
  function renderHistorical(){
   historicalDetailPage=0;
-  var arr=historicalFilteredRecords(),seriesType=$('histRecordType').value;
-  renderMarketSelection(arr);renderGeoComparison(arr);
+  var presenceRecords=historicalFilteredRecords(true),arr=historicalFilteredRecords(),seriesType=$('histRecordType').value;
+  renderMarketSelection(presenceRecords);renderGeoComparison(arr);
   function stats(items){
    if(!items.length)return null;
    var mixed=seriesType==='all',range=['published_price_range','published_weight_class_range','published_lot_highlight'].includes(seriesType);
