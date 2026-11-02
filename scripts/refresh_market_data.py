@@ -596,39 +596,52 @@ def parse_willcox():
                     feeder_section = cow_section = False
                 if feeder_section:
                     lot_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+(\d{3,4})\s+\$([\d,]+(?:\.\d{1,2})?)")
-                    lots = list(lot_re.finditer(line))
-                    for n, m in enumerate(lots):
+                    for m in lot_re.finditer(line):
                         head, desc, wt, price = m.groups()
-                        sex = "Steer" if n == 0 else ("Heifer" if n == 1 else "Unknown")
-                        if sex == "Unknown":
-                            continue
-                        records.append(record(date, "Willcox Livestock Auction", "Arizona",
-                                              "Feeder steer" if sex == "Steer" else "Feeder heifer",
-                                              sex, desc, float(wt), float(price.replace(",", "")), int(head),
-                                              "Willcox Livestock Auction", pdf_url, "auction_lot_average",
-                                              sale_type="Live auction", notes=f"Published lot description: {desc}"))
+                        desc_upper = desc.upper()
+                        if "STR" in desc_upper or "STEER" in desc_upper:
+                            sex, category = "Steer", "Feeder steer"
+                        elif "HFR" in desc_upper or "HEIFER" in desc_upper:
+                            sex, category = "Heifer", "Feeder heifer"
+                        else:
+                            sex, category = "Unknown", "Other"
+                        records.append(record(
+                            date, "Willcox Livestock Auction", "Arizona", category, sex, desc,
+                            float(wt), float(price.replace(",", "")), int(head),
+                            "Willcox Livestock Auction", pdf_url, "auction_lot_average",
+                            sale_type="Live auction",
+                            notes=f"Published lot description: {desc}; category requires source classification"
+                        ))
                 elif cow_section:
                     cow_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+\$([\d,]+(?:\.\d{1,2})?)")
-                    lots = list(cow_re.finditer(line))
-                    for n, m in enumerate(lots):
+                    for n, m in enumerate(cow_re.finditer(line)):
                         head, desc, price = m.groups()
+                        desc_upper = desc.upper()
+                        if "PAIR" in desc_upper or "PAIRS" in desc_upper:
+                            category, sex, price_unit = "Cow-calf pair", "Mixed", "USD/family"
+                        elif "BRED" in desc_upper or "COW" in desc_upper:
+                            category, sex, price_unit = "Bred cow", "Cow", "USD/head"
+                        else:
+                            # The section contains both bred cows and pairs. Lot order
+                            # is not evidence of category; keep ambiguous lots quarantined.
+                            category, sex, price_unit = "Other", "Unknown", None
+                        description = f"{head} {desc}"
                         cow_records.append({
                             "id": stable_id("willcox", date, n, desc, price, pdf_url),
                             "date": date, "market": "Willcox Livestock Auction",
                             "market_id": stable_id("market", "Willcox Livestock Auction"),
                             "region": "Arizona", "state": cow_state, "county": cow_county,
                             "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
-                            "category": "Bred cow" if n == 0 else "Cow-calf pair",
-                            "description": f"{head} {desc}", "price": float(price.replace(",", "")),
-                            "price_unit": "USD/head" if n == 0 else "USD/family",
-                            "head": int(head), "record_type": "published_individual_price",
+                            "category": category, "sex": sex, "breed": desc,
+                            "description": description, "price": float(price.replace(",", "")),
+                            "price_unit": price_unit, "head": int(head),
+                            "record_type": "published_individual_price",
                             "source": "Willcox Livestock Auction", "source_url": pdf_url
                         })
         except Exception as e:
             print(f"Willcox report failed {page_url}: {e}", file=sys.stderr)
     print(f"Willcox: {len(records)} feeder lots and {len(cow_records)} cow/pair records from {len(report_pages)} report pages")
     return records, cow_records
-
 
 def parse_burley():
     """Parse Burley Livestock Auction's own public weekly sale tables."""
@@ -1450,7 +1463,7 @@ def quality_check(rows, collection):
         for field in ("market", "category", "source"):
             if not str(row.get(field) or "").strip():
                 issues.append("missing_" + field)
-        if collection == "records" and (row.get("category") == "Other" or row.get("sex") == "Unknown"):
+        if row.get("category") == "Other" or row.get("sex") == "Unknown":
             issues.append("animal_category_not_classifiable")
         expected_units = {
             "Feeder steer": "USD/cwt", "Feeder heifer": "USD/cwt",
@@ -1699,7 +1712,11 @@ def main():
     for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows + cottonwood_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
-    new_ids = {r.get("id") for r in records}
+    new_records = (
+        records + marana_cows + willcox_cows + fallon_cows + usda_cow_records
+        + belen_cows + ranchers_cows + cottonwood_cows
+    )
+    new_ids = {r.get("id") for r in new_records}
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
     # Quarantine is durable history. Keep prior rejected rows unless the same
@@ -1710,16 +1727,17 @@ def main():
         rejected_records, rejected_cows, old_quarantine,
         accepted_market_ids, accepted_cow_ids
     )
+    all_rejected = rejected_records + rejected_cows
     rejected_new = sum(
-        1 for r in rejected_records
+        1 for r in all_rejected
         if r.get("id") in new_ids and "animal_category_not_classifiable" not in r.get("issues", [])
     )
     newly_unclassified = sum(
-        1 for r in rejected_records
+        1 for r in all_rejected
         if r.get("id") in new_ids and "animal_category_not_classifiable" in r.get("issues", [])
     )
     rejection_reasons = {}
-    for rejected in rejected_records:
+    for rejected in all_rejected:
         if rejected.get("id") in new_ids and "animal_category_not_classifiable" not in rejected.get("issues", []):
             for reason in rejected.get("issues", []):
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
