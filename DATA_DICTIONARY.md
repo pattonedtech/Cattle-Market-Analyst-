@@ -45,3 +45,21 @@ The QA report also includes `source_fetch_health` by domain: logical requests, a
 - Records with an unclassifiable `Other` category or unknown animal sex are quarantined rather than published as usable market observations. Corriente lots with unknown sex remain in `Corriente cattle (unclassified)` when the source explicitly identifies Corriente.
 - Null means not reported / not established, not zero.
 - The dataset contains public market observations only. Do not add personal consignor or buyer details.
+
+
+## Category and unit validation
+
+The collector enforces category-specific units where the category has an unambiguous valuation basis:
+- Feeder steers/heifers, Corriente steers/heifers, cull cows, and bulls: `USD/cwt`.
+- Bred cows and bred heifers: `USD/head`.
+- Cow-calf pairs: `USD/family`.
+- Unclassified Corriente cattle retain the exact source-reported unit and remain separated by unit in benchmarks.
+
+A unit mismatch is quarantined. Do not silently reinterpret a per-head price as a per-pair price or vice versa. Published individual sale prices (including breeding-stock lots) are a separate observation-mean series; they are not auction weighted averages.
+
+## QA and quarantine artifacts
+
+- `data/market_data_qa.json` is the lightweight QA summary. It contains accepted/rejected counts, geographic/category/source coverage, source-fetch diagnostics, and the quarantine archive URL.
+- `data/quarantine_observations.json` contains the full rejected source rows and machine-readable reason codes. These rows are not part of the published market or breeding-stock observation arrays.
+- The dashboard fetches only the lightweight QA summary during normal page load. The detailed quarantine archive is downloaded only when a user opens its link.
+- Historical quarantine rows are retained until the same stable observation ID passes validation or a fresh rejection replaces the prior reason.
