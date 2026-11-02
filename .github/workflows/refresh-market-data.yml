@@ -86,10 +86,13 @@ jobs:
           # Rebuild QA totals after merging so the report and public arrays stay in sync.
           sys.path.insert(0, "scripts")
           from refresh_market_data import build_qa_report
+          from market_model import build_benchmarks
           rejected_records = [row for row in rejected if row.get("collection") == "records"]
           rejected_cows = [row for row in rejected if row.get("collection") == "cow_records"]
           qa = build_qa_report(local["records"], local["cow_records"], rejected_records, rejected_cows)
           qa_path.write_text(json.dumps(qa, indent=2) + "\n", encoding="utf-8")
+          local["schema_version"] = 7
+          local["benchmarks"] = build_benchmarks(local["records"], local["cow_records"])
           local["qa_summary"] = {
               "market_records_accepted": len(local["records"]),
               "market_records_rejected": len(rejected_records),
