@@ -73,6 +73,15 @@ class PublishedDatasetTests(unittest.TestCase):
         self.assertEqual(self.qa["cow_market_observations"]["accepted"], len(self.payload.get("cow_records", [])))
         self.assertTrue(all(row.get("source_url", "").startswith("https://") for row in self.qa["rejected_observations"]))
 
+    def test_quarantined_records_are_not_in_public_arrays(self):
+        market_ids = {row["id"] for row in self.payload.get("records", [])}
+        cow_ids = {row["id"] for row in self.payload.get("cow_records", [])}
+        for row in self.qa.get("rejected_observations", []):
+            if row.get("collection") == "records":
+                self.assertNotIn(row.get("id"), market_ids)
+            elif row.get("collection") == "cow_records":
+                self.assertNotIn(row.get("id"), cow_ids)
+
     def test_qa_report_has_geographic_and_source_coverage(self):
         self.assertGreaterEqual(self.qa.get("schema_version", 0), 2)
         self.assertIn("geographic_quality", self.qa)
