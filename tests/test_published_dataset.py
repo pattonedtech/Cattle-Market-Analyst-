@@ -19,6 +19,13 @@ class PublishedDatasetTests(unittest.TestCase):
         qa_path = ROOT / "data" / "market_data_qa.json"
         with qa_path.open(encoding="utf-8") as handle:
             cls.qa = json.load(handle)
+        quarantine_path = ROOT / "data" / "quarantine_observations.json"
+        if quarantine_path.exists():
+            with quarantine_path.open(encoding="utf-8") as handle:
+                cls.quarantine = json.load(handle)
+        else:
+            # Legacy compatibility until the first refresh writes the split archive.
+            cls.quarantine = {"rejected_observations": cls.qa.get("rejected_observations", [])}
 
     def check_collection(self, rows, require_record_type):
         ids = set()
@@ -71,7 +78,7 @@ class PublishedDatasetTests(unittest.TestCase):
     def test_qa_report_matches_published_arrays(self):
         self.assertEqual(self.qa["market_observations"]["accepted"], len(self.payload.get("records", [])))
         self.assertEqual(self.qa["cow_market_observations"]["accepted"], len(self.payload.get("cow_records", [])))
-        for row in self.qa["rejected_observations"]:
+        for row in self.quarantine.get("rejected_observations", []):
             issues = row.get("issues", [])
             has_source = str(row.get("source_url", "")).startswith("https://")
             missing_source_is_reason = "missing_or_invalid_https_source_url" in issues
@@ -81,14 +88,24 @@ class PublishedDatasetTests(unittest.TestCase):
     def test_quarantined_records_are_not_in_public_arrays(self):
         market_ids = {row["id"] for row in self.payload.get("records", [])}
         cow_ids = {row["id"] for row in self.payload.get("cow_records", [])}
-        for row in self.qa.get("rejected_observations", []):
+        for row in self.quarantine.get("rejected_observations", []):
             if row.get("collection") == "records":
                 self.assertNotIn(row.get("id"), market_ids)
             elif row.get("collection") == "cow_records":
                 self.assertNotIn(row.get("id"), cow_ids)
 
+    def test_quarantine_archive_matches_summary_counts(self):
+        rows = self.quarantine.get("rejected_observations", [])
+        summary = self.qa.get("quarantine_summary", {})
+        if (ROOT / "data" / "quarantine_observations.json").exists():
+            self.assertNotIn("rejected_observations", self.qa)
+            self.assertEqual(self.quarantine.get("record_count"), len(rows))
+            self.assertEqual(summary.get("total"), len(rows))
+            self.assertEqual(summary.get("market_records"), sum(1 for x in rows if x.get("collection") == "records"))
+            self.assertEqual(summary.get("cow_records"), sum(1 for x in rows if x.get("collection") == "cow_records"))
+
     def test_qa_report_has_geographic_and_source_coverage(self):
-        self.assertGreaterEqual(self.qa.get("schema_version", 0), 2)
+        self.assertGreaterEqual(self.qa.get("schema_version", 0), 3)
         self.assertIn("geographic_quality", self.qa)
         self.assertIn("accepted_by_source_domain", self.qa)
         self.assertTrue(
