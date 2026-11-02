@@ -79,6 +79,21 @@ class MarketDataQualityTests(unittest.TestCase):
         self.assertEqual(len(accepted), 1)
         self.assertEqual(rejected, [])
 
+    def test_burley_market_resolves_to_cassia_county(self):
+        self.assertEqual(
+            collector.geographic_fields("Burley Livestock Auction", "Idaho"),
+            ("Idaho", "Cassia"),
+        )
+
+    def test_regional_reports_are_not_assigned_a_county(self):
+        self.assertEqual(
+            collector.geographic_fields(
+                "Northwest Direct Cattle Report",
+                "Northwest Region (WA/OR/ID/UT)",
+            ),
+            (None, None),
+        )
+
     def test_price_outside_sanity_bounds_is_rejected(self):
         accepted, rejected = collector.quality_check(
             [feeder_record(price=0)], "records"
