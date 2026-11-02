@@ -721,7 +721,7 @@ def parse_ranchers_choice():
                     ))
             # Cow and bull ranges can be printed either as $/cwt tables or $/lb.
             if cow_mode or bull_price_mode:
-                label = "Cull cow" if cow_mode else "Bull"
+                label = "Bull" if (bull_price_mode or line.lower().startswith("bull")) else "Cull cow"
                 m = re.search(
                     r"(?:High[- ]yielding cows?|Medium[- ]yielding cows?|Low[- ]yielding cows?|High Yielding|Medium Yielding|Low Yielding|Bulls?)\s+\$?([\d,.]+)\s*(?:-\s*\$?([\d,.]+))?",
                     line, re.I
@@ -737,7 +737,7 @@ def parse_ranchers_choice():
                     if 0 < lo <= hi <= 100000:
                         records.append(record(
                             date, "Ranchers Choice Stockyard", "California", label,
-                            "Cow" if cow_mode else "Bull", "Not specified", None,
+                            "Bull" if (bull_price_mode or line.lower().startswith("bull")) else "Cow", "Not specified", None,
                             (lo+hi)/2, None, "Ranchers Choice Stockyard", url,
                             "published_price_range", lo, hi, "Live auction",
                             notes=f"Published {'$/lb converted to USD/cwt' if cow_per_lb else 'USD/cwt'} range; {line}"
@@ -1203,7 +1203,7 @@ SOURCES = [
     {"name":"Producers Livestock Marketing Association","state":"CA","kind":"live auction","url":"https://www.producerslivestock.com/","status":"listed; historical parser pending"},
     {"name":"Turlock Livestock Auction Yard","state":"CA","kind":"live auction","url":"https://www.turlocklivestock.com/","status":"listed; historical parser pending"},
     {"name":"Tulare Sales Yard","state":"CA","kind":"live auction","url":"https://tularesalesyard.com/","status":"listed; historical parser pending"},
-    {"name":"101 Livestock Market","state":"CA","kind":"live auction","url":"https://www.101livestock.com/","status":"listed; historical parser pending"},
+    {"name":"101 Livestock Market (historical)","state":"CA","kind":"live auction","url":"https://101livestock.com/market-report/","status":"historical archive through December 2025; same Aromas facility now operates as Ranchers Choice Stockyard"},
     {"name":"Modesto Livestock Commission","state":"CA","kind":"live auction","url":"https://www.modestolivestock.com/","status":"listed; historical parser pending"},
     {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"listed; weekly report PDFs identified; parser pending"},
     {"name":"Producers Livestock Marketing Association","state":"CA","kind":"live auction","url":"https://www.producerslivestock.com/","status":"listed; historical parser pending"},
@@ -1310,6 +1310,14 @@ def quality_check(rows, collection):
                     issues.append("weight_outside_50_3000_lb")
             except (TypeError, ValueError):
                 issues.append("weight_not_numeric")
+        if row.get("weight_low") is not None or row.get("weight_high") is not None:
+            try:
+                weight_low = float(row.get("weight_low"))
+                weight_high = float(row.get("weight_high"))
+                if not (50 <= weight_low <= weight_high <= 3000) or (weight is not None and not (weight_low <= weight <= weight_high)):
+                    issues.append("invalid_weight_class_bounds")
+            except (TypeError, ValueError):
+                issues.append("weight_class_bounds_not_numeric")
         elif unit == "USD/cwt" and row.get("record_type") != "published_price_range":
             issues.append("missing_weight_for_cwt_record")
         head = row.get("head")
