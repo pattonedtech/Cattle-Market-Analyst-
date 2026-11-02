@@ -8,14 +8,14 @@ This gives the project a shared, auditable, versioned read model. It is not a sh
 - Published observations are shared and read-only to site visitors.
 - Browser-entered observations are local to the browser/device and are not visible to other users.
 - The collector is the only automated publisher.
-- Rejected observations remain in the QA quarantine report and are excluded from published arrays.
+- Rejected observations remain in the separate `data/quarantine_observations.json` archive and are excluded from published arrays; `data/market_data_qa.json` remains a lightweight summary.
 
 ## Canonical processing pipeline
 
 1. **Collect:** source-specific parsers retrieve reports and record source health.
 2. **Normalize:** `scripts/market_model.py` adds canonical sale geography, animal-origin, Corriente-origin, weight-basis, price-basis, and benchmark cohort fields.
 3. **Validate:** `quality_check` checks identity, source URL, date, category, price, unit, weight, head count, and geography.
-4. **Quarantine:** invalid or unclassifiable records are retained with original evidence and reason codes. Prior quarantine history is retained until revalidation.
+4. **Quarantine:** invalid or unclassifiable records are retained in `data/quarantine_observations.json` with original evidence and reason codes. Prior quarantine history is retained until revalidation.
 5. **Benchmark:** the canonical engine creates cohorts by geography, category, unit, source series, Corriente origin, reporting period, and weight cohort.
 6. **Publish:** the data and QA report are committed together and the dashboard deploys only after tests pass.
 

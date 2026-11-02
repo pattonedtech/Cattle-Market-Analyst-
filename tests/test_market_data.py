@@ -130,6 +130,30 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(accepted, [])
         self.assertIn("invalid_weight_class_bounds", rejected[0]["issues"])
 
+    def test_historical_geography_backfill_preserves_verified_market_registry(self):
+        row = {"market": "Overland Stock Yard", "region": "California"}
+        result = collector.backfill_market_geography(row)
+        self.assertEqual(result["state"], "California")
+        self.assertEqual(result["county"], "Kings")
+        self.assertEqual(result["geography_method"], "verified_market_registry")
+        self.assertTrue(result.get("market_id"))
+
+    def test_historical_geography_backfill_preserves_source_state_without_guessing_county(self):
+        row = {"market": "Unknown Auction", "region": "Arizona", "state": "Arizona"}
+        result = collector.backfill_market_geography(row)
+        self.assertEqual(result["state"], "Arizona")
+        self.assertIsNone(result.get("county"))
+        self.assertEqual(result["geography_method"], "source_report_state_only")
+        self.assertIsNone(result.get("market_id"))
+
+    def test_historical_geography_backfill_keeps_multistate_reports_unassigned(self):
+        row = {"market": "Northwest Direct Cattle Report", "region": "Northwest Region (WA/OR/ID)"}
+        result = collector.backfill_market_geography(row)
+        self.assertIsNone(result.get("state"))
+        self.assertIsNone(result.get("county"))
+        self.assertEqual(result["geography_method"], "not_verified")
+        self.assertIsNone(result.get("market_id"))
+
     def test_regional_reports_are_not_assigned_a_county(self):
         self.assertEqual(
             collector.geographic_fields(
@@ -175,6 +199,20 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         )
         self.assertEqual(rejected, [])
         self.assertEqual(accepted[0]["corriente_origin"], "Native Corriente")
+
+    def test_cow_calf_pair_must_use_per_family_unit(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Cow-calf pair", sex="Mixed", price_unit="USD/head")], "records"
+        )
+        self.assertEqual(accepted, [])
+        self.assertIn("category_unit_mismatch", rejected[0]["issues"])
+
+    def test_bred_cow_uses_per_head_unit(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Bred cow", sex="Cow", price_unit="USD/head")], "records"
+        )
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["price_unit"], "USD/head")
 
     def test_unclassifiable_other_category_is_quarantined(self):
         accepted, rejected = collector.quality_check(
