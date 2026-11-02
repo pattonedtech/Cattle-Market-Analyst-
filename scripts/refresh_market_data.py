@@ -1454,7 +1454,7 @@ def main():
     if new_ids and rejected_new / len(new_ids) > 0.05:
         raise RuntimeError(f"QA gate blocked publishing: {rejected_new}/{len(new_ids)} newly collected observations failed validation")
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows)
-    QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\\n", encoding="utf-8")
+    QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     print(f"QA: accepted {len(merged)} market and {len(merged_cows)} cow records; quarantined {len(rejected_records)} market and {len(rejected_cows)} cow records")
     category_counts = {}
     for r in merged:
