@@ -62,6 +62,8 @@ STATE_NAMES = {
 }
 MARKET_COUNTIES = [
     ("visalia", "California", "Tulare"),
+    ("ranchers choice", "California", "San Benito"),
+    ("101 livestock", "California", "San Benito"),
     ("overland", "California", "Kings"),
     ("dos palos", "California", "Merced"),
     ("escalon", "California", "San Joaquin"),
@@ -614,6 +616,158 @@ def parse_burley():
     return out
 
 
+def parse_ranchers_choice():
+    """Parse Rancher's Choice Stockyard's public dated PDF market-report archive."""
+    index_url = "https://rancherschoicestockyard.com/market-reports/"
+    try:
+        soup = BeautifulSoup(fetch(index_url).text, "html.parser")
+    except Exception as e:
+        print(f"Rancher's Choice report index failed: {e}", file=sys.stderr)
+        return [], []
+    urls = []
+    for a in soup.find_all("a", href=True):
+        href = urljoin(index_url, a["href"]).split("#")[0]
+        if ".pdf" in href.lower() and "rancherschoicestockyard.com" in urlparse(href).netloc:
+            if href not in urls:
+                urls.append(href)
+    records, cow_records = [], []
+    for url in urls[:40]:
+        try:
+            text = pdf_text(url)
+        except Exception as e:
+            print(f"Rancher's Choice PDF failed {url}: {e}", file=sys.stderr)
+            continue
+        date = parse_date(text[:1200]) or parse_date(url.replace("-", " ").replace(".", " "))
+        if not date:
+            print(f"Rancher's Choice report date not identified: {url}", file=sys.stderr)
+            continue
+        lines = [" ".join(line.split()) for line in text.splitlines() if line.strip()]
+        feeder_mode = False
+        bull_class_mode = False
+        highlight_mode = False
+        cow_mode = False
+        bull_price_mode = False
+        breeding_mode = False
+        cow_per_lb = bool(re.search(r"Top Cow\s*[-–]\s*\d[\d,]*\s*lbs?\s*[-–]\s*\$?[\d,.]+\s*/\s*lb", text, re.I))
+        for line in lines:
+            low_line = line.lower()
+            if "steers" in low_line and "heifers" in low_line and ("300" in low_line or "on on" in low_line):
+                feeder_mode, bull_class_mode, highlight_mode = True, False, False
+            if "feeder bulls" in low_line:
+                feeder_mode, bull_class_mode, highlight_mode = False, True, False
+            if "calf highlights" in low_line:
+                feeder_mode = bull_class_mode = False
+                highlight_mode = True
+            if "slaughter cows" in low_line or "cow market" in low_line:
+                cow_mode, bull_price_mode = True, False
+            if "bull market" in low_line:
+                cow_mode, bull_price_mode = False, True
+            if "bred & pair market" in low_line or "bred and pair market" in low_line:
+                breeding_mode = True
+            # Weight-class tables report price per pound. Keep the original class
+            # bounds and convert only the price unit to USD/cwt.
+            if feeder_mode or bull_class_mode:
+                matches = list(re.finditer(
+                    r"(\d{3,4})\s*-\s*(\d{3,4})\s*lbs?\s*\$?([\d,.]+)\s*-\s*\$?([\d,.]+)\s*/\s*lb",
+                    line, re.I
+                ))
+                if feeder_mode and len(matches) >= 2:
+                    classes = [(matches[0], "Feeder steer", "Steer"), (matches[1], "Feeder heifer", "Heifer")]
+                elif bull_class_mode and matches:
+                    classes = [(matches[0], "Bull", "Bull")]
+                else:
+                    classes = []
+                for match, category, sex in classes:
+                    lo_w, hi_w, lo_p, hi_p = match.groups()
+                    try:
+                        weight_low, weight_high = float(lo_w), float(hi_w)
+                        price_low, price_high = float(lo_p.replace(",", ""))*100, float(hi_p.replace(",", ""))*100
+                    except ValueError:
+                        continue
+                    if not (50 <= weight_low <= weight_high <= 3000 and 0 < price_low <= price_high <= 100000):
+                        continue
+                    row = record(
+                        date, "Ranchers Choice Stockyard", "California", category, sex,
+                        "Not specified", (weight_low+weight_high)/2,
+                        (price_low+price_high)/2, None, "Ranchers Choice Stockyard",
+                        url, "published_weight_class_range", price_low, price_high,
+                        "Live auction", notes=f"Published weight class {lo_w}-{hi_w} lb; source prices per lb converted to USD/cwt; no class head count reported"
+                    )
+                    row["weight_low"], row["weight_high"] = weight_low, weight_high
+                    records.append(row)
+            # Highlighted lots are kept separate from published class ranges.
+            if highlight_mode:
+                lot_re = re.compile(
+                    r"(\d+)\s+((?:[A-Za-z]+\s+)*?)(Steers?|Heifers?)\s+(?:Calves\s+)?(\d{3,4})\s*lbs?\s*\$?([\d,.]+)\s*/\s*lb",
+                    re.I
+                )
+                for match in lot_re.finditer(line):
+                    head, descriptor, sex_text, weight, price = match.groups()
+                    sex = "Steer" if sex_text.lower().startswith("steer") else "Heifer"
+                    category = "Feeder steer" if sex == "Steer" else "Feeder heifer"
+                    try:
+                        weight_n, price_cwt = float(weight), float(price.replace(",", ""))*100
+                        head_n = int(head)
+                    except ValueError:
+                        continue
+                    if head_n <= 0 or not (100 <= weight_n <= 3000) or not (0 < price_cwt <= 100000):
+                        continue
+                    records.append(record(
+                        date, "Ranchers Choice Stockyard", "California", category, sex,
+                        "Not specified", weight_n, price_cwt, head_n,
+                        "Ranchers Choice Stockyard", url, "published_lot_highlight",
+                        sale_type="Live auction",
+                        notes=f"Published lot highlight; description {descriptor.strip() or 'not specified'}; source price per lb converted to USD/cwt"
+                    ))
+            # Cow and bull ranges can be printed either as $/cwt tables or $/lb.
+            if cow_mode or bull_price_mode:
+                label = "Cull cow" if cow_mode else "Bull"
+                m = re.search(
+                    r"(?:High[- ]yielding cows?|Medium[- ]yielding cows?|Low[- ]yielding cows?|High Yielding|Medium Yielding|Low Yielding|Bulls?)\s+\$?([\d,.]+)\s*(?:-\s*\$?([\d,.]+))?",
+                    line, re.I
+                )
+                if m:
+                    try:
+                        lo = float(m.group(1).replace(",", ""))
+                        hi = float((m.group(2) or m.group(1)).replace(",", ""))
+                    except ValueError:
+                        lo = hi = 0
+                    factor = 100 if cow_per_lb else 1
+                    lo, hi = lo*factor, hi*factor
+                    if 0 < lo <= hi <= 100000:
+                        records.append(record(
+                            date, "Ranchers Choice Stockyard", "California", label,
+                            "Cow" if cow_mode else "Bull", "Not specified", None,
+                            (lo+hi)/2, None, "Ranchers Choice Stockyard", url,
+                            "published_price_range", lo, hi, "Live auction",
+                            notes=f"Published {'$/lb converted to USD/cwt' if cow_per_lb else 'USD/cwt'} range; {line}"
+                        ))
+            if breeding_mode:
+                bred = re.search(r"Bred Cows?\s+\$?([\d,]+)(?:\s*-\s*\$?([\d,]+))?", line, re.I)
+                pairs = re.search(r"Pairs\s+\$?([\d,]+)(?:\s*-\s*\$?([\d,]+))?", line, re.I)
+                for match, category, unit in [(bred, "Bred cow", "USD/head"), (pairs, "Cow-calf pair", "USD/family")]:
+                    if not match:
+                        continue
+                    lo = float(match.group(1).replace(",", ""))
+                    hi = float((match.group(2) or match.group(1)).replace(",", ""))
+                    if lo <= 0 or hi < lo:
+                        continue
+                    cow_records.append({
+                        "id": stable_id("ranchers-choice", date, category, lo, hi, url),
+                        "date": date, "market": "Ranchers Choice Stockyard",
+                        "market_id": stable_id("market", "Ranchers Choice Stockyard"),
+                        "region": "California", "state": "California", "county": "San Benito",
+                        "geography_method": "verified_market_registry",
+                        "category": category, "price": (lo+hi)/2, "price_low": lo,
+                        "price_high": hi, "price_unit": unit, "head": None,
+                        "source": "Ranchers Choice Stockyard", "source_url": url,
+                        "record_type": "published_price_range",
+                        "description": "Published breeding-cattle price range"
+                    })
+    print(f"Rancher's Choice: {len(records)} feeder/cull observations and {len(cow_records)} breeding observations from {len(urls)} public PDFs")
+    return records, cow_records
+
+
 def parse_roswell_web():
     url = "https://www.roswelllivestockauction.com/market-report.html"
     try:
@@ -1038,6 +1192,8 @@ def fetch_futures():
 SOURCES = [
     {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges; current public archive is limited to recent snapshots"},
     {"name":"Dos Palos Y Auction","state":"CA","kind":"live auction","url":"https://www.dpyauction.com/market-reports","status":"official weekly archive verified; parser pending QA; reports currently include dated downloadable PDFs"},
+    {"name":"Ranchers Choice Stockyard","state":"CA","kind":"live auction","url":"https://rancherschoicestockyard.com/market-reports/","status":"automated: dated 2026 PDF reports; weight-class ranges, lot highlights, cow/bull ranges and breeding prices kept distinct"},
+    {"name":"California Wool Growers Market Reports","state":"CA","kind":"auction market directory","url":"https://californiawoolgrowers.org/resources/market-reports/","status":"industry directory used to verify California auction yards and source report links"},
     {"name":"Burley Livestock Auction","state":"ID","kind":"live auction","url":"https://burleylivestock.auction/reports","status":"automated: public weekly lot tables; archived reports"},
     {"name":"Idaho Farm Bureau Beef Market Reports","state":"ID","kind":"market report directory","url":"https://www.idahofb.org/commodities/beef-market-reports/","status":"official industry directory for Caldwell, Vale, Emmett, Burley, Jerome, Twin Falls, Blackfoot, Cottonwood and Lewiston; individual parsers pending"},
     {"name":"Idaho Public Livestock Markets","state":"ID","kind":"government market directory","url":"https://agri.idaho.gov/wp-content/uploads/animal-industries/livestock-market-list.pdf","status":"official state market registry; used to verify market names and physical locations"},
@@ -1234,6 +1390,8 @@ def main():
     records += parse_overland()
     records += parse_visalia()
     records += parse_burley()
+    ranchers_records, ranchers_cows = parse_ranchers_choice()
+    records += ranchers_records
     marana_records, marana_cows = parse_marana()
     willcox_records, willcox_cows = parse_willcox()
     records += marana_records + willcox_records
@@ -1278,7 +1436,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows:
+    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     new_ids = {r.get("id") for r in records}
