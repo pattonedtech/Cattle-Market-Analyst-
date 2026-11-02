@@ -1,0 +1,5 @@
+# Require maintainer review for source parsers, workflows, and public observations.
+/data/ @pattonedtech
+/scripts/ @pattonedtech
+/tests/ @pattonedtech
+/.github/workflows/ @pattonedtech
