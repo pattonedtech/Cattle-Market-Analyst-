@@ -1564,6 +1564,7 @@ def main():
     records += fallon_records
     old = []
     old_cows = []
+    old_quarantine = []
     if OUT.exists():
         try:
             old_payload = json.loads(OUT.read_text(encoding="utf-8"))
@@ -1571,6 +1572,12 @@ def main():
             old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
+    if QA_OUT.exists():
+        try:
+            previous_qa = json.loads(QA_OUT.read_text(encoding="utf-8"))
+            old_quarantine = previous_qa.get("rejected_observations", [])
+        except Exception:
+            old_quarantine = []
     by_id = {}
     # Backfill geography on previously published observations so the feature
     # works across the full historical archive, not only new daily records.
@@ -1589,6 +1596,27 @@ def main():
     new_ids = {r.get("id") for r in records}
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
+    # Quarantine is durable history. Keep prior rejected rows unless the same
+    # stable ID is now accepted or a fresh validation produced an updated rejection.
+    accepted_market_ids = {r.get("id") for r in merged}
+    accepted_cow_ids = {r.get("id") for r in merged_cows}
+    current_reject_keys = {
+        (r.get("collection"), r.get("id")) for r in rejected_records + rejected_cows
+    }
+    prior_market = []
+    prior_cows = []
+    for old_reject in old_quarantine:
+        collection = old_reject.get("collection")
+        rid = old_reject.get("id")
+        key = (collection, rid)
+        if key in current_reject_keys:
+            continue
+        if collection == "records" and rid not in accepted_market_ids:
+            prior_market.append(old_reject)
+        elif collection == "cow_records" and rid not in accepted_cow_ids:
+            prior_cows.append(old_reject)
+    rejected_records.extend(prior_market)
+    rejected_cows.extend(prior_cows)
     rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
     rejection_reasons = {}
     for rejected in rejected_records:
