@@ -20,7 +20,7 @@ The public collector output is `data/market_observations.json` (schema version 7
 | `head` | Reported head count, or null if unavailable. |
 | `record_type` | Sale/report method, such as auction average, published weight-class range, published price range, lot highlight, video contract, direct trade, or state summary. |
 | `source`, `source_url` | Publisher and direct URL to the original report. |
-| `qa_status`, `qa_warnings` | Collector validation outcome and non-fatal review flags. |
+| `qa_status`, `qa_warnings` | Collector validation outcome and non-fatal review flags. |\n\nThe QA report also includes `source_fetch_health` by domain: logical requests, attempts, successful fetches, final failed requests, and the most recent final error. Transient failures are retried once. Historical quarantined observations remain in the QA report until a stable-ID record is accepted or a new rejection replaces the old reason.
 
 ## Interpretation rules
 
