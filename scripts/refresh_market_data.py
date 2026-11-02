@@ -1560,6 +1560,7 @@ def main():
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
+    # Record-level failures are quarantined; the batch threshold below is a circuit breaker.
     rejection_rate = rejected_new / len(new_ids) if new_ids else 0
     if rejection_rate >= 0.20:
         raise RuntimeError(
