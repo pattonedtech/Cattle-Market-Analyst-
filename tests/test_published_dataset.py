@@ -71,7 +71,12 @@ class PublishedDatasetTests(unittest.TestCase):
     def test_qa_report_matches_published_arrays(self):
         self.assertEqual(self.qa["market_observations"]["accepted"], len(self.payload.get("records", [])))
         self.assertEqual(self.qa["cow_market_observations"]["accepted"], len(self.payload.get("cow_records", [])))
-        self.assertTrue(all(row.get("source_url", "").startswith("https://") for row in self.qa["rejected_observations"]))
+        for row in self.qa["rejected_observations"]:
+            issues = row.get("issues", [])
+            has_source = str(row.get("source_url", "")).startswith("https://")
+            missing_source_is_reason = "missing_or_invalid_https_source_url" in issues
+            self.assertTrue(has_source or missing_source_is_reason, row)
+            self.assertTrue(issues, row)
 
     def test_quarantined_records_are_not_in_public_arrays(self):
         market_ids = {row["id"] for row in self.payload.get("records", [])}
