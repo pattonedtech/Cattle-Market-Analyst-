@@ -7,8 +7,9 @@ on:
       - "scripts/refresh_market_data.py"
       - "tests/**"
       - ".github/workflows/refresh-market-data.yml"
-# Two daily windows provide a same-day recovery opportunity if GitHub drops a scheduled event.
-  # Keep both runs away from the top of the hour, when GitHub reports the most schedule congestion.
+  # GitHub Actions cron is UTC: 7:17 AM / 3:17 PM Pacific during daylight time,
+  # and 6:17 AM / 2:17 PM Pacific during standard time.
+  # The two runs provide a same-day recovery window and avoid the top of the hour.
   schedule:
     - cron: "17 14 * * *"
     - cron: "17 22 * * *"
