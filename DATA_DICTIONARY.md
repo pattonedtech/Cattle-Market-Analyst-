@@ -18,7 +18,7 @@ The public collector output is `data/market_observations.json`. A record is one 
 | `price`, `price_low`, `price_high` | Reported price or midpoint and its published range. |
 | `price_unit` | `USD/cwt`, `USD/head`, or `USD/family`; never compare unlike units. |
 | `head` | Reported head count, or null if unavailable. |
-| `record_type` | Sale/report method, such as auction average, published range, video contract, direct trade, or state summary. |
+| `record_type` | Sale/report method, such as auction average, published weight-class range, published price range, lot highlight, video contract, direct trade, or state summary. |
 | `source`, `source_url` | Publisher and direct URL to the original report. |
 | `qa_status`, `qa_warnings` | Collector validation outcome and non-fatal review flags. |
 
