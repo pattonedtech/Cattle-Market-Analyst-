@@ -31,8 +31,13 @@ CREATE TABLE IF NOT EXISTS market_locations (
 
 CREATE TABLE IF NOT EXISTS market_observations (
     observation_id text PRIMARY KEY,
-    source_id text REFERENCES market_sources(source_id),
+    source_id text NOT NULL REFERENCES market_sources(source_id),
     market_id text REFERENCES market_locations(market_id),
+    reporting_state text,
+    reporting_county text,
+    reporting_region text,
+    geography_method text NOT NULL DEFAULT 'not_verified'
+        CHECK (geography_method IN ('verified_market_registry','source_reported','regional_report','not_verified')),
     sale_date date NOT NULL,
     category text NOT NULL,
     sex text,
@@ -74,6 +79,7 @@ CREATE INDEX IF NOT EXISTS market_observations_weight_idx ON market_observations
 CREATE TABLE IF NOT EXISTS quarantined_observations (
     quarantine_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     observation_id text,
+    collection_name text NOT NULL CHECK (collection_name IN ('market_observations','cow_market_observations')),
     source_id text REFERENCES market_sources(source_id),
     source_url text,
     original_payload jsonb NOT NULL,
@@ -115,7 +121,7 @@ CREATE TABLE IF NOT EXISTS benchmark_snapshots (
     source_record_types text[] NOT NULL DEFAULT ARRAY[]::text[],
     corriente_origin text NOT NULL DEFAULT 'not_applicable'
         CHECK (corriente_origin IN ('Native Corriente','Mexican M-branded Corriente','unspecified','not_applicable')),
-    period_days integer,
+    period_days integer NOT NULL DEFAULT 0 CHECK (period_days >= 0),
     weight_cohort text NOT NULL DEFAULT 'all',
     weight_low_lb numeric(10,2),
     weight_high_lb numeric(10,2),
@@ -126,10 +132,11 @@ CREATE TABLE IF NOT EXISTS benchmark_snapshots (
     head_count bigint,
     average_method text NOT NULL,
     created_at timestamptz NOT NULL DEFAULT now(),
-    UNIQUE (as_of, geography_level, geography_code, region_label, category, price_unit,
-            source_series, corriente_origin, period_days, weight_cohort)
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS benchmark_snapshots_unique_idx
+    ON benchmark_snapshots (as_of, geography_level, geography_code, COALESCE(region_label, ''),
+                            category, price_unit, source_series, corriente_origin, period_days, weight_cohort);
 CREATE INDEX IF NOT EXISTS benchmark_snapshots_lookup_idx
     ON benchmark_snapshots (as_of DESC, category, price_unit, source_series, geography_level);
 
