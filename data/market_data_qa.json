@@ -1,14 +1,14 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-02T00:11:38.804682+00:00",
+  "generated_at": "2026-11-02T01:14:58.397766+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
-    "accepted": 17756,
-    "rejected": 2
+    "accepted": 18325,
+    "rejected": 211
   },
   "cow_market_observations": {
-    "accepted": 1526,
-    "rejected": 1
+    "accepted": 1548,
+    "rejected": 9
   },
   "geographic_quality": {
     "market_records_missing_state": 135,
@@ -17,7 +17,7 @@
     "accepted_by_geography_method": {
       "regional_report_unassigned": 135,
       "source_report_state_only": 1102,
-      "verified_market_registry": 16519
+      "verified_market_registry": 17088
     },
     "accepted_by_county": {
       "Arizona / Cochise": 160,
@@ -26,6 +26,7 @@
       "California / San Benito": 59,
       "California / Tulare": 28,
       "Idaho / Cassia": 134,
+      "Idaho / Idaho": 569,
       "Idaho / Twin Falls": 24,
       "Montana / County not identified": 454,
       "Nevada / Churchill": 2019,
@@ -45,7 +46,7 @@
   "accepted_by_state": {
     "Arizona": 3780,
     "California": 9951,
-    "Idaho": 158,
+    "Idaho": 727,
     "Montana": 454,
     "Nevada": 2019,
     "New Mexico": 989,
@@ -61,6 +62,7 @@
     "Cattlemen's Livestock Auction (USDA)": 151,
     "Cattlemen's Livestock Auction - Belen": 2,
     "Clovis Livestock Auction (USDA)": 217,
+    "Cottonwood Livestock Auction": 569,
     "Fallon Livestock": 2019,
     "Marana Stockyards": 3620,
     "Montana Weekly Cattle Auction Summary (USDA)": 227,
@@ -88,6 +90,7 @@
     "Burley Livestock Auction": 116,
     "Cattle Channel (sale report)": 78,
     "Cattlemen's Livestock Auction - Belen": 2,
+    "Cottonwood Livestock Auction": 569,
     "Fallon Livestock": 2019,
     "Marana Stockyards": 3620,
     "Overland Stock Yard": 9814,
@@ -100,6 +103,7 @@
     "belenlivestockauction.com": 2,
     "burleylivestock.auction": 116,
     "cattlechannel.com": 78,
+    "cottonwoodlivestock.com": 569,
     "rancherschoicestockyard.com": 59,
     "test.willcoxlivestockauction.com": 160,
     "www.ams.usda.gov": 1860,
@@ -110,56 +114,3742 @@
   },
   "rejected_observations": [
     {
-      "id": "2a75b7dacb97d61357",
-      "date": "2024-03-12",
-      "market": "Fallon Livestock",
-      "state": "Nevada",
-      "county": "Churchill",
-      "category": "Feeder heifer",
-      "weight": 350.0,
-      "price": 351.0,
+      "id": "0e2796520a64bd87f6",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 87.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_2-13-2024.pdf",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
       "collection": "records",
       "issues": [
-        "invalid_price_range_or_average"
+        "missing_or_invalid_https_source_url"
       ],
       "warnings": []
     },
     {
-      "id": "ae4098f18534b8807b",
-      "date": "2025-09-09",
-      "market": "Fallon Livestock",
-      "state": "Nevada",
-      "county": "Churchill",
+      "id": "24b30bedf03b3f3a57",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
       "category": "Feeder heifer",
-      "weight": 950.0,
-      "price": 1242.23,
+      "weight": 875.0,
+      "price": 117.5,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.fallonlivestock.com/uploads/1/1/7/2/117241874/market_report_8-19-2025.pdf",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
       "collection": "records",
       "issues": [
-        "invalid_price_range_or_average"
+        "missing_or_invalid_https_source_url"
       ],
-      "warnings": [
-        "unusual_cwt_price_review_source"
-      ]
+      "warnings": []
     },
     {
-      "id": "f66104611ea1819372",
-      "date": "2026-10-01",
-      "market": "Willcox Livestock Auction",
-      "state": "Arizona",
-      "county": "Cochise",
-      "category": "Bred cow",
+      "id": "3d108429dd7d1528bf",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 141.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "48c266ddeea4a40733",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 133.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "599c02963f79c71b73",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 163.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "67bc867d912a2f699d",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 142.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "854350d5c3a053ecd3",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 127.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "85d73f43736d00a651",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 138.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b0b91ed031ae63e819",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 144.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ca4d6e2a2da1b6a26a",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 160.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "cf2700ca897ad91051",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 137.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d1d8de8648b51c77c5",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 150.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ea403a7c3ce94259a0",
+      "date": "2022-01-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 129.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "180949abca9a2b33a4",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 151.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "184e797b54afd35bb8",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
       "weight": null,
-      "price": 0.0,
-      "price_unit": "USD/head",
-      "source_url": "https://test.willcoxlivestockauction.com/wp-content/uploads/2026/10/10-01-26-Market-Report.pdf",
+      "price": 92.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "27cd17cbf271f23569",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 130.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "35b3ebe4d9bf3e741b",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 146.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3855073dab4eac6dc0",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 160.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5809155df5b6218487",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 123.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5fd59e49a6a8f8262e",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 133.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "6671a1bfd636d8475d",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 128.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "7b3ebe666c195f674d",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 116.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "87fd186f663fcb5421",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 145.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "cc02930a4ca6fce141",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 134.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e752aaaf9bc8924955",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 140.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ff93b8e24743b6cb5a",
+      "date": "2022-01-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/January-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "0b20574dfcbc5e15b8",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 148.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "24f5a1dbe994ac822a",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 168.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "27a120ffb1963902d1",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 148.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "42a21edafbe87662ab",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 165.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4c5f79b22262fd26c6",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 131.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "6cbe278a1080a815f3",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 159.25,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "747d704bf0e9ae3aca",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 146.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "82e9a5133a495a168e",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 164.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "93b37e6dec60e28fa0",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 92.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9ef219f6cb8282c00b",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 148.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "aa2a1ec74d9823ee3a",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 154.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b87dfb2431838628a9",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 155.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "dabfd178729480a554",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 156.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "0c98f332b90859d0f7",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 105.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3e9e0e8c1581e35603",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 186.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "59a8e1dd7028e18202",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 145.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "59e74dd561307cd561",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 146.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "604b0838cd56e5a08b",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "7d483a7d612cb5a256",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 138.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9a9ca6c37790900a30",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 130.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9f44fc7bf893f292ce",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 155.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d187a1d6df8a155735",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 175.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "da6d66e406e0b0d002",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 185.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "daefe33ec785395d5b",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 137.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e0ed4b44ac62ff84c1",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 134.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ebc24169690b98a0b5",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "2296db64078d06ebea",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 137.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "58b35c11e79b3271dd",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 128.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8158b38b7b332a3d5c",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 135.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "88e2fdf2c4f73541f5",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 162.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8b4f5455cba4326394",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 137.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "94bc2f7062931e40f3",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 164.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "abf880b4daa39282a9",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 159.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "bb34ac9ecff53844f5",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 141.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "bd80ba9bb0f65f15d7",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 101.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c42256539ce4dcf039",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 163.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c5f6bb71a104cda97d",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 133.125,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e84263fbfc6989f1d1",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 141.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ea191d12ccd647abd3",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 147.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "0646f29eca9812b67e",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 195.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "08363ec27b627897fa",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 147.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "10113694eea0b4a712",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 186.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "39d16760a5e277a79b",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 176.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5817cb1d581c89a131",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 174.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "91e81474adeae64faf",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 202.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d21c4fbe71d2a42763",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 158.125,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d4f1d55d1e7c05c4fe",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 164.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ed0661b7ab5ce41384",
+      "date": "2022-08-12",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 122.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-12-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "03e06e48335cbe23e2",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 171.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "0452f9ef1f9a9b58dc",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 166.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5fcfb418481ec6c125",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 161.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "60a03e9996b7f8600d",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 159.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8095ea6ae4ed81d134",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 142.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "94626cc8bb5485c776",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 162.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "aae8c83dc4b7a5ddf1",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 181.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b9f7348f9f5d294f96",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 184.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e68f7a94e7b18ca2e9",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 110.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ec26894c0e191468c3",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 162.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f54bec27218835ee2a",
+      "date": "2022-08-26",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 156.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/August-26-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "098789b494754006fc",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 143.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3bf783d4eae210dcb6",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 176.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4e9227ec26a0e77fbd",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 166.25,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "7f89aad9a5558bb896",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 185.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "87ffb68c558e81a633",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 178.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "93496869da4645641b",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 144.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9c01ad55e5cd19b940",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 92.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c403f3adb23074a0d2",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 177.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d081ddd438b7bae3a6",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 168.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ddc2210cd5eeb28f4e",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 156.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "df5eec3fb7048206ec",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 158.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e512ff27dbe6b3292a",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 154.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "15e6ee7f0061945982",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 167.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "2f9d1e8197b5930322",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 155.25,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3c22527cb59a723a2d",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 89.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "694ca0de46284a26df",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 154.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "76bf24d3b7a3250556",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 197.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "addb9495bf31c7df47",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 139.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "dd1e2b7344a655a6ca",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 165.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e247dbbeee223a4120",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 204.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e44c4d1863923e642f",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 166.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e4708562ca8874a5d8",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 150.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "eba121eef88d8afbb8",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 142.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f212a6f51cc907c669",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 153.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f2a907c2bcde09cbd8",
+      "date": "2022-10-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 173.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-14-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "1686121661c5e69947",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 153.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "185ee4e958704a5bc2",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 141.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "48939ec07f85abf90a",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 146.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4a84b55a621cd3f8a2",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 193.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4f248af87d23e6f684",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 138.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8af261de881dffa5f8",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 160.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "96c73eb3276cba45a5",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 208.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "980f647078ed0cb442",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 88.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c0089aef8df14462d5",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 157.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e500d5cedb64325ae0",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 150.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "eca30358b90ee5d8b4",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 144.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f13bed1026645f18d4",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 184.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f298c20fcf364cc930",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 166.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "19345a2eaffe7fa5ea",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 142.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "22da75df1dcf0b0eb7",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 154.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "2a59e816faeba66581",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 147.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "75cdb353fffd6ea7be",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 150.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "94c244c9f22413d1ed",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 170.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9f771074d739d23aa0",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 155.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "a0d4c3eba29b79c2b4",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 171.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "a4a524f5db819b0ee0",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 180.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d8f9ee0f3e8dcfbbe6",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 144.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e05e59a1fb9b93404f",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 86.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e677d552b6bd2482b5",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 167.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f36cc86bf1208d2d62",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 177.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ff352cf4bb093bea46",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 144.25,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "187e7b425135e4417e",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 82.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "38d82ce1445a6a91bb",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 190.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "455d30679efc11e09b",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 165.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "834f1a78b05b095876",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 135.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9de611cf24e24ef903",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 175.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b08165ac0151582d09",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 144.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b2d4b7b3351dbfc1ac",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 165.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "bc1476a47c05821215",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 155.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c0a7ce1c860050cf80",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 159.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c32796b5d15e37d26b",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 167.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c3c2b0331a888a9ec5",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 185.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c656d8eb74fe85ec2e",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 147.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "cc4c720c94b052d3e2",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 158.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "2098691abe24e49f22",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 211.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3879993294aef60fce",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 161.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "49c0d99a25862bb517",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 186.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "7e8d24586d2c12aae8",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 162.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "92daee5fb4f5d430a3",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 107.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b7e832cc3c8dae11e8",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 218.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b9a57d6017e455f824",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 185.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "bf30b3764976666cdc",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 203.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "c309233d36b71f0a81",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 225.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "d9dd9e15467693291f",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 196.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ddfcaac8ab09b89983",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f59da9fb826848b1c2",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 161.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "fe30850cd218529b93",
+      "date": "2023-02-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 175.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "04bf7c08898b165079",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 242.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "0f641427847cc7a735",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 192.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "1dae5d109ab7eb57dc",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 189.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "25c00943efa53753ad",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 207.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "43af518b68b91a1470",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 147.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5e4b7993bd5b2199c4",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "6487a5aa6afa6cf1b7",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 205.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "a56229e23557d04ac2",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 249.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b18ac6bac9bb7133e0",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 118.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e789cb2a28e35725f4",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 152.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e8f2de61d8efd3f149",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 201.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e90294162e13f032f4",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 173.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "fa0ead2187cc107475",
+      "date": "2023-03-10",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 247.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-10-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "2002199bd28d979049",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 199.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "21c2b1e09f7dc2a191",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 192.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "319a9908e1f2c68832",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 113.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4bb792ef059ba7a5d2",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 152.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "69d99fd094fd81f371",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 162.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "6d04eaf73518281cdb",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 186.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "75294cb540fc174606",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 203.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "819357585ae97732bd",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 227.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8d98e50652d016141a",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 225.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "96a8732405d173d6de",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 211.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "9f7f90d914a9126af5",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 149.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ea4e56e03725672d9b",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 215.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f5a84fe8a87148ea62",
+      "date": "2023-03-24",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 186.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-24-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "16a74b9d641f6a9e8e",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 196.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "20739192910cc43a5d",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 875.0,
+      "price": 167.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "5a4cfc47a52bdabf3b",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 232.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "61760ad4f3b505117a",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 875.0,
+      "price": 181.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "65afccad09c88a7515",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 210.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "7d56e31d22fdb3d581",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 207.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "85435703d917842a2f",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 185.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "98538792bbb4f9f130",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 112.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "b606f8aaf5c83e7ceb",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 750.0,
+      "price": 172.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "bc87af4bd2505279ba",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 207.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "db79c679394d789319",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 197.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ddf34a6b6ef2ede70c",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 223.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e37646ecb00a78a6ce",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 212.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "14c608a3e8401ab46c",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 450.0,
+      "price": 221.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "382bf98b61ba51fc6e",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 300.0,
+      "price": 207.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "81200ba62e558d69a0",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 550.0,
+      "price": 209.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "8b6006fb596ae9d063",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Bull",
+      "weight": null,
+      "price": 124.75,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "cb9c4bce6b1fa09bc0",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 650.0,
+      "price": 180.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "dcd965329cf72ce9f4",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 650.0,
+      "price": 202.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e09b0f7500475e594c",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder steer",
+      "weight": 750.0,
+      "price": 168.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "e8bff981fb6cc1025b",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 300.0,
+      "price": 197.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "f079095a92b05ae641",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 550.0,
+      "price": 196.5,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ff8894e33b7b33256a",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Feeder heifer",
+      "weight": 450.0,
+      "price": 195.0,
+      "price_unit": "USD/cwt",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "31087c68f3aefec09e",
+      "date": "2022-02-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1412.5,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/February-11-2022.pdf",
       "collection": "cow_records",
       "issues": [
-        "invalid_price_range_or_average",
-        "price_outside_sanity_bounds"
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "87c6aed6265520534f",
+      "date": "2022-03-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1200.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/March-11-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ecc4f3a80aee0bd9bb",
+      "date": "2022-05-27",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1550.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/May-27-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "3fc227136b752f95de",
+      "date": "2022-09-23",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1412.5,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/September-23-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "fc19c43c5ff722dbfa",
+      "date": "2022-10-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 2000.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/October-28-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "4fdb816cbc5929daf2",
+      "date": "2022-11-11",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1437.5,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/November-11-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "41a244336f398e0fbb",
+      "date": "2022-12-09",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1475.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/December-9-2022.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "51581e5521f8fadaf5",
+      "date": "2023-04-14",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1400.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-14-2023.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
+      ],
+      "warnings": []
+    },
+    {
+      "id": "ce2f954594c75612cd",
+      "date": "2023-04-28",
+      "market": "Cottonwood Livestock Auction",
+      "state": "Idaho",
+      "county": "Idaho",
+      "category": "Cow-calf pair",
+      "weight": null,
+      "price": 1980.0,
+      "price_unit": "USD/family",
+      "source_url": "http://cottonwoodlivestock.com/wp-content/uploads/2023/05/April-28-2023.pdf",
+      "collection": "cow_records",
+      "issues": [
+        "missing_or_invalid_https_source_url"
       ],
       "warnings": []
     }
@@ -205,7 +3895,14 @@
       "state": "ID",
       "kind": "market report directory",
       "url": "https://www.idahofb.org/commodities/beef-market-reports/",
-      "status": "official industry directory for Caldwell, Vale, Emmett, Burley, Jerome, Twin Falls, Blackfoot, Cottonwood and Lewiston; individual parsers pending"
+      "status": "industry directory for Idaho auction report sources"
+    },
+    {
+      "name": "Cottonwood Livestock Auction",
+      "state": "ID",
+      "kind": "live auction",
+      "url": "https://cottonwoodlivestock.com/market-report/",
+      "status": "automated: dated PDF archive 2022-2026; feeder weight-class ranges and pair prices"
     },
     {
       "name": "Idaho Public Livestock Markets",
