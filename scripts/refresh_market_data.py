@@ -960,7 +960,7 @@ def discover_cattle_channel_report_urls():
     do not probe obsolete WordPress sitemap/feed URLs that currently return 404.
     """
     report_pattern = re.compile(
-        r"/market-report/(?:idaho|oregon)/[^/]+/20\\d{2}-\\d{2}-\\d{2}/?$",
+        r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?$",
         re.I,
     )
     allowed_hosts = {"cattlechannel.com", "www.cattlechannel.com"}
