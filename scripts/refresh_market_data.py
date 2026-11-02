@@ -5,7 +5,7 @@ Only reported prices are stored as observations. National/regional futures quote
 auction prices, direct trades, video contracts, and price ranges remain distinct.
 """
 from __future__ import annotations
-import json, re, hashlib, sys
+import json, re, hashlib, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, quote, urlparse
@@ -13,13 +13,14 @@ from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
-from market_model import normalize_observation, build_benchmarks
+from market_model import normalize_observation, build_benchmarks, merge_quarantine_history
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "market_observations.json"
 QA_OUT = DATA / "market_data_qa.json"
 FUTURES_OUT = DATA / "futures.json"
+SOURCE_FETCH_HEALTH = {}
 S = requests.Session()
 S.headers.update({
     # USDA AMS blocks some non-browser default clients at its legacy PDF endpoint.
@@ -35,9 +36,29 @@ def stable_id(*parts):
 
 
 def fetch(url):
-    r = S.get(url, timeout=45)
-    r.raise_for_status()
-    return r
+    """Fetch with one bounded retry and retain domain-level source health."""
+    domain = urlparse(url).netloc or "unknown"
+    health = SOURCE_FETCH_HEALTH.setdefault(domain, {
+        "requests": 0, "attempts": 0, "successes": 0,
+        "failed_requests": 0, "last_error": None
+    })
+    health["requests"] += 1
+    last_error = None
+    for attempt in range(2):
+        health["attempts"] += 1
+        try:
+            response = S.get(url, timeout=45)
+            response.raise_for_status()
+            health["successes"] += 1
+            health["last_error"] = None
+            return response
+        except Exception as exc:
+            last_error = exc
+            if attempt == 0:
+                time.sleep(1)
+    health["failed_requests"] += 1
+    health["last_error"] = str(last_error)[:500]
+    raise last_error
 
 
 def parse_date(text):
@@ -1449,7 +1470,7 @@ def quality_check(rows, collection):
     return accepted, rejected
 
 
-def build_qa_report(records, cow_records, rejected_records, rejected_cows):
+def build_qa_report(records, cow_records, rejected_records, rejected_cows, source_fetch_health=None):
     by_state, by_county, by_market, by_source, by_domain, by_geo_method = {}, {}, {}, {}, {}, {}
     by_category, by_record_type, by_corriente_origin, by_sale_regionality = {}, {}, {}, {}
     missing_state = missing_county = warning_records = 0
@@ -1502,6 +1523,7 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows):
         "accepted_sale_regionality": dict(sorted(by_sale_regionality.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
         "accepted_by_source_domain": dict(sorted(by_domain.items())),
+        "source_fetch_health": dict(sorted((source_fetch_health or {}).items())),
         "rejected_observations": rejected_records + rejected_cows,
         "source_registry": SOURCES
     }
@@ -1542,6 +1564,7 @@ def main():
     records += fallon_records
     old = []
     old_cows = []
+    old_quarantine = []
     if OUT.exists():
         try:
             old_payload = json.loads(OUT.read_text(encoding="utf-8"))
@@ -1549,6 +1572,12 @@ def main():
             old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
+    if QA_OUT.exists():
+        try:
+            previous_qa = json.loads(QA_OUT.read_text(encoding="utf-8"))
+            old_quarantine = previous_qa.get("rejected_observations", [])
+        except Exception:
+            old_quarantine = []
     by_id = {}
     # Backfill geography on previously published observations so the feature
     # works across the full historical archive, not only new daily records.
@@ -1567,13 +1596,21 @@ def main():
     new_ids = {r.get("id") for r in records}
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
+    # Quarantine is durable history. Keep prior rejected rows unless the same
+    # stable ID is now accepted or a fresh validation produced an updated rejection.
+    accepted_market_ids = {r.get("id") for r in merged}
+    accepted_cow_ids = {r.get("id") for r in merged_cows}
+    rejected_records, rejected_cows = merge_quarantine_history(
+        rejected_records, rejected_cows, old_quarantine,
+        accepted_market_ids, accepted_cow_ids
+    )
     rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
     rejection_reasons = {}
     for rejected in rejected_records:
         if rejected.get("id") in new_ids:
             for reason in rejected.get("issues", []):
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
-    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows)
+    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     # Record-level failures are quarantined; the batch threshold below is a circuit breaker.
     rejection_rate = rejected_new / len(new_ids) if new_ids else 0
