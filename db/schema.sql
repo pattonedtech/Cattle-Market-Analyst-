@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS benchmark_snapshots (
     observation_count integer NOT NULL CHECK (observation_count >= 0),
     head_count bigint,
     average_method text NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT now(),
+    created_at timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS benchmark_snapshots_unique_idx
