@@ -171,7 +171,7 @@
 <script>
 (function(){
 'use strict';
-var KEY='flyingp_market_records_v1', ROLE_KEY='flyingp_market_roles_v1', records=[], futuresContracts=[], cowMarketRecords=[], marketRoles={}, recordsPage=0, recordsPageSize=100, publishedIds=new Set();
+var KEY='flyingp_market_records_v1', ROLE_KEY='flyingp_market_roles_v1', records=[], futuresContracts=[], cowMarketRecords=[], publishedBenchmarks=[], marketRoles={}, recordsPage=0, recordsPageSize=100, publishedIds=new Set();
 function loadMarketRoles(){try{marketRoles=JSON.parse(localStorage.getItem(ROLE_KEY)||'{}');if(!marketRoles||typeof marketRoles!=='object'||Array.isArray(marketRoles))marketRoles={}}catch(e){marketRoles={}}}
 function saveMarketRoles(){localStorage.setItem(ROLE_KEY,JSON.stringify(marketRoles))}
 function marketRole(market){return marketRoles[market]||'none'}
@@ -188,7 +188,7 @@ var response=await fetch('data/market_observations.json?refresh='+Date.now(),{ca
 if(!response.ok)throw new Error('HTTP '+response.status+' while loading published market data');
 var payload=await response.json();
 if(!payload||!Array.isArray(payload.records))throw new Error('Published data did not contain a records array');
-var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];
+var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];publishedBenchmarks=payload.benchmarks&&Array.isArray(payload.benchmarks.groups)?payload.benchmarks.groups:[];
 var sources=Array.isArray(payload.sources)?payload.sources:[];
 $('sourceList').innerHTML=sources.map(function(x){var u=safeSourceUrl(x.url);return '<p>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>':esc(x.name))+' ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
 if(payload.qa_summary)$('sourceList').innerHTML+='<p><strong>Data QA:</strong> '+fmt(payload.qa_summary.market_records_accepted)+' accepted; '+fmt(payload.qa_summary.market_records_rejected)+' quarantined. <a href="data/market_data_qa.json" target="_blank" rel="noopener">Open QA report</a>.</p>';
@@ -420,42 +420,69 @@ return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.pr
 function renderWesternOverview(){
 if(!$("westCategory"))return;
 var category=$("westCategory").value,period=$("westPeriod").value,sourceMode=$("westSource").value,corriente=$("westCorriente").value,weightBand=$("westWeight").value;
-var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";$("westCorriente").disabled=!isCorriente;
-var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
+var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";
+$("westCorriente").disabled=!isCorriente;
 var unit=category==="Bred cow"||category==="Bred heifer"||category==="Fresh Corriente"?"USD/head":category==="Cow-calf pair"?"USD/family":"USD/cwt";
 var weightApplicable=unit==="USD/cwt"&&category!=="Corriente cattle (unclassified)";
 $("westWeight").disabled=!weightApplicable;
 if(!weightApplicable){weightBand="all";$("westWeight").value="all";}
-function normalize(record){
+var periodKey=period==="all"?"all":String(period);
+var series=sourceMode==="auction"?"auction_weighted_average":sourceMode;
+var rangeMode=sourceMode==="published_weight_class_range"||sourceMode==="published_price_range";
+var mixedMode=sourceMode==="all"||(isCorriente&&corriente==="all");
+function priceText(value){return value===null||value===undefined?"—":money(value)+(unit==="USD/cwt"?"/cwt":unit==="USD/head"?"/head":"/pair");}
+function fromBenchmark(state){
+var origin=isCorriente?corriente:"not_applicable";
+var group=publishedBenchmarks.find(function(g){return g.state===state&&g.category===category&&g.price_unit===unit&&g.record_type===series&&g.corriente_origin===origin&&g.period_days===periodKey&&g.weight_cohort===weightBand;});
+if(!group)return null;
+return {avg:group.average,low:group.low,high:group.high,count:group.observation_count,averageCount:group.observation_count,head:group.head_count,markets:(group.markets||[]).length,method:group.average_method,sourceTypes:group.source_record_types||[]};
+}
+var stateRows,overall,regionalRows=[];
+if(!mixedMode&&!rangeMode&&publishedBenchmarks.length){
+stateRows=WEST_STATES.map(function(state){return {state:state,stats:fromBenchmark(state)};});
+overall=fromBenchmark("Western");
+}else{
+var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
+function rawMatch(record){
+if(record.source==="User-entered")return false;
 var state=westernState(record),recordUnit=record.price_unit||"USD/cwt";
-if(recordUnit!==unit)return null;
-if(record.category!==category)return null;
-if(weightBand!=="all"){var band=weightBand.split("-").map(Number),wlo=record.weight_low!=null?Number(record.weight_low):Number(record.weight),whi=record.weight_high!=null?Number(record.weight_high):Number(record.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<band[0]||wlo>band[1])return null;}
-if(isCorriente){
-var origin=corrienteOrigin(record);
-if(corriente!=="all"&&origin!==corriente)return null;
+if(recordUnit!==unit||record.category!==category)return false;
+if(isCorriente&&corriente!=="all"&&corrienteOrigin(record)!==corriente)return false;
+if(sourceMode!=="all"&&record.record_type!==sourceMode)return false;
+if(cutoff&&record.date){var dt=new Date(record.date+"T23:59:59");if(!Number.isNaN(dt.getTime())&&dt.getTime()<cutoff)return false;}
+if(weightBand!=="all"){var band=weightBand.split("-").map(Number),wlo=record.weight_low!=null?Number(record.weight_low):Number(record.weight),whi=record.weight_high!=null?Number(record.weight_high):Number(record.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<band[0]||wlo>band[1])return false;}
+return Number.isFinite(Number(record.price))&&Number(record.price)>0;
 }
-if(!westernSourceAllowed(record,sourceMode))return null;
-if(cutoff&&record.date){var dt=new Date(record.date+"T23:59:59");if(!Number.isNaN(dt.getTime())&&dt.getTime()<cutoff)return null}
-if(!Number.isFinite(Number(record.price))||Number(record.price)<=0)return null;
-return Object.assign({},record,{state:state,price_unit:unit});
+var candidates=records.filter(rawMatch);
+function rangeStats(items){
+if(!items.length)return null;
+return {avg:null,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Published ranges are not averaged"};
 }
-var candidates=records.map(normalize).filter(Boolean);
-cowMarketRecords.forEach(function(r){var n=normalize(r);if(n)candidates.push(n)});
-var stateRows=WEST_STATES.map(function(state){var items=candidates.filter(function(r){return r.state===state});return {state:state,items:items,stats:westernAverage(items)}});
-var stateItems=candidates.filter(function(r){return !!r.state}),overall=westernAverage(stateItems);
-function priceText(value){return value===null||value===undefined?"—":money(value)+(unit==="USD/cwt"?"/cwt":unit==="USD/head"?"/head":"/pair")}
-$("westOverall").textContent=overall?priceText(overall.avg):"No comparable data";
-$("westOverallCell").textContent=overall?priceText(overall.avg):"—";
-$("westOverallMeta").textContent=overall?fmt(overall.count)+" observations ("+fmt(overall.averageCount)+" used in average) · "+fmt(overall.head||0)+" reported head · "+overall.markets+" markets · "+overall.method:"No qualifying state-level observations for this category and filter.";
-$("westStateBody").innerHTML=stateRows.map(function(row){var a=row.stats;return "<tr><td>"+esc(row.state)+"</td><td class='num'>"+(a?priceText(a.avg):"—")+"</td><td class='num'>"+(a?priceText(a.low):"—")+"</td><td class='num'>"+(a?priceText(a.high):"—")+"</td><td class='num'>"+(a?fmt(a.count):"0")+"</td><td class='num'>"+(a&&a.head!==null?fmt(a.head):"—")+"</td><td>"+(a?a.markets+" market(s) · "+a.averageCount+"/"+a.count+" observations used":"No data")+"</td></tr>"}).join("");
-$("westLow").textContent=overall?priceText(overall.low):"—";$("westHigh").textContent=overall?priceText(overall.high):"—";$("westCount").textContent=overall?fmt(overall.count):"0";$("westHead").textContent=overall&&overall.head!==null?fmt(overall.head):"—";$("westCoverage").textContent=stateRows.filter(function(x){return !!x.stats}).length+"/10 states";
-$("westMethod").textContent=(overall?overall.method+" average across state-tagged records; "+overall.averageCount+" of "+overall.count+" observations were used. ":"No average calculated. ")+(sourceMode==="range"?"Published range midpoints are not the same as lot-weighted sale prices. ":sourceMode==="video"?"Video and direct trades are benchmarks and are not blended with local auction averages. ":sourceMode==="all"?"All state-specific source types are selected; mixed methodologies make this an exploratory comparison. ":"Auction and USDA weighted-average sources are selected. ")+"The Western overall is weighted by reported head where available, not an average of the ten state averages. It excludes multi-state reports to avoid double-counting. "+(weightBand==="all"&&unit==="USD/cwt"?"All weights are combined; select a weight class for a tighter like-for-like comparison.":"");
-var regions={};candidates.forEach(function(r){if(r.state)return;var label=String(r.region||"").trim();if(!label||!/(region|multi-state|western|northwest|southwest)/i.test(label))return;if(!regions[label])regions[label]=[];regions[label].push(r)});
-var regionRows=Object.keys(regions).map(function(label){return {label:label,items:regions[label],stats:westernAverage(regions[label])}});
-$("westRegionalBody").innerHTML=regionRows.length?regionRows.map(function(row){var types=Array.from(new Set(row.items.map(function(r){return r.record_type||"auction report"}))).join(", ");return "<tr><td>"+esc(row.label)+"</td><td class='num'>"+priceText(row.stats.avg)+"</td><td class='num'>"+fmt(row.stats.count)+"</td><td class='num'>"+(row.stats.head===null?"—":fmt(row.stats.head))+"</td><td>"+esc(types)+"</td></tr>"}).join(""):"<tr><td colspan='5' class='empty'>No regional benchmark for this category and source filter.</td></tr>";
-var available=stateRows.filter(function(x){return !!x.stats}).map(function(x){return x.state});
-$("overviewStatus").textContent=available.length+" of 10 Western states have qualifying "+category.toLowerCase()+" observations in the selected period. States without published comparable data remain blank. Categories with sparse or absent data require additional local auction feeds or manually entered observations.";
+function countStats(items){
+if(!items.length)return null;
+return {avg:null,low:null,high:null,count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Mixed source types are not pooled"};
+}
+var summarize=rangeMode?rangeStats:mixedMode?countStats:westernAverage;
+stateRows=WEST_STATES.map(function(state){return {state:state,stats:summarize(candidates.filter(function(r){return westernState(r)===state;}))};});
+var stateItems=candidates.filter(function(r){return !!westernState(r);});
+overall=rangeMode?rangeStats(stateItems):mixedMode?countStats(stateItems):westernAverage(stateItems);
+var regions={};
+candidates.forEach(function(r){if(westernState(r))return;var label=String(r.region||"").trim();if(!label)return;var type=r.record_type||"unclassified",key=label+"|"+type;if(!regions[key])regions[key]=[];regions[key].push(r);});
+regionalRows=Object.keys(regions).map(function(key){var items=regions[key],parts=key.split("|");return {label:parts[0],type:parts[1],count:items.length,head:items.every(function(r){return Number(r.head)>0;})?items.reduce(function(a,r){return a+Number(r.head);},0):null};});
+}
+$("westOverall").textContent=overall&&overall.avg!==null?priceText(overall.avg):mixedMode?"Select one source/origin to calculate a benchmark":rangeMode?"Range data — no average":"No comparable data";
+$("westOverallCell").textContent=overall&&overall.avg!==null?priceText(overall.avg):"—";
+$("westOverallMeta").textContent=overall?fmt(overall.count)+" observations · "+(overall.head===null?"head counts incomplete":fmt(overall.head)+" reported head")+" · "+overall.markets+" markets · "+overall.method:"No qualifying observations for this category and filter.";
+$("westStateBody").innerHTML=stateRows.map(function(row){var a=row.stats;return "<tr><td>"+esc(row.state)+"</td><td class='num'>"+(a&&a.avg!==null?priceText(a.avg):"—")+"</td><td class='num'>"+(a&&a.low!==null?priceText(a.low):"—")+"</td><td class='num'>"+(a&&a.high!==null?priceText(a.high):"—")+"</td><td class='num'>"+(a?fmt(a.count):"0")+"</td><td class='num'>"+(a&&a.head!==null?fmt(a.head):"—")+"</td><td>"+(a?a.markets+" market(s) · "+a.method:"No data")+"</td></tr>"}).join("");
+$("westLow").textContent=overall&&overall.low!==null?priceText(overall.low):"—";
+$("westHigh").textContent=overall&&overall.high!==null?priceText(overall.high):"—";
+$("westCount").textContent=overall?fmt(overall.count):"0";
+$("westHead").textContent=overall&&overall.head!==null?fmt(overall.head):"—";
+$("westCoverage").textContent=stateRows.filter(function(x){return !!x.stats}).length+"/10 states";
+$("westMethod").textContent= mixedMode?"No pooled average is calculated across different Corriente origins or different source methodologies. Choose one Corriente origin and one source series.":rangeMode?"Published price ranges are shown as an envelope only. Their midpoints are not treated as auction averages.":(overall?overall.method+". ":"No average calculated. ")+(sourceMode==="auction"?"Auction weighted-average observations are combined only within that method family. ":"The selected source series is kept separate. ")+(weightBand==="all"&&unit==="USD/cwt"?"All weights are combined in the all-weight cohort; select a 100 lb weight cohort for a tighter comparison.":"");
+$("westRegionalBody").innerHTML=regionalRows.length?regionalRows.map(function(row){return "<tr><td>"+esc(row.label)+"</td><td class='num'>—</td><td class='num'>"+fmt(row.count)+"</td><td class='num'>"+(row.head===null?"—":fmt(row.head))+"</td><td>"+esc(row.type)+" (regional; not pooled with state averages)</td></tr>"}).join(""):"<tr><td colspan='5' class='empty'>No regional benchmark for this category and source filter.</td></tr>";
+var available=stateRows.filter(function(x){return !!x.stats}).map(function(x){return x.state;});
+$("overviewStatus").textContent=available.length+" of 10 Western states have qualifying "+category.toLowerCase()+" observations in the selected period. Western overall uses the pooled observations from verified western states, not an average of state averages. Regional/unassigned reports remain separate.";
 }
 function renderGeoComparison(){
 var category=$('histCategory')?$('histCategory').value:'Feeder steer';
