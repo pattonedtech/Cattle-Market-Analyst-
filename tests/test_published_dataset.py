@@ -73,6 +73,15 @@ class PublishedDatasetTests(unittest.TestCase):
         self.assertEqual(self.qa["cow_market_observations"]["accepted"], len(self.payload.get("cow_records", [])))
         self.assertTrue(all(row.get("source_url", "").startswith("https://") for row in self.qa["rejected_observations"]))
 
+    def test_qa_report_has_geographic_and_source_coverage(self):
+        self.assertGreaterEqual(self.qa.get("schema_version", 0), 2)
+        self.assertIn("geographic_quality", self.qa)
+        self.assertIn("accepted_by_source_domain", self.qa)
+        self.assertTrue(
+            any(source.get("name") == "Ranchers Choice Stockyard"
+                for source in self.qa.get("source_registry", []))
+        )
+
     def test_published_counts_match_arrays(self):
         self.assertEqual(
             self.payload.get("record_count"), len(self.payload.get("records", []))
