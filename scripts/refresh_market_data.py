@@ -544,6 +544,24 @@ def parse_fallon():
     print(f"Fallon: {len(records)} feeder weight-class ranges and {len(cow_records)} cow/pair price ranges from {len(report_urls)} reports")
     return records, cow_records
 
+def classify_willcox_feeder_lot(description):
+    upper = str(description or "").upper()
+    if "STR" in upper or "STEER" in upper:
+        return "Feeder steer", "Steer"
+    if "HFR" in upper or "HEIFER" in upper:
+        return "Feeder heifer", "Heifer"
+    return "Other", "Unknown"
+
+
+def classify_willcox_cow_lot(description):
+    upper = str(description or "").upper()
+    if "PAIR" in upper or "PAIRS" in upper:
+        return "Cow-calf pair", "Mixed", "USD/family"
+    if "BRED" in upper or "COW" in upper:
+        return "Bred cow", "Cow", "USD/head"
+    return "Other", "Unknown", None
+
+
 def parse_willcox():
     archive_url = "https://test.willcoxlivestockauction.com/market-report/"
     pages = [archive_url]
@@ -598,13 +616,7 @@ def parse_willcox():
                     lot_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+(\d{3,4})\s+\$([\d,]+(?:\.\d{1,2})?)")
                     for m in lot_re.finditer(line):
                         head, desc, wt, price = m.groups()
-                        desc_upper = desc.upper()
-                        if "STR" in desc_upper or "STEER" in desc_upper:
-                            sex, category = "Steer", "Feeder steer"
-                        elif "HFR" in desc_upper or "HEIFER" in desc_upper:
-                            sex, category = "Heifer", "Feeder heifer"
-                        else:
-                            sex, category = "Unknown", "Other"
+                        category, sex = classify_willcox_feeder_lot(desc)
                         records.append(record(
                             date, "Willcox Livestock Auction", "Arizona", category, sex, desc,
                             float(wt), float(price.replace(",", "")), int(head),
@@ -616,15 +628,7 @@ def parse_willcox():
                     cow_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+\$([\d,]+(?:\.\d{1,2})?)")
                     for n, m in enumerate(cow_re.finditer(line)):
                         head, desc, price = m.groups()
-                        desc_upper = desc.upper()
-                        if "PAIR" in desc_upper or "PAIRS" in desc_upper:
-                            category, sex, price_unit = "Cow-calf pair", "Mixed", "USD/family"
-                        elif "BRED" in desc_upper or "COW" in desc_upper:
-                            category, sex, price_unit = "Bred cow", "Cow", "USD/head"
-                        else:
-                            # The section contains both bred cows and pairs. Lot order
-                            # is not evidence of category; keep ambiguous lots quarantined.
-                            category, sex, price_unit = "Other", "Unknown", None
+                        category, sex, price_unit = classify_willcox_cow_lot(desc)
                         description = f"{head} {desc}"
                         cow_records.append({
                             "id": stable_id("willcox", date, n, desc, price, pdf_url),
