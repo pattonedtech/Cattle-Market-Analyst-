@@ -457,7 +457,7 @@ return Number.isFinite(Number(record.price))&&Number(record.price)>0;
 var candidates=records.filter(rawMatch);
 function rangeStats(items){
 if(!items.length)return null;
-return {avg:null,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Published ranges are not averaged"};
+return {avg:null,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Published lot highlights and ranges are not averaged"};
 }
 function countStats(items){
 if(!items.length)return null;
@@ -529,7 +529,7 @@ if(!items.length)return null;
 var vals=items.map(function(r){return Number(r.price)}),isMixed=seriesType==='all',isRange=seriesType.indexOf('published_')===0,allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
 var heads=allHaveHead?items.reduce(function(a,r){return a+Number(r.head)},0):null;
 var avg=isMixed||isRange?null:(allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/heads:vals.reduce(function(a,b){return a+b},0)/vals.length);
-return {avg:avg,low:isMixed?null:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads,method:isMixed?'mixed source types not pooled':isRange?'published ranges are not averaged':allHaveHead?'head-weighted (all records)':'observation mean (head counts incomplete)'};
+return {avg:avg,low:isMixed?null:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads,method:isMixed?'mixed source types not pooled':isRange?'published lot highlights and ranges are not averaged':allHaveHead?'head-weighted (all records)':'observation mean (head counts incomplete)'};
 }
 var groups={};
 geoRecords.forEach(function(r){
@@ -592,7 +592,7 @@ return Number.isFinite(Number(r.price))&&r.date;
 var months=Array.from({length:12},(_,i)=>({name:new Date(2000,i,1).toLocaleString('en-US',{month:'short'}),values:[]}));
 var years={};
 arr.forEach(function(r){var d=new Date(r.date+'T12:00:00'),m=d.getMonth(),y=d.getFullYear();months[m].values.push(r);if(!years[y])years[y]=[];years[y].push(r)});
-function stats(a){if(!a.length)return null;var isMixed=seriesType==='all',isRange=seriesType.indexOf('published_')===0,allHaveHead=a.every(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))}),head=allHaveHead?a.reduce(function(x,r){return x+Number(r.head)},0):null,avg=isMixed||isRange?null:(allHaveHead?a.reduce(function(x,r){return x+Number(r.price)*Number(r.head)},0)/head:a.reduce(function(x,r){return x+Number(r.price)},0)/a.length);return {avg:avg,low:isMixed?null:Math.min.apply(null,a.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,a.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:a.length,head:head,method:isMixed?'mixed source types not pooled':isRange?'published ranges are not averaged':allHaveHead?'head-weighted':'observation mean'}}
+function stats(a){if(!a.length)return null;var isMixed=seriesType==='all',isRange=seriesType.indexOf('published_')===0,allHaveHead=a.every(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))}),head=allHaveHead?a.reduce(function(x,r){return x+Number(r.head)},0):null,avg=isMixed||isRange?null:(allHaveHead?a.reduce(function(x,r){return x+Number(r.price)*Number(r.head)},0)/head:a.reduce(function(x,r){return x+Number(r.price)},0)/a.length);return {avg:avg,low:isMixed?null:Math.min.apply(null,a.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,a.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:a.length,head:head,method:isMixed?'mixed source types not pooled':isRange?'published lot highlights and ranges are not averaged':allHaveHead?'head-weighted':'observation mean'}}
 var monthly=months.map(function(m){return {name:m.name,...stats(m.values)}});
 var chartData=monthly.filter(x=>x.n&&Number.isFinite(x.avg)).map(x=>({date:x.name,price:x.avg}));
 drawChart('seasonChart',chartData);
