@@ -21,7 +21,7 @@
 <div class="field"><label>Cattle category</label><select id="westCategory"><option value="Feeder steer">Feeder steers ($/cwt)</option><option value="Feeder heifer">Feeder heifers ($/cwt)</option><option value="Replacement heifer">Replacement heifers — open / unbred ($/cwt)</option><option value="Bred heifer">Replacement heifers — bred ($/head)</option><option value="Bred cow">Bred cows ($/head)</option><option value="Cow-calf pair">Cow-calf pairs ($/pair)</option><option value="Corriente steer">Corriente steers ($/cwt)</option><option value="Corriente heifer">Corriente heifers ($/cwt)</option><option value="Corriente cattle (unclassified)">Corriente cattle — unclassified ($/cwt)</option><option value="Fresh Corriente">Fresh Corriente — origin unspecified ($/head)</option></select></div>
 <div class="field"><label>Corriente classification</label><select id="westCorriente"><option value="all">All Corriente types</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not recorded</option></select></div>
 <div class="field"><label>Reporting period</label><select id="westPeriod"><option value="90">Latest 90 days</option><option value="365">Latest 12 months</option><option value="all">All available history</option></select></div>
-<div class="field"><label>Price source / method</label><select id="westSource"><option value="all">All state-level sources (exploratory)</option><option value="auction">Auction and weighted-average reports</option><option value="range">Published range midpoints</option><option value="video">Video and direct-trade benchmarks</option></select></div>
+<div class="field"><label>Price source / method</label><select id="westSource"><option value="auction">Auction and weighted-average reports</option><option value="all">All state-level sources (exploratory)</option><option value="range">Published range midpoints</option><option value="video">Video and direct-trade benchmarks</option></select></div>
 </div>
 <div class="kpi-label" style="margin-top:10px">Western overall average</div><div class="kpi" id="westOverall">—</div><div class="sub" id="westOverallMeta">Waiting for published market data…</div>
 <div class="tablewrap"><table><thead><tr><th>State</th><th class="num">Average</th><th class="num">Low</th><th class="num">High</th><th class="num">Observations</th><th class="num">Head / lots</th><th>Coverage</th></tr></thead><tbody id="westStateBody"><tr><td colspan="7" class="empty">Loading state averages…</td></tr></tbody><tfoot><tr><th>Western overall</th><th class="num" id="westOverallCell">—</th><th class="num" id="westLow">—</th><th class="num" id="westHigh">—</th><th class="num" id="westCount">0</th><th class="num" id="westHead">—</th><th id="westCoverage">—</th></tr></tfoot></table></div>
@@ -402,12 +402,27 @@ return !type||["auction_lot_average","published_lot_highlight","usda_auction","u
 }
 function westernAverage(items){
 if(!items.length)return null;
-var withHead=items.filter(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))});
+// A head-weighted mean is valid only when every included observation has a
+// positive reported head count. Weighting only the subset with head counts
+// silently discards the other observations and biases the result.
+var allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
 var avg,head=null,method;
-if(withHead.length){head=withHead.reduce(function(a,r){return a+Number(r.head)},0);avg=withHead.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/head;method="head-weighted";}
-else{avg=items.reduce(function(a,r){return a+Number(r.price)},0)/items.length;method="observation average";}
-var used=withHead.length?withHead:items;
-return {avg:avg,low:Math.min.apply(null,used.map(function(r){return Number(r.price_low||r.price)})),high:Math.max.apply(null,used.map(function(r){return Number(r.price_high||r.price)})),count:items.length,averageCount:used.length,head:head,markets:Array.from(new Set(used.map(function(r){return r.market}).filter(Boolean))).length,method:method,weightedCount:withHead.length};
+if(allHaveHead){
+head=items.reduce(function(a,r){return a+Number(r.head)},0);
+avg=items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/head;
+method="head-weighted (all records have head counts)";
+}else{
+avg=items.reduce(function(a,r){return a+Number(r.price)},0)/items.length;
+method="observation average (head counts incomplete)";
+}
+return {
+avg:avg,
+low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),
+high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),
+count:items.length,averageCount:items.length,head:head,
+markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,
+method:method,weightedCount:allHaveHead?items.length:0
+};
 }
 function renderWesternOverview(){
 if(!$("westCategory"))return;
