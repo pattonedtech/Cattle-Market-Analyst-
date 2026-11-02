@@ -162,6 +162,21 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(rejected, [])
         self.assertEqual(accepted[0]["corriente_origin"], "Native Corriente")
 
+    def test_fetch_retries_transient_failure_and_tracks_domain_health(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        domain = "retry-test.example.org"
+        collector.SOURCE_FETCH_HEALTH.pop(domain, None)
+        response = SimpleNamespace(raise_for_status=lambda: None)
+        with patch.object(collector.S, "get", side_effect=[RuntimeError("temporary"), response]), patch.object(collector.time, "sleep"):
+            result = collector.fetch("https://retry-test.example.org/report.pdf")
+        self.assertIs(result, response)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["requests"], 1)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["attempts"], 2)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["successes"], 1)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_requests"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
