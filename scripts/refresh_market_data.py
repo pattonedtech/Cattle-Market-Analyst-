@@ -595,19 +595,37 @@ def parse_willcox():
                 if "AUCTION SUMMARY" in upper:
                     feeder_section = cow_section = False
                 if feeder_section:
-                    lot_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+(\d{3,4})\s+\$([\d,]+(?:\.\d{1,2})?)")
-                    lots = list(lot_re.finditer(line))
-                    for n, m in enumerate(lots):
+                    lot_re = re.compile(r"(\\d+)\\s+([A-Z][A-Z/]*(?:\\s+[A-Z][A-Z/]*){0,2})\\s+(\\d{3,4})\\s+\\$([\\d,]+(?:\\.\\d{1,2})?)")
+                    for m in lot_re.finditer(line):
+                        head, desc, wt, price = m.groups()
+                        desc_upper = desc.upper()
+                        if "STR" in desc_upper or "STEER" in desc_upper:
+                            sex, category = "Steer", "Feeder steer"
+                        elif "HFR" in desc_upper or "HEIFER" in desc_upper:
+                            sex, category = "Heifer", "Feeder heifer"
+                        else:
+                            sex, category = "Unknown", "Other"
+                        records.append(record(
+                            date, "Willcox Livestock Auction", "Arizona", category, sex, desc,
+                            float(wt), float(price.replace(",", "")), int(head),
+                            "Willcox Livestock Auction", pdf_url, "auction_lot_average",
+                            sale_type="Live auction",
+                            notes=f"Published lot description: {desc}; category requires source classification"
+                        ))
+                elif cow_section:
+                    cow_re = re.compile(r"(\\d+)\\s+([A-Z][A-Z/]*(?:\\s+[A-Z][A-Z/]*){0,2})\\s+\\$([\\d,]+(?:\\.\\d{1,2})?)")
+                    for n, m in enumerate(cow_re.finditer(line)):
                         head, desc, price = m.groups()
-                        description = f"{head} {desc}"
-                        description_upper = description.upper()
-                        if "PAIR" in description_upper:
+                        desc_upper = desc.upper()
+                        if "PAIR" in desc_upper or "PAIRS" in desc_upper:
                             category, sex, price_unit = "Cow-calf pair", "Mixed", "USD/family"
-                        elif "BRED" in description_upper or "COW" in description_upper:
+                        elif "BRED" in desc_upper or "COW" in desc_upper:
                             category, sex, price_unit = "Bred cow", "Cow", "USD/head"
                         else:
-                            # Never use row order to infer animal class.
+                            # The section contains both bred cows and pairs. Lot order
+                            # is not evidence of category; keep ambiguous lots quarantined.
                             category, sex, price_unit = "Other", "Unknown", None
+                        description = f"{head} {desc}"
                         cow_records.append({
                             "id": stable_id("willcox", date, n, desc, price, pdf_url),
                             "date": date, "market": "Willcox Livestock Auction",
@@ -624,7 +642,6 @@ def parse_willcox():
             print(f"Willcox report failed {page_url}: {e}", file=sys.stderr)
     print(f"Willcox: {len(records)} feeder lots and {len(cow_records)} cow/pair records from {len(report_pages)} report pages")
     return records, cow_records
-
 
 def parse_burley():
     """Parse Burley Livestock Auction's own public weekly sale tables."""
