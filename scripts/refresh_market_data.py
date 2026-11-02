@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "market_observations.json"
 QA_OUT = DATA / "market_data_qa.json"
+QUARANTINE_OUT = DATA / "quarantine_observations.json"
 FUTURES_OUT = DATA / "futures.json"
 SOURCE_FETCH_HEALTH = {}
 S = requests.Session()
@@ -1432,6 +1433,16 @@ def quality_check(rows, collection):
                 issues.append("missing_" + field)
         if collection == "records" and (row.get("category") == "Other" or row.get("sex") == "Unknown"):
             issues.append("animal_category_not_classifiable")
+        expected_units = {
+            "Feeder steer": "USD/cwt", "Feeder heifer": "USD/cwt",
+            "Corriente steer": "USD/cwt", "Corriente heifer": "USD/cwt",
+            "Cull cow": "USD/cwt", "Bull": "USD/cwt",
+            "Bred cow": "USD/head", "Bred heifer": "USD/head",
+            "Fresh Corriente": "USD/head", "Cow-calf pair": "USD/family",
+        }
+        expected_unit = expected_units.get(row.get("category"))
+        if expected_unit and row.get("price_unit") != expected_unit:
+            issues.append("category_unit_mismatch")
         source_url = str(row.get("source_url") or "")
         parsed_url = urlparse(source_url)
         if parsed_url.scheme != "https" or not parsed_url.netloc:
@@ -1638,7 +1649,17 @@ def main():
             old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
-    if QA_OUT.exists():
+    # Quarantine is stored separately so the dashboard can fetch the small QA
+    # summary without downloading thousands of rejected source rows.
+    if QUARANTINE_OUT.exists():
+        try:
+            previous_quarantine = json.loads(QUARANTINE_OUT.read_text(encoding="utf-8"))
+            old_quarantine = previous_quarantine.get("rejected_observations", [])
+        except Exception:
+            old_quarantine = []
+    if not old_quarantine and QA_OUT.exists():
+        # One-time migration from the legacy embedded quarantine report, or
+        # recovery if a split archive is empty while the legacy report is not.
         try:
             previous_qa = json.loads(QA_OUT.read_text(encoding="utf-8"))
             old_quarantine = previous_qa.get("rejected_observations", [])
@@ -1686,6 +1707,23 @@ def main():
     if newly_unclassified:
         print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
+    quarantine_rows = rejected_records + rejected_cows
+    quarantine_report = {
+        "schema_version": 1,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "record_count": len(quarantine_rows),
+        "market_record_count": len(rejected_records),
+        "cow_record_count": len(rejected_cows),
+        "rejected_observations": quarantine_rows,
+    }
+    QUARANTINE_OUT.write_text(json.dumps(quarantine_report, indent=2) + "\n", encoding="utf-8")
+    qa_report["quarantine_report_url"] = "data/quarantine_observations.json"
+    qa_report["quarantine_summary"] = {
+        "total": len(quarantine_rows),
+        "market_records": len(rejected_records),
+        "cow_records": len(rejected_cows),
+    }
+    qa_report.pop("rejected_observations", None)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     # Record-level failures are quarantined; the batch threshold below is a circuit breaker.
     rejection_rate = rejected_new / len(new_ids) if new_ids else 0
@@ -1729,7 +1767,7 @@ def main():
         source_versions["cottonwood"] = 1
     OUT.write_text(json.dumps({
         "schema_version": 7, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "benchmarks": build_benchmarks(merged, merged_cows), "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "benchmarks": build_benchmarks(merged, merged_cows), "qa_report_url": "data/market_data_qa.json", "quarantine_report_url": "data/quarantine_observations.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
