@@ -42,14 +42,15 @@
 <section class="page" id="history"><div class="grid">
 <div class="card span-12"><h2>Historical market patterns</h2><p class="sub">Seasonal averages are calculated only from records matching the selected market, cattle category, and weight range. Small samples are displayed, not hidden.</p>
 <div class="fieldgrid">
-<div class="field" style="grid-column:1/-1"><label for="histMarketInput">Historical market selection</label><div class="market-selection-actions"><input id="histMarketInput" list="histMarketOptions" placeholder="Type an auction market, then add it"><datalist id="histMarketOptions"></datalist><button class="btn secondary" id="addHistMarket" type="button">+ Add market</button><button class="btn outline" id="clearHistMarkets" type="button">All markets</button></div><div id="histSelectedMarkets" class="market-chips" aria-live="polite"><span class="muted">All available markets</span></div><small>Markets are organized by state. Add one or more yards to filter the graph, geographic comparison, and exact observations together. Overland Stock Yard and Overland Stockyard (USDA) are treated as one physical market; original source labels remain visible below.</small></div>
+<div class="field" style="grid-column:1/-1"><label for="histMarketInput">Add a market to the historical analysis</label><div class="market-selection-actions"><select id="histMarketInput" aria-label="Choose a market to add"><option value="">Choose a market…</option></select><button class="btn secondary" id="addHistMarket" type="button">+ Add</button><button class="btn outline" id="clearHistMarkets" type="button">All markets</button></div><div id="histSelectedMarkets" class="market-chips" aria-live="polite"><span class="muted">All markets included</span></div><small>Markets are grouped by state. Presence shows how many observations match the current category, weight, origin, and source filters. Overland Stock Yard aliases are grouped as one physical market.</small></div>
 <div class="field"><label>Category</label><select id="histCategory"><option value="Feeder steer">Feeder steer</option><option value="Feeder heifer">Feeder heifer</option><option value="Replacement heifer">Replacement heifer</option><option value="Corriente steer">Corriente steer</option><option value="Corriente heifer">Corriente heifer</option><option value="Corriente cattle (unclassified)">Corriente cattle — unclassified</option><option value="Fresh Corriente">Fresh Corriente</option><option value="Cull cow">Cull cow</option><option value="Bull">Bull</option></select></div>
 <div class="field"><label>Corriente origin</label><select id="histCorrienteOrigin"><option value="all">All origins</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not reported</option></select></div><div class="field"><label>Source series</label><select id="histRecordType"><option value="auction">Auction weighted averages (comparable series)</option><option value="all">All types (exploratory only)</option><option value="auction_lot_average">Individual auction-lot averages</option><option value="published_lot_highlight">Published lot highlights (no average)</option><option value="published_individual_price">Published individual sale prices</option><option value="published_weight_class_range">Published weight-class ranges</option><option value="published_price_range">Published price ranges</option><option value="video_lot_contract">Video lot contracts</option><option value="usda_auction">USDA auction reports</option><option value="third_party_auction_weighted_average">Third-party auction weighted averages</option><option value="usda_state_summary">USDA state summaries</option><option value="usda_direct_trade">USDA direct trades</option><option value="usda_video_regional">USDA regional video</option></select></div><div class="field"><label>Weight range</label><select id="histWeight"><option value="all">All recorded weights</option><option value="300">300–399 lb</option><option value="400">400–499 lb</option><option value="500">500–599 lb</option><option value="600">600–699 lb</option><option value="700">700–799 lb</option><option value="800">800–899 lb</option><option value="900">900–999 lb</option></select></div>
 </div></div>
-<div class="card span-7"><h2>Seasonal price pattern</h2><p class="sub">Average recorded price by calendar month using the selected market set and all other filters above. This is descriptive history, not a forecast.</p><canvas class="chart" id="seasonChart"></canvas><div id="seasonNote" class="sub"></div></div>
-<div class="card span-5"><h2>Year-over-year</h2><p class="sub">Annual comparable average when the selected series supports averaging; otherwise range/count only.</p><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Avg price</th><th class="num">Records</th></tr></thead><tbody id="yearBody"><tr><td colspan="3" class="empty">No data.</td></tr></tbody></table></div></div>
-<div class="card span-12"><h2>Monthly data behind the graph</h2><p class="sub">Monthly comparable average or published range, with sample size across available years. The observation table below shows the source records used to calculate these summaries.</p><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Average</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No data.</td></tr></tbody></table></div></div>
-<div class="card span-12"><h2>Exact observations behind the graph</h2><p class="sub">These are the individual published records matching the market selection, category, Corriente-origin, source-series, and weight filters. Open the source link to verify the original report.</p><div class="tablewrap"><table><thead><tr><th>Date</th><th>Physical market / sale location</th><th>Category / type</th><th class="num">Weight</th><th class="num">Price</th><th class="num">Head</th><th>Original source / record type</th></tr></thead><tbody id="histObservationBody"><tr><td colspan="7" class="empty">No matching observations.</td></tr></tbody></table></div><div class="actions" style="justify-content:space-between;margin-top:10px"><span class="sub" id="histObservationStatus" aria-live="polite">No observations.</span><div class="actions" style="margin:0"><button class="btn secondary" id="histObservationPrev" type="button" disabled>Previous</button><button class="btn secondary" id="histObservationNext" type="button" disabled>Next</button></div></div></div>
+<div class="card span-12"><h2>Historical overview by state</h2><p class="sub">Average price by state for the current category and filters. The state-by-state data is directly below the graph.</p><canvas class="chart" id="histStateChart"></canvas><div class="tablewrap"><table><thead><tr><th>State</th><th class="num">Average price</th><th class="num">Low</th><th class="num">High</th><th class="num">Observations</th></tr></thead><tbody id="histStateBody"><tr><td colspan="5" class="empty">No state data.</td></tr></tbody></table></div></div>
+<div class="card span-12"><h2>Historical overview by year</h2><p class="sub">Annual price trend across the current market selection. Annual values and observation counts are directly below the graph.</p><canvas class="chart" id="histYearChart"></canvas><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Average price</th><th class="num">Low</th><th class="num">High</th><th class="num">Observations</th></tr></thead><tbody id="yearBody"><tr><td colspan="5" class="empty">No annual data.</td></tr></tbody></table></div></div>
+<div class="card span-12"><h2>Selected market history</h2><p class="sub" id="selectedMarketNote">Add a market above to show its individual price history and the matching observations underneath.</p><canvas class="chart" id="selectedMarketChart"></canvas><div class="tablewrap"><table><thead><tr><th>Date</th><th>Market</th><th class="num">Price</th><th class="num">Weight</th><th class="num">Head</th><th>Source</th></tr></thead><tbody id="selectedMarketBody"><tr><td colspan="6" class="empty">Add a market to view its observations.</td></tr></tbody></table></div></div>
+<div class="card span-12"><h2>Seasonal price pattern</h2><p class="sub">Monthly price pattern for all matching observations. Monthly values are directly below the graph.</p><canvas class="chart" id="seasonChart"></canvas><div id="seasonNote" class="sub"></div><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Average</th><th class="num">Low</th><th class="num">High</th><th class="num">Observations</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No monthly data.</td></tr></tbody></table></div></div>
+<div class="card span-12"><h2>Exact observations behind the graphs</h2><p class="sub">Individual source records matching the selected filters. Open the source links to verify the original reports.</p><div class="tablewrap"><table><thead><tr><th>Date</th><th>Physical market / sale location</th><th>Category / type</th><th class="num">Weight</th><th class="num">Price</th><th class="num">Head</th><th>Original source / record type</th></tr></thead><tbody id="histObservationBody"><tr><td colspan="7" class="empty">No matching observations.</td></tr></tbody></table></div><div class="actions" style="justify-content:space-between;margin-top:10px"><span class="sub" id="histObservationStatus" aria-live="polite">No observations.</span><div class="actions" style="margin:0"><button class="btn secondary" id="histObservationPrev" type="button" disabled>Previous</button><button class="btn secondary" id="histObservationNext" type="button" disabled>Next</button></div></div></div>
 <div class="card span-12" id="geoComparison">
 <h2>Geographic market comparison</h2>
 <p class="sub">This comparison uses the exact same filtered observation set as the historical graph and detail table. Compare states, counties within a state, or physical auction yards. Market aliases are grouped together rather than counted as separate yards.</p>
@@ -507,13 +508,13 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
 }
 
  function marketKey(value){
-  var normalized=String(value||'').toLowerCase().replace(/\\(usda\\)/g,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\\s+/g,' ');
+  var normalized=String(value||'').toLowerCase().replace(/\(\s*usda\s*\)/g,' ').replace(/\busda\b/g,' ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
   if(/^overland stock ?yard$/.test(normalized))return 'overland-stock-yard';
   return normalized;
  }
  function marketLabel(value){return marketKey(value)==='overland-stock-yard'?'Overland Stock Yard':String(value||'').trim()}
  function normalizeWesternState(value){
-  var raw=String(value||'').trim().toLowerCase().replace(/\\bstate of\\s+/,'').replace(/\\s*\\([a-z]{2}\\)\\s*$/,'').trim();
+  var raw=String(value||'').trim().toLowerCase().replace(/\bstate of\s+/,'').replace(/\s*\(([a-z]{2})\)\s*$/,'').trim();
   var codes={wa:'Washington',or:'Oregon',ca:'California',nv:'Nevada',id:'Idaho',mt:'Montana',wy:'Wyoming',ut:'Utah',az:'Arizona',nm:'New Mexico'};
   if(codes[raw])return codes[raw];
   for(var i=0;i<WEST_STATES.length;i++)if(WEST_STATES[i].toLowerCase()===raw)return WEST_STATES[i];
@@ -521,12 +522,8 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
  }
  function resolveRecordGeography(record){
   var inferred=clientGeography(record.market||'');
-  return Object.assign({},record,{
-   state:normalizeWesternState(record.state)||inferred.state||null,
-   county:String(record.county||'').trim()||inferred.county||null,
-   market_key:marketKey(record.market),
-   market_display:marketLabel(record.market)
-  });
+  var state=normalizeWesternState(record.state)||normalizeWesternState(record.region)||inferred.state||null;
+  return Object.assign({},record,{state:state,county:String(record.county||'').trim()||inferred.county||null,market_key:marketKey(record.market),market_display:marketLabel(record.market)});
  }
  function marketCatalog(){
   var byKey={};
@@ -560,24 +557,33 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
   saveHistoricalMarkets();
  }
  function saveHistoricalMarkets(){try{localStorage.setItem(HIST_MARKET_KEY,JSON.stringify(selectedHistoricalMarkets))}catch(e){console.error('Could not save historical market selection:',e)}}
- function renderMarketSelection(){
-  var catalog=marketCatalog();
-  $('histMarketOptions').innerHTML=catalog.map(function(m){return '<option value="'+esc(m.label)+'" label="'+esc((m.state||'State unverified')+' · '+fmt(m.count)+' observations')+'"></option>'}).join('');
+ function renderMarketSelection(presenceRecords){
+  var catalog=marketCatalog(),select=$('histMarketInput'),prior=select.value;
+  var presence={};
+  (presenceRecords||[]).forEach(function(r){var key=r.market_key||marketKey(r.market);presence[key]=(presence[key]||0)+1});
+  var stateOrder=['Arizona','California','Idaho','Montana','Nevada','New Mexico','Oregon','Utah','Washington','Wyoming','State not verified'];
+  var grouped={};
+  catalog.forEach(function(m){var state=m.state||'State not verified';(grouped[state]||(grouped[state]=[])).push(m)});
+  select.innerHTML='<option value="">Choose a market…</option>'+stateOrder.filter(function(state){return grouped[state]&&grouped[state].length}).map(function(state){
+   var markets=grouped[state].sort(function(a,b){return a.label.localeCompare(b.label)});
+   return '<optgroup label="'+esc(state)+'">'+markets.map(function(m){var n=presence[m.key]||0;return '<option value="'+esc(m.key)+'">'+esc(m.label)+' · '+(n?'✓ '+fmt(n)+' matching':'— no matching data')+'</option>'}).join('')+'</optgroup>';
+  }).join('');
+  if(catalog.some(function(m){return m.key===prior}))select.value=prior;
   var selectedKeys=new Set(selectedHistoricalMarkets.map(marketKey));
   var selected=catalog.filter(function(m){return selectedKeys.has(m.key)});
   $('histSelectedMarkets').innerHTML=selected.length?selected.map(function(m){
-   var location=m.state||'State not verified',presence=m.count?fmt(m.count)+' records':'No records yet';
-   return '<span class="market-chip">'+esc(m.label)+' · '+esc(location)+' · '+esc(presence)+' <button type="button" data-remove-hist-market="'+esc(m.key)+'" aria-label="Remove '+esc(m.label)+' from historical selection">×</button></span>';
-  }).join(''):'<span class="muted">All available markets are included. Add one or more markets to narrow the analysis.</span>';
+   var count=presence[m.key]||0;
+   return '<span class="market-chip">'+esc(m.label)+' · '+esc(m.state||'State not verified')+' · '+(count?'✓ '+fmt(count)+' matching':'— no matching data')+' <button type="button" data-remove-hist-market="'+esc(m.key)+'" aria-label="Remove '+esc(m.label)+' from historical selection">×</button></span>';
+  }).join(''):'<span class="muted">All markets included. Add one or more markets to narrow the analysis.</span>';
   $('geoRoleManager').innerHTML=catalog.map(function(m){var role=marketRole(m.label);return '<div class="field"><label>'+esc(m.label)+' · '+esc(m.state||'State unverified')+'</label><select data-market-role="'+esc(m.key)+'"><option value="none"'+(role==='none'?' selected':'')+'>No preference</option><option value="buy"'+(role==='buy'?' selected':'')+'>Preferred buying yard</option><option value="sell"'+(role==='sell'?' selected':'')+'>Preferred selling yard</option><option value="both"'+(role==='both'?' selected':'')+'>Buying and selling</option></select></div>'}).join('');
  }
  function addHistoricalMarket(){
-  var input=$('histMarketInput'),raw=String(input.value||'').trim();
-  if(!raw)return;
-  var catalog=marketCatalog(),existing=catalog.find(function(m){return m.key===marketKey(raw)});
-  var label=existing?existing.label:marketLabel(raw),key=marketKey(label);
-  if(key&&!selectedHistoricalMarkets.some(function(m){return marketKey(m)===key}))selectedHistoricalMarkets.push(label);
-  saveHistoricalMarkets();input.value='';historicalDetailPage=0;renderHistorical();
+  var select=$('histMarketInput'),key=String(select.value||'').trim();
+  if(!key)return;
+  var entry=marketCatalog().find(function(m){return m.key===key});
+  if(!entry)return;
+  if(!selectedHistoricalMarkets.some(function(m){return marketKey(m)===key}))selectedHistoricalMarkets.push(entry.label);
+  saveHistoricalMarkets();select.value='';historicalDetailPage=0;renderHistorical();
  }
  function historicalFilteredRecords(){
   var category=$('histCategory')?$('histCategory').value:'Feeder steer';
@@ -610,7 +616,7 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
    var location=(r.county?r.county+', ':'')+(r.state||r.region||'Location not verified');
    var source=esc(r.source||'Source not identified')+' · '+esc(r.record_type||'record type not identified');
    if(safeSourceUrl(r.source_url))source+=' · <a href="'+esc(safeSourceUrl(r.source_url))+'" target="_blank" rel="noopener">Verify source</a>';
-   if(r.market&&marketKey(r.market)!==marketKey(r.market_display))source+=' <span class="muted">(recorded market label: '+esc(r.market)+')</span>';
+   if(r.market&&String(r.market).trim()!==String(r.market_display||'').trim())source+=' <span class="muted">(original market label: '+esc(r.market)+')</span>';
    return '<tr><td>'+esc(r.date)+'</td><td>'+esc(r.market_display||r.market||'Market not identified')+'<br><span class="muted">'+esc(location)+'</span></td><td>'+esc(r.category)+'<br><span class="muted">'+esc(r.breed||'')+' · '+esc(r.sex||'')+(corrienteOrigin(r)!=='not_applicable'?' · '+esc(corrienteOrigin(r)):'')+'</span></td><td class="num">'+weight+'</td><td class="num">'+price+'<br><span class="muted">'+esc(r.price_unit||'USD/cwt')+unitLabel(r.price_unit||'USD/cwt')+'</span></td><td class="num">'+(Number(r.head)>0?fmt(r.head):'—')+'</td><td>'+source+'</td></tr>';
   }).join(''):'<tr><td colspan="7" class="empty">No published observations match these filters.</td></tr>';
   $('histObservationStatus').textContent=fmt(total)+' matching observations · page '+(total?historicalDetailPage+1:0)+' of '+(total?pages:0)+' · showing up to '+pageSize+' per page';
@@ -680,36 +686,64 @@ $("overviewStatus").textContent=available.length+" of 10 Western states have qua
   $('geoCaveat').textContent=(geoRecords.length?stats(geoRecords).method:'No average')+' across '+geoRecords.length+' matching records. Price unit is '+unit+'. Geographic summaries use the same source, weight, origin, category, and selected-market filters as the graph. Physical-market aliases are grouped; original source names are retained in the detailed observations.';
   renderMarketSelection();
  }
+ function drawBarChart(canvasId,data){
+  var canvas=$(canvasId),ctx=canvas.getContext('2d'),width=canvas.clientWidth||700,height=230,dpr=window.devicePixelRatio||1;
+  canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+  ctx.font='11px system-ui';ctx.fillStyle='#69736c';
+  if(!data.length){ctx.textAlign='center';ctx.fillText('No comparable averages for this selection',width/2,height/2);return}
+  var values=data.map(function(x){return Number(x.price)}).filter(Number.isFinite),min=Math.min(0,Math.min.apply(null,values)),max=Math.max.apply(null,values);
+  if(max===min)max=min+1;
+  var left=48,right=12,top=14,bottom=54,plotW=width-left-right,plotH=height-top-bottom,step=plotW/data.length,barW=Math.max(4,step*.62);
+  ctx.strokeStyle='#e3e8e2';
+  for(var i=0;i<=4;i++){var y=top+plotH*i/4,val=max-(max-min)*i/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(width-right,y);ctx.stroke();ctx.textAlign='right';ctx.fillStyle='#69736c';ctx.fillText('$'+Math.round(val),left-7,y+4)}
+  data.forEach(function(item,index){
+   var v=Number(item.price);if(!Number.isFinite(v))return;
+   var barH=(v-min)/(max-min)*plotH,x=left+index*step+(step-barW)/2,y=top+plotH-barH;
+   ctx.fillStyle='#3d6b4c';ctx.fillRect(x,y,barW,barH);
+   ctx.fillStyle='#69736c';ctx.textAlign='center';
+   var label=String(item.date||'');if(label.length>13)label=label.slice(0,12)+'…';
+   ctx.save();ctx.translate(x+barW/2,height-bottom+8);ctx.rotate(-Math.PI/5);ctx.fillText(label,0,0);ctx.restore();
+  });
+ }
  function renderHistorical(){
   historicalDetailPage=0;
-  renderMarketSelection();
-  var arr=historicalFilteredRecords();
-  renderGeoComparison(arr);
-  var seriesType=$('histRecordType')?$('histRecordType').value:'auction';
-  var months=Array.from({length:12},function(_,i){return {name:new Date(2000,i,1).toLocaleString('en-US',{month:'short'}),values:[]}});
-  var years={};
-  arr.forEach(function(r){var d=new Date(r.date+'T12:00:00');if(Number.isNaN(d.getTime()))return;var m=d.getMonth(),y=d.getFullYear();months[m].values.push(r);if(!years[y])years[y]=[];years[y].push(r)});
-  function stats(a){
-   if(!a.length)return null;
-   var isMixed=seriesType==='all',isRange=['published_price_range','published_weight_class_range','published_lot_highlight'].includes(seriesType),allHaveHead=a.every(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))}),head=allHaveHead?a.reduce(function(x,r){return x+Number(r.head)},0):null;
-   var avg=isMixed||isRange?null:(allHaveHead?a.reduce(function(x,r){return x+Number(r.price)*Number(r.head)},0)/head:a.reduce(function(x,r){return x+Number(r.price)},0)/a.length);
-   return {avg:avg,low:isMixed?null:Math.min.apply(null,a.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,a.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:a.length,head:head,method:isMixed?'mixed source types not pooled':isRange?'published lot highlights and ranges are not averaged':allHaveHead?'head-weighted':'observation mean'};
+  var arr=historicalFilteredRecords(),seriesType=$('histRecordType').value;
+  renderMarketSelection(arr);renderGeoComparison(arr);
+  function stats(items){
+   if(!items.length)return null;
+   var mixed=seriesType==='all',range=['published_price_range','published_weight_class_range','published_lot_highlight'].includes(seriesType);
+   var allHead=items.every(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))}),heads=allHead?items.reduce(function(s,r){return s+Number(r.head)},0):null;
+   var avg=mixed||range?null:(allHead?items.reduce(function(s,r){return s+Number(r.price)*Number(r.head)},0)/heads:items.reduce(function(s,r){return s+Number(r.price)},0)/items.length);
+   return {avg:avg,low:mixed?null:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:mixed?null:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length};
   }
+  var byState={};arr.forEach(function(r){if(r.state)(byState[r.state]||(byState[r.state]=[])).push(r)});
+  var stateRows=Object.keys(byState).sort().map(function(state){return {state:state,stats:stats(byState[state])}});
+  drawBarChart('histStateChart',stateRows.filter(function(x){return x.stats.avg!==null}).map(function(x){return {date:x.state,price:x.stats.avg}}));
+  $('histStateBody').innerHTML=stateRows.length?stateRows.map(function(x){var s=x.stats;return '<tr><td>'+esc(x.state)+'</td><td class="num">'+(s.avg===null?'—':money(s.avg))+'</td><td class="num">'+(s.low===null?'—':money(s.low))+'</td><td class="num">'+(s.high===null?'—':money(s.high))+'</td><td class="num">'+s.n+'</td></tr>'}).join(''):'<tr><td colspan="5" class="empty">No state observations match these filters.</td></tr>';
+  var byYear={};arr.forEach(function(r){var year=String(r.date||'').slice(0,4);if(/^\d{4}$/.test(year))(byYear[year]||(byYear[year]=[])).push(r)});
+  var years=Object.keys(byYear).sort();
+  var yearRows=years.map(function(year){return {year:year,stats:stats(byYear[year]),records:byYear[year]}});
+  drawChart('histYearChart',yearRows.filter(function(x){return x.stats.avg!==null}).map(function(x){return {date:x.year,price:x.stats.avg}}));
+  $('yearBody').innerHTML=yearRows.length?yearRows.map(function(x){var s=x.stats;return '<tr><td>'+x.year+'</td><td class="num">'+(s.avg===null?'—':money(s.avg))+'</td><td class="num">'+(s.low===null?'—':money(s.low))+'</td><td class="num">'+(s.high===null?'—':money(s.high))+'</td><td class="num">'+s.n+'</td></tr>'}).join(''):'<tr><td colspan="5" class="empty">No annual observations.</td></tr>';
+  var selectedKeys=new Set(selectedHistoricalMarkets.map(marketKey));
+  var selectedRows=arr.filter(function(r){return selectedKeys.has(r.market_key)});
+  var selectedNames=Array.from(new Set(selectedRows.map(function(r){return r.market_display||r.market})));
+  $('selectedMarketNote').textContent=selectedHistoricalMarkets.length?selectedNames.length+' selected physical market(s) have '+selectedRows.length+' matching observations. '+(selectedRows.length?'The graph shows the selected market observations; the source-level detail is below.':'No matching records for this market selection and current filters.'):'All markets are represented in the overview above. Add one or more markets to display their dedicated history below.';
+  drawChart('selectedMarketChart',selectedRows.slice().sort(function(a,b){return String(a.date).localeCompare(String(b.date))}).map(function(r){return {date:r.date,price:Number(r.price)}}));
+  $('selectedMarketBody').innerHTML=selectedRows.length?selectedRows.slice().sort(function(a,b){return String(b.date).localeCompare(String(a.date))}).map(function(r){return '<tr><td>'+esc(r.date)+'</td><td>'+esc(r.market_display||r.market)+'</td><td class="num">'+money(r.price)+'<br><span class="muted">'+esc(r.price_unit||'USD/cwt')+'</span></td><td class="num">'+(r.weight?fmt(r.weight)+' lb':'—')+'</td><td class="num">'+(Number(r.head)>0?fmt(r.head):'—')+'</td><td>'+esc(r.source||'Source not identified')+(safeSourceUrl(r.source_url)?' · <a href="'+esc(safeSourceUrl(r.source_url))+'" target="_blank" rel="noopener">Verify source</a>':'')+'</td></tr>'}).join(''):'<tr><td colspan="6" class="empty">'+(selectedHistoricalMarkets.length?'No observations for the selected market(s) and filters.':'Add a market above to show its dedicated data.')+'</td></tr>';
+  var months=Array.from({length:12},function(_,i){return {name:new Date(2000,i,1).toLocaleString('en-US',{month:'short'}),values:[]}});
+  arr.forEach(function(r){var date=new Date(r.date+'T12:00:00');if(!Number.isNaN(date.getTime()))months[date.getMonth()].values.push(r)});
   var monthly=months.map(function(m){return Object.assign({name:m.name},stats(m.values)||{avg:null,low:null,high:null,n:0})});
-  var chartData=monthly.filter(function(x){return x.n&&Number.isFinite(x.avg)}).map(function(x){return {date:x.name,price:x.avg}});
-  drawChart('seasonChart',chartData);
-  $('seasonNote').textContent=arr.length+' matching observations across '+Object.keys(years).length+' calendar years. '+(arr.length<12?'Sample is too small for a dependable seasonal conclusion.':'Interpret with caution: source type, breed mix, and lot quality still affect price.')+(selectedHistoricalMarkets.length?' Selected physical markets: '+selectedHistoricalMarkets.map(marketLabel).join(', ')+'.':' All available markets are included.');
-  var ys=Object.keys(years).sort();
-  $('yearBody').innerHTML=ys.length?ys.map(function(y){var st=stats(years[y]);return '<tr><td>'+y+'</td><td class="num">'+(st.avg===null?'—':money(st.avg))+'</td><td class="num">'+st.n+'</td></tr>'}).join(''):'<tr><td colspan="3" class="empty">No matching historical records yet.</td></tr>';
-  $('monthBody').innerHTML=monthly.map(function(m){return '<tr><td>'+m.name+'</td><td class="num">'+(m.n&&m.avg!==null?money(m.avg):'—')+'</td><td class="num">'+(m.n&&m.low!==null?money(m.low):'—')+'</td><td class="num">'+(m.n&&m.high!==null?money(m.high):'—')+'</td><td class="num">'+m.n+'</td></tr>'}).join('');
+  drawChart('seasonChart',monthly.filter(function(x){return x.avg!==null}).map(function(x){return {date:x.name,price:x.avg}}));
+  $('seasonNote').textContent=arr.length+' matching observations across '+years.length+' years. '+(arr.length<12?'Small sample: interpret cautiously.':'Historical description only; this is not a forecast.');
+  $('monthBody').innerHTML=monthly.map(function(m){return '<tr><td>'+m.name+'</td><td class="num">'+(m.avg===null?'—':money(m.avg))+'</td><td class="num">'+(m.low===null?'—':money(m.low))+'</td><td class="num">'+(m.high===null?'—':money(m.high))+'</td><td class="num">'+m.n+'</td></tr>'}).join('');
   renderHistoricalObservations(arr);
-  var sources=Array.from(new Set(arr.map(function(r){return (r.market_display||r.market)+' ('+(r.source||'source')+' · '+(r.record_type||'manual')+')'})));
-  $('histCaveat').textContent=arr.length?'Included physical markets: '+Array.from(new Set(arr.map(function(r){return r.market_display||r.market}))).join('; ')+'. Original source labels and series types present: '+sources.join('; ')+'. All types and published ranges are displayed without a pooled average; use a single comparable series and market for like-for-like seasonal analysis.':'No records match these filters yet. Add a market selection or broaden the category, weight range, or source series.';
+  $('histCaveat').textContent=arr.length?'Analysis includes '+arr.length+' matching observations across '+selectedNames.length+' selected-market labels. The graph summaries and observation table use the same underlying filter.':'No records match these filters. Broaden the category, weight range, source series, or market selection.';
  }
  ['histCategory','histWeight','histRecordType'].forEach(function(id){if($(id))$(id).addEventListener('change',renderHistorical)});
  ['geoLevel','geoState','geoCounty','geoSort'].forEach(function(id){if($(id))$(id).addEventListener('change',function(){renderGeoComparison(historicalFilteredRecords())})});
  $('addHistMarket').addEventListener('click',addHistoricalMarket);
- $('histMarketInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addHistoricalMarket()}});
+ $('histMarketInput').addEventListener('change',function(){if(this.value)addHistoricalMarket()});
  $('clearHistMarkets').addEventListener('click',function(){selectedHistoricalMarkets=[];saveHistoricalMarkets();renderHistorical()});
  $('histSelectedMarkets').addEventListener('click',function(e){var button=e.target.closest('[data-remove-hist-market]');if(!button)return;var key=button.getAttribute('data-remove-hist-market');selectedHistoricalMarkets=selectedHistoricalMarkets.filter(function(m){return marketKey(m)!==key});saveHistoricalMarkets();renderHistorical()});
  $('geoRoleManager').addEventListener('change',function(e){
