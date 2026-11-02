@@ -85,6 +85,25 @@ class MarketDataQualityTests(unittest.TestCase):
             ("Idaho", "Cassia"),
         )
 
+    def test_ranchers_choice_resolves_to_san_benito_county(self):
+        self.assertEqual(
+            collector.geographic_fields("Ranchers Choice Stockyard", "California"),
+            ("California", "San Benito"),
+        )
+
+    def test_published_weight_class_bounds_are_preserved(self):
+        row = feeder_record(weight=350, weight_low=300, weight_high=399)
+        accepted, rejected = collector.quality_check([row], "records")
+        self.assertEqual(len(accepted), 1)
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["weight_low"], 300)
+
+    def test_invalid_weight_class_bounds_are_rejected(self):
+        row = feeder_record(weight=350, weight_low=400, weight_high=300)
+        accepted, rejected = collector.quality_check([row], "records")
+        self.assertEqual(accepted, [])
+        self.assertIn("invalid_weight_class_bounds", rejected[0]["issues"])
+
     def test_regional_reports_are_not_assigned_a_county(self):
         self.assertEqual(
             collector.geographic_fields(
