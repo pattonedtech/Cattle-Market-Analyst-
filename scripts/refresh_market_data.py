@@ -123,6 +123,17 @@ def record(date, market, region, category, sex, breed, weight, price, head, sour
     }
 
 
+def needs_source_backfill(source_name):
+    if not OUT.exists():
+        return True
+    try:
+        payload = json.loads(OUT.read_text(encoding="utf-8"))
+        versions = payload.get("source_versions", {})
+        return int(versions.get(source_name, 0)) < 1
+    except Exception:
+        return True
+
+
 def needs_backfill():
     if not OUT.exists():
         return True
@@ -614,6 +625,94 @@ def parse_burley():
             print(f"Burley report failed {url}: {e}", file=sys.stderr)
     print(f"Burley: {len(out)} lot observations from {min(len(urls), 40 if needs_backfill() else 1)} report pages")
     return out
+
+
+def parse_cottonwood():
+    """Parse Cottonwood Livestock Auction's public 2022-2026 PDF archive."""
+    index_url = "https://cottonwoodlivestock.com/market-report/"
+    try:
+        soup = BeautifulSoup(fetch(index_url).text, "html.parser")
+    except Exception as e:
+        print(f"Cottonwood archive index failed: {e}", file=sys.stderr)
+        return [], [], False
+    urls = []
+    for a in soup.find_all("a", href=True):
+        href = urljoin(index_url, a["href"]).split("#")[0]
+        if ".pdf" in href.lower() and "cottonwoodlivestock.com" in urlparse(href).netloc:
+            if href not in urls:
+                urls.append(href)
+    full_backfill = needs_source_backfill("cottonwood")
+    limit = 100 if full_backfill else 3
+    records, cow_records = [], []
+    parsed_reports = 0
+    for url in urls[:limit]:
+        try:
+            text = pdf_text(url)
+        except Exception as e:
+            print(f"Cottonwood report failed {url}: {e}", file=sys.stderr)
+            continue
+        date = parse_date(text[:800]) or parse_date(url.replace("-", " ").replace("/", " "))
+        if not date:
+            print(f"Cottonwood report date not identified: {url}", file=sys.stderr)
+            continue
+        parsed_reports += 1
+        normalized = " ".join(text.split())
+        def add_weight_classes(heading, next_heading, category, sex):
+            start_match = re.search(rf"\b{heading}\s*:", normalized, re.I)
+            if not start_match:
+                return
+            tail = normalized[start_match.end():]
+            end_match = re.search(rf"\b{next_heading}\s*:", tail, re.I)
+            section = tail[:end_match.start()] if end_match else tail
+            classes = list(re.finditer(r"(\d{3,4})\s*-\s*(\d{3,4})\s*lbs?", section, re.I))
+            for idx, cls in enumerate(classes):
+                chunk = section[cls.end():classes[idx+1].start() if idx+1 < len(classes) else len(section)]
+                values = re.findall(r"(?<![\d,])(\d{2,4}(?:\.\d{1,2})?)(?![\d,])", chunk)
+                if len(values) < 2:
+                    continue
+                lo_w, hi_w = float(cls.group(1)), float(cls.group(2))
+                lo_p, hi_p = float(values[0]), float(values[1])
+                if not (50 <= lo_w <= hi_w <= 3000 and 0 < lo_p <= hi_p <= 100000):
+                    continue
+                row = record(
+                    date, "Cottonwood Livestock Auction", "Idaho", category, sex,
+                    "Not specified", (lo_w+hi_w)/2, (lo_p+hi_p)/2, None,
+                    "Cottonwood Livestock Auction", url, "published_weight_class_range",
+                    lo_p, hi_p, "Live auction",
+                    notes=f"Published {heading.lower()} weight class {int(lo_w)}-{int(hi_w)} lb; price range in USD/cwt; report total head is not allocated to this class"
+                )
+                row["weight_low"], row["weight_high"] = lo_w, hi_w
+                records.append(row)
+        add_weight_classes("Steers", "Heifers", "Feeder steer", "Steer")
+        add_weight_classes("Heifers", "Cows", "Feeder heifer", "Heifer")
+        bull_match = re.search(r"Slaughter\s+Bulls\s*:\s*([\d,.]+)\s*to\s*([\d,.]+)", normalized, re.I)
+        if bull_match:
+            lo, hi = [float(x.replace(",", "")) for x in bull_match.groups()]
+            if 0 < lo <= hi <= 100000:
+                records.append(record(
+                    date, "Cottonwood Livestock Auction", "Idaho", "Bull", "Bull",
+                    "Not specified", None, (lo+hi)/2, None,
+                    "Cottonwood Livestock Auction", url, "published_price_range",
+                    lo, hi, "Live auction", notes="Published slaughter-bull price range in USD/cwt"
+                ))
+        pair_match = re.search(r"Pairs\s*:\s*([\d,.]+)\s*to\s*([\d,.]+)\s*per\s*pair", normalized, re.I)
+        if pair_match:
+            lo, hi = [float(x.replace(",", "")) for x in pair_match.groups()]
+            if 0 < lo <= hi <= 100000:
+                cow_records.append({
+                    "id": stable_id("cottonwood", date, "Cow-calf pair", lo, hi, url),
+                    "date": date, "market": "Cottonwood Livestock Auction",
+                    "market_id": stable_id("market", "Cottonwood Livestock Auction"),
+                    "region": "Idaho", "state": "Idaho", "county": "Idaho",
+                    "geography_method": "verified_market_registry",
+                    "category": "Cow-calf pair", "price": (lo+hi)/2,
+                    "price_low": lo, "price_high": hi, "price_unit": "USD/family",
+                    "head": None, "source": "Cottonwood Livestock Auction",
+                    "source_url": url, "record_type": "published_price_range",
+                    "description": "Published cow-calf pair price range"
+                })
+    print(f"Cottonwood: {len(records)} market and {len(cow_records)} pair observations from {parsed_reports} reports")
+    return records, cow_records, bool(parsed_reports and full_backfill)
 
 
 def parse_ranchers_choice():
@@ -1195,7 +1294,8 @@ SOURCES = [
     {"name":"Ranchers Choice Stockyard","state":"CA","kind":"live auction","url":"https://rancherschoicestockyard.com/market-reports/","status":"automated: dated 2026 PDF reports; weight-class ranges, lot highlights, cow/bull ranges and breeding prices kept distinct"},
     {"name":"California Wool Growers Market Reports","state":"CA","kind":"auction market directory","url":"https://californiawoolgrowers.org/resources/market-reports/","status":"industry directory used to verify California auction yards and source report links"},
     {"name":"Burley Livestock Auction","state":"ID","kind":"live auction","url":"https://burleylivestock.auction/reports","status":"automated: public weekly lot tables; archived reports"},
-    {"name":"Idaho Farm Bureau Beef Market Reports","state":"ID","kind":"market report directory","url":"https://www.idahofb.org/commodities/beef-market-reports/","status":"official industry directory for Caldwell, Vale, Emmett, Burley, Jerome, Twin Falls, Blackfoot, Cottonwood and Lewiston; individual parsers pending"},
+    {"name":"Idaho Farm Bureau Beef Market Reports","state":"ID","kind":"market report directory","url":"https://www.idahofb.org/commodities/beef-market-reports/","status":"industry directory for Idaho auction report sources"},
+    {"name":"Cottonwood Livestock Auction","state":"ID","kind":"live auction","url":"https://cottonwoodlivestock.com/market-report/","status":"automated: dated PDF archive 2022-2026; feeder weight-class ranges and pair prices"},
     {"name":"Idaho Public Livestock Markets","state":"ID","kind":"government market directory","url":"https://agri.idaho.gov/wp-content/uploads/animal-industries/livestock-market-list.pdf","status":"official state market registry; used to verify market names and physical locations"},
     {"name":"Overland Stock Yard","state":"CA","kind":"auction / video lots","url":"https://www.overlandstockyard.com/market-reports","status":"automated: video lots; dairy and beef types remain separate"},
     {"name":"Tulare County Stockyard","state":"CA","kind":"live auction","url":"https://tularecountystockyard.com/","status":"listed; historical parser pending"},
@@ -1398,6 +1498,8 @@ def main():
     records += parse_overland()
     records += parse_visalia()
     records += parse_burley()
+    cottonwood_records, cottonwood_cows, cottonwood_backfill_complete = parse_cottonwood()
+    records += cottonwood_records
     ranchers_records, ranchers_cows = parse_ranchers_choice()
     records += ranchers_records
     marana_records, marana_cows = parse_marana()
@@ -1444,7 +1546,7 @@ def main():
         by_id[r["id"]] = r
     merged = sorted(by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", ""), r.get("id", "")))
     cow_by_id = {r["id"]: r for r in old_cows}
-    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows:
+    for r in marana_cows + willcox_cows + fallon_cows + usda_cow_records + belen_cows + ranchers_cows + cottonwood_cows:
         cow_by_id[r["id"]] = r
     merged_cows = sorted(cow_by_id.values(), key=lambda r: (r.get("date", ""), r.get("market", "")))
     new_ids = {r.get("id") for r in records}
@@ -1478,9 +1580,12 @@ def main():
     print("Market records by state: " + "; ".join(f"{k}={v}" for k, v in sorted(state_counts.items())))
     print("Corriente records by classification: " + ("; ".join(f"{k}={v}" for k, v in sorted(corriente_counts.items())) or "none identified in published descriptions"))
     DATA.mkdir(parents=True, exist_ok=True)
+    source_versions = dict(old_payload.get("source_versions", {})) if "old_payload" in locals() and isinstance(old_payload, dict) else {}
+    if cottonwood_backfill_complete:
+        source_versions["cottonwood"] = 1
     OUT.write_text(json.dumps({
-        "schema_version": 5, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "records": merged, "cow_records": merged_cows, "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
+        "schema_version": 6, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
