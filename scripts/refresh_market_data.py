@@ -1432,6 +1432,16 @@ def quality_check(rows, collection):
                 issues.append("missing_" + field)
         if collection == "records" and (row.get("category") == "Other" or row.get("sex") == "Unknown"):
             issues.append("animal_category_not_classifiable")
+        expected_units = {
+            "Feeder steer": "USD/cwt", "Feeder heifer": "USD/cwt",
+            "Corriente steer": "USD/cwt", "Corriente heifer": "USD/cwt",
+            "Cull cow": "USD/cwt", "Bull": "USD/cwt",
+            "Bred cow": "USD/head", "Bred heifer": "USD/head",
+            "Fresh Corriente": "USD/head", "Cow-calf pair": "USD/family",
+        }
+        expected_unit = expected_units.get(row.get("category"))
+        if expected_unit and row.get("price_unit") != expected_unit:
+            issues.append("category_unit_mismatch")
         source_url = str(row.get("source_url") or "")
         parsed_url = urlparse(source_url)
         if parsed_url.scheme != "https" or not parsed_url.netloc:
