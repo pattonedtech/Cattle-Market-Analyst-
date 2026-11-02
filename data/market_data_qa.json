@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "generated_at": "2026-11-02T00:03:50.041274+00:00",
+  "schema_version": 2,
+  "generated_at": "2026-11-02T00:05:08.444657+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
     "accepted": 17697,
@@ -9,6 +9,37 @@
   "cow_market_observations": {
     "accepted": 1522,
     "rejected": 1
+  },
+  "geographic_quality": {
+    "market_records_missing_state": 135,
+    "market_records_missing_county": 1237,
+    "market_records_with_warnings": 1307,
+    "accepted_by_geography_method": {
+      "regional_report_unassigned": 135,
+      "source_report_state_only": 1102,
+      "verified_market_registry": 16460
+    },
+    "accepted_by_county": {
+      "Arizona / Cochise": 160,
+      "Arizona / Pima": 3620,
+      "California / Kings": 9864,
+      "California / Tulare": 28,
+      "Idaho / Cassia": 134,
+      "Idaho / Twin Falls": 24,
+      "Montana / County not identified": 454,
+      "Nevada / Churchill": 2019,
+      "New Mexico / Chaves": 199,
+      "New Mexico / County not identified": 414,
+      "New Mexico / Curry": 217,
+      "New Mexico / Do\u00f1a Ana": 6,
+      "New Mexico / Valencia": 153,
+      "Oregon / Malheur": 17,
+      "Oregon / Umatilla": 19,
+      "Unassigned / County not identified": 135,
+      "Utah / County not identified": 146,
+      "Washington / County not identified": 36,
+      "Wyoming / County not identified": 52
+    }
   },
   "accepted_by_state": {
     "Arizona": 3780,
@@ -61,6 +92,17 @@
     "USDA AMS Market News": 1860,
     "Visalia Livestock Market": 28,
     "Willcox Livestock Auction": 160
+  },
+  "accepted_by_source_domain": {
+    "belenlivestockauction.com": 2,
+    "burleylivestock.auction": 116,
+    "cattlechannel.com": 78,
+    "test.willcoxlivestockauction.com": 160,
+    "www.ams.usda.gov": 1860,
+    "www.fallonlivestock.com": 2019,
+    "www.maranastockyards.us": 3620,
+    "www.overlandstockyard.com": 9814,
+    "www.visalialivestock.com": 28
   },
   "rejected_observations": [
     {
