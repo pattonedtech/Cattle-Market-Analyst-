@@ -1542,6 +1542,8 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         if row.get("qa_warnings"):
             warning_records += 1
     cow_by_category, cow_by_record_type, cow_by_market = {}, {}, {}
+    cow_by_state, cow_by_county = {}, {}
+    cow_missing_state = cow_missing_county = 0
     for row in cow_records:
         category = row.get("category") or "Unknown"
         cow_by_category[category] = cow_by_category.get(category, 0) + 1
@@ -1549,6 +1551,14 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         cow_by_record_type[record_type] = cow_by_record_type.get(record_type, 0) + 1
         market = row.get("market") or "Unknown"
         cow_by_market[market] = cow_by_market.get(market, 0) + 1
+        state = row.get("state") or "Regional / unassigned"
+        cow_by_state[state] = cow_by_state.get(state, 0) + 1
+        county_key = f"{row.get('state') or 'Unassigned'} / {row.get('county') or 'County not identified'}"
+        cow_by_county[county_key] = cow_by_county.get(county_key, 0) + 1
+        if not row.get("state"):
+            cow_missing_state += 1
+        if not row.get("county"):
+            cow_missing_county += 1
     return {
         "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -1569,6 +1579,12 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         "accepted_by_cow_category": dict(sorted(cow_by_category.items())),
         "accepted_by_cow_record_type": dict(sorted(cow_by_record_type.items())),
         "accepted_by_cow_market": dict(sorted(cow_by_market.items())),
+        "accepted_by_cow_state": dict(sorted(cow_by_state.items())),
+        "accepted_by_cow_county": dict(sorted(cow_by_county.items())),
+        "cow_geographic_quality": {
+            "cow_records_missing_state": cow_missing_state,
+            "cow_records_missing_county": cow_missing_county
+        },
         "accepted_corriente_origin": dict(sorted(by_corriente_origin.items())),
         "accepted_sale_regionality": dict(sorted(by_sale_regionality.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
