@@ -88,10 +88,19 @@ def normalize_observation(original: dict) -> dict:
     else:
         row["price_basis"] = "unclassified"
 
+    # Keep per-cwt cohorts in comparable 100 lb bands. If the source supplied
+    # an actual class range, preserve it rather than replacing it with a bin.
+    benchmark_low = row.get("weight_low")
+    benchmark_high = row.get("weight_high")
+    if benchmark_low is None and benchmark_high is None and unit == "USD/cwt" and row.get("weight") is not None:
+        benchmark_low = int(float(row["weight"]) // 100) * 100
+        benchmark_high = benchmark_low + 99
+    row["benchmark_weight_low"] = benchmark_low
+    row["benchmark_weight_high"] = benchmark_high
     row["benchmark_key"] = "|".join((
         category, unit, state or "REGIONAL_UNASSIGNED", record_type,
-        str(row.get("weight_low") if row.get("weight_low") is not None else ""),
-        str(row.get("weight_high") if row.get("weight_high") is not None else ""),
+        str(benchmark_low if benchmark_low is not None else ""),
+        str(benchmark_high if benchmark_high is not None else ""),
     ))
     return row
 
@@ -136,7 +145,7 @@ def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None)
             continue
         key = (
             row["state"], row["category"], row["price_unit"], record_type,
-            row.get("weight_low"), row.get("weight_high"),
+            row.get("benchmark_weight_low"), row.get("benchmark_weight_high"),
         )
         groups[key].append(row)
     output = []
