@@ -44,6 +44,8 @@ The Investment Outlook supports feeder cattle bought at 400–600 lb, a backgrou
 
 ## Public data, provenance, and quality assurance
 
+See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for field definitions and comparison rules.
+
 The public Pages site is a read-only presentation of the repository's published dataset. It is not a shared multi-user database. Observations manually entered in a browser are stored in that browser's local storage and are not automatically shared with other visitors or written to GitHub. Export a CSV to back up local entries. Do not enter personal, confidential, customer, or payment information.
 
 The scheduled collector retrieves public auction and USDA market reports. Each published observation should retain its sale date, market name, state, county when independently established, category, weight, price, price unit, record type, source name, and direct source URL. Regional or multi-state reports remain regional; they are not assigned to a yard or county. A source listed as "parser pending" is a discovery lead, not an automated data source.
