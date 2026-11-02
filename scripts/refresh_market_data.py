@@ -1508,6 +1508,14 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         by_sale_regionality[regionality] = by_sale_regionality.get(regionality, 0) + 1
         if row.get("qa_warnings"):
             warning_records += 1
+    cow_by_category, cow_by_record_type, cow_by_market = {}, {}, {}
+    for row in cow_records:
+        category = row.get("category") or "Unknown"
+        cow_by_category[category] = cow_by_category.get(category, 0) + 1
+        record_type = row.get("record_type") or "unclassified"
+        cow_by_record_type[record_type] = cow_by_record_type.get(record_type, 0) + 1
+        market = row.get("market") or "Unknown"
+        cow_by_market[market] = cow_by_market.get(market, 0) + 1
     return {
         "schema_version": 2,
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -1525,6 +1533,9 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         "accepted_by_market": dict(sorted(by_market.items())),
         "accepted_by_category": dict(sorted(by_category.items())),
         "accepted_by_record_type": dict(sorted(by_record_type.items())),
+        "accepted_by_cow_category": dict(sorted(cow_by_category.items())),
+        "accepted_by_cow_record_type": dict(sorted(cow_by_record_type.items())),
+        "accepted_by_cow_market": dict(sorted(cow_by_market.items())),
         "accepted_corriente_origin": dict(sorted(by_corriente_origin.items())),
         "accepted_sale_regionality": dict(sorted(by_sale_regionality.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
