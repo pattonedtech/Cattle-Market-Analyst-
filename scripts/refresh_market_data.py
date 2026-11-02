@@ -1185,26 +1185,48 @@ def quality_check(rows, collection):
 
 
 def build_qa_report(records, cow_records, rejected_records, rejected_cows):
-    by_state, by_market, by_source = {}, {}, {}
+    by_state, by_county, by_market, by_source, by_domain, by_geo_method = {}, {}, {}, {}, {}, {}
+    missing_state = missing_county = warning_records = 0
     for row in records:
         state = row.get("state") or "Regional / unassigned"
         by_state[state] = by_state.get(state, 0) + 1
+        if not row.get("state"):
+            missing_state += 1
+        county_key = f"{row.get('state') or 'Unassigned'} / {row.get('county') or 'County not identified'}"
+        by_county[county_key] = by_county.get(county_key, 0) + 1
+        if not row.get("county"):
+            missing_county += 1
         market = row.get("market") or "Unknown"
         by_market[market] = by_market.get(market, 0) + 1
         source = row.get("source") or "Unknown"
         by_source[source] = by_source.get(source, 0) + 1
+        domain = urlparse(row.get("source_url") or "").netloc or "Missing"
+        by_domain[domain] = by_domain.get(domain, 0) + 1
+        method = row.get("geography_method") or "not_recorded"
+        by_geo_method[method] = by_geo_method.get(method, 0) + 1
+        if row.get("qa_warnings"):
+            warning_records += 1
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
         "market_observations": {"accepted": len(records), "rejected": len(rejected_records)},
         "cow_market_observations": {"accepted": len(cow_records), "rejected": len(rejected_cows)},
+        "geographic_quality": {
+            "market_records_missing_state": missing_state,
+            "market_records_missing_county": missing_county,
+            "market_records_with_warnings": warning_records,
+            "accepted_by_geography_method": dict(sorted(by_geo_method.items())),
+            "accepted_by_county": dict(sorted(by_county.items()))
+        },
         "accepted_by_state": dict(sorted(by_state.items())),
         "accepted_by_market": dict(sorted(by_market.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
+        "accepted_by_source_domain": dict(sorted(by_domain.items())),
         "rejected_observations": rejected_records + rejected_cows,
         "source_registry": SOURCES
     }
+
 
 
 def main():
