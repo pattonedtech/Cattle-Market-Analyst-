@@ -1339,7 +1339,7 @@ def quality_check(rows, collection):
                 "id": row.get("id"), "date": row.get("date"), "market": row.get("market"),
                 "state": row.get("state"), "county": row.get("county"), "category": row.get("category"),
                 "weight": row.get("weight"), "price": row.get("price"), "price_unit": row.get("price_unit"),
-                "source_url": row.get("source_url"), "issues": sorted(set(issues)), "warnings": sorted(set(warnings))
+                "source_url": row.get("source_url"), "collection": collection, "issues": sorted(set(issues)), "warnings": sorted(set(warnings))
             })
         else:
             row["qa_status"] = "passed_with_warnings" if warnings else "passed"
