@@ -1657,8 +1657,9 @@ def main():
             old_quarantine = previous_quarantine.get("rejected_observations", [])
         except Exception:
             old_quarantine = []
-    elif QA_OUT.exists():
-        # One-time migration from the legacy embedded quarantine report.
+    if not old_quarantine and QA_OUT.exists():
+        # One-time migration from the legacy embedded quarantine report, or
+        # recovery if a split archive is empty while the legacy report is not.
         try:
             previous_qa = json.loads(QA_OUT.read_text(encoding="utf-8"))
             old_quarantine = previous_qa.get("rejected_observations", [])
