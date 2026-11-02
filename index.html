@@ -471,6 +471,10 @@ var regions={};
 candidates.forEach(function(r){if(westernState(r))return;var label=String(r.region||"").trim();if(!label)return;var type=r.record_type||"unclassified",key=label+"|"+type;if(!regions[key])regions[key]=[];regions[key].push(r);});
 regionalRows=Object.keys(regions).map(function(key){var items=regions[key],parts=key.split("|");return {label:parts[0],type:parts[1],count:items.length,head:items.every(function(r){return Number(r.head)>0;})?items.reduce(function(a,r){return a+Number(r.head);},0):null};});
 }
+if(publishedBenchmarks.length&&!mixedMode&&!rangeMode){
+var selectedOrigin=isCorriente?corriente:"not_applicable";
+regionalRows=publishedBenchmarks.filter(function(g){return g.state==="Regional / unassigned"&&g.region&&g.category===category&&g.price_unit===unit&&g.record_type===series&&g.corriente_origin===selectedOrigin&&g.period_days===periodKey&&g.weight_cohort===weightBand;}).map(function(g){return {label:g.region,type:g.record_type,count:g.observation_count,head:g.head_count};});
+}
 $("westOverall").textContent=overall&&overall.avg!==null?priceText(overall.avg):mixedMode?"Select one source/origin to calculate a benchmark":rangeMode?"Range data — no average":"No comparable data";
 $("westOverallCell").textContent=overall&&overall.avg!==null?priceText(overall.avg):"—";
 $("westOverallMeta").textContent=overall?fmt(overall.count)+" observations · "+(overall.head===null?"head counts incomplete":fmt(overall.head)+" reported head")+" · "+overall.markets+" markets · "+overall.method:"No qualifying observations for this category and filter.";
