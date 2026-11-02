@@ -74,7 +74,7 @@ class MarketModelTests(unittest.TestCase):
         result = build_benchmarks(items)
         groups = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] == "all"]
         keys = {(x["category"], x["price_unit"], x["record_type"]) for x in groups}
-        self.assertEqual(len(keys), 4)
+        self.assertEqual(len(keys), 5)
         self.assertNotIn(("Feeder steer", "USD/cwt", "published_weight_class_range"), keys)
         self.assertIn(("Feeder steer", "USD/cwt", "auction_weighted_average"), keys)
 
