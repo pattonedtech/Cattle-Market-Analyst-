@@ -953,17 +953,35 @@ def parse_roswell_web():
     return []
 
 
-def discover_cattle_channel_report_urls():
-    """Discover Idaho/Oregon reports from the live sitemap and report index.
+def normalize_cattle_channel_report_url(candidate, base_url, report_pattern):
+    """Return one canonical, safe report URL, or None for non-report URLs."""
+    href = urljoin(base_url, str(candidate or "").strip())
+    parsed = urlparse(href)
+    if (
+        parsed.scheme.lower() != "https"
+        or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
+        or parsed.port not in (None, 443)
+        or parsed.username is not None
+        or parsed.password is not None
+        or not report_pattern.fullmatch(parsed.path)
+    ):
+        return None
+    date_match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", parsed.path)
+    try:
+        datetime.strptime(date_match.group(1), "%Y-%m-%d")
+    except (AttributeError, ValueError):
+        return None
+    # Canonical host/path removes www, fragments, and tracking query strings so
+    # the same sale report cannot be fetched twice under alternate URL forms.
+    return "https://cattlechannel.com" + parsed.path.rstrip("/")
 
-    Follow nested sitemap references (some sitemap.xml files are indexes), but
-    do not probe obsolete WordPress sitemap/feed URLs that currently return 404.
-    """
+
+def discover_cattle_channel_report_urls():
+    """Discover valid Idaho/Oregon reports from the live sitemap and index."""
     report_pattern = re.compile(
-        r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?$",
+        r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?",
         re.I,
     )
-    allowed_hosts = {"cattlechannel.com", "www.cattlechannel.com"}
     discovered = set()
     sitemap_queue = ["https://cattlechannel.com/sitemap.xml"]
     visited_sitemaps = set()
@@ -982,20 +1000,15 @@ def discover_cattle_channel_report_urls():
         content = response.text or ""
         candidates = []
         try:
-            # Use the standard-library XML parser so the workflow does not
-            # require an additional lxml dependency just to read sitemaps.
             import xml.etree.ElementTree as ET
             root = ET.fromstring(content)
             for node in root.iter():
                 tag = node.tag.rsplit("}", 1)[-1].lower()
                 if tag == "loc" and node.text:
                     candidates.append(node.text.strip())
-                elif tag == "link":
-                    href = node.attrib.get("href")
-                    if href:
-                        candidates.append(href.strip())
+                elif tag == "link" and node.attrib.get("href"):
+                    candidates.append(node.attrib["href"].strip())
         except ET.ParseError:
-            # Some publishers serve an HTML sitemap at the conventional XML path.
             html = BeautifulSoup(content, "html.parser")
             candidates = [
                 urljoin(sitemap_url, link["href"])
@@ -1003,42 +1016,44 @@ def discover_cattle_channel_report_urls():
             ]
 
         for candidate in candidates:
-            if not candidate:
-                continue
             href = urljoin(sitemap_url, candidate.strip())
             parsed = urlparse(href)
-            if parsed.scheme != "https" or parsed.netloc.lower() not in allowed_hosts:
+            # Only recurse into same-site HTTPS XML resources. Keep this bounded
+            # to avoid following arbitrary external links or crawling whole sites.
+            if (
+                parsed.scheme.lower() != "https"
+                or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
+                or parsed.port not in (None, 443)
+                or parsed.username is not None
+                or parsed.password is not None
+            ):
                 continue
-            if report_pattern.search(parsed.path):
-                discovered.add(href.rstrip("/"))
-            elif parsed.path.lower().endswith(".xml") and href not in visited_sitemaps:
-                sitemap_queue.append(href)
+            report_url = normalize_cattle_channel_report_url(href, sitemap_url, report_pattern)
+            if report_url:
+                discovered.add(report_url)
+            elif parsed.path.lower().endswith((".xml", ".xml.gz")):
+                child_sitemap = "https://cattlechannel.com" + parsed.path
+                if child_sitemap not in visited_sitemaps and child_sitemap not in sitemap_queue:
+                    sitemap_queue.append(child_sitemap)
 
-    # The public report index is a second discovery path when sitemap entries
-    # are delayed or omitted. This is the live index endpoint verified in QA.
     index_url = "https://cattlechannel.com/market-report/"
     try:
         index = BeautifulSoup(fetch(index_url).text, "html.parser")
         for link in index.find_all("a", href=True):
-            href = urljoin(index_url, link["href"])
-            parsed = urlparse(href)
-            if (
-                parsed.scheme == "https"
-                and parsed.netloc.lower() in allowed_hosts
-                and report_pattern.search(parsed.path)
-            ):
-                discovered.add(href.rstrip("/"))
+            report_url = normalize_cattle_channel_report_url(
+                link["href"], index_url, report_pattern
+            )
+            if report_url:
+                discovered.add(report_url)
     except Exception as exc:
         print(f"Cattle Channel report index unavailable {index_url}: {exc}", file=sys.stderr)
 
     print(
         "Cattle Channel discovery: "
         f"{len(visited_sitemaps)} sitemap(s) checked; "
-        f"{len(discovered)} Idaho/Oregon report URL(s) found"
+        f"{len(discovered)} valid Idaho/Oregon report URL(s) found"
     )
     return discovered
-
-
 def parse_cattle_channel_west():
     """Add public Idaho/Oregon sale summaries from Cattle Channel."""
     fallback_urls = [
@@ -1049,7 +1064,7 @@ def parse_cattle_channel_west():
     ]
     urls = set(fallback_urls)
     urls.update(discover_cattle_channel_report_urls())
-    records, seen = [], set();
+    records, seen = [], set()
     def report_date_from_url(url):
         match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
         return match.group(1) if match else ""
