@@ -427,7 +427,7 @@ def parse_marana():
                             continue
                         if value < 100:
                             continue
-                        described_head = re.search(r"\\b(\\d+)\\s*(?:hd|head)\\b", desc, re.I)
+                        described_head = re.search(r"\b(\d+)\s*(?:hd|head)\b", desc, re.I)
                         cow_records.append({
                             "id": stable_id("marana", date, cow_type, desc, value, url),
                             "date": date, "market": "Marana Stockyards", "region": "Arizona",
