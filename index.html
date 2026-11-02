@@ -197,7 +197,7 @@ var qaResponse=await fetch('data/market_data_qa.json?refresh='+Date.now(),{cache
 if(qaResponse.ok){
 var qaData=await qaResponse.json(),health=qaData.source_fetch_health||{},domains=Object.keys(health),failed=domains.filter(function(domain){return Number(health[domain].failed_requests||0)>0;});
 $('sourceList').innerHTML+='<p><strong>Source connectivity:</strong> '+domains.length+' domains checked; '+failed.length+' with final request failures.</p>';
-if(failed.length)$('sourceList').innerHTML+='<p class="sub">Failed source domains: '+failed.map(function(domain){var x=health[domain],urls=Array.isArray(x.failed_urls)?x.failed_urls.join(', '):'';return esc(domain)+' ('+fmt(x.failed_requests)+' final failures; '+fmt(x.transient_failures||0)+' failed attempts; '+esc(x.last_error||'error unavailable')+(urls?'; URLs: '+esc(urls):'')+')'}).join('; ')+'. See QA report for details.</p>';
+if(failed.length)$('sourceList').innerHTML+='<p class="sub">Failed source domains: '+failed.map(function(domain){var x=health[domain],urls=Array.isArray(x.failed_urls)?x.failed_urls.join(', '):'';return esc(domain)+' ('+fmt(x.failed_requests)+' final failures; '+fmt(x.failed_attempts||0)+' failed attempts; '+esc(x.last_error||'error unavailable')+(urls?'; URLs: '+esc(urls):'')+')'}).join('; ')+'. See QA report for details.</p>';
 }
 }catch(qaError){console.warn('Source health report could not be loaded:',qaError);}
 publishedIds=new Set(published.map(function(r){return String(r.id)}));
