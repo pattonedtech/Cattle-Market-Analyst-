@@ -1766,7 +1766,7 @@ def main():
         source_versions["cottonwood"] = 1
     OUT.write_text(json.dumps({
         "schema_version": 7, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "benchmarks": build_benchmarks(merged, merged_cows), "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "benchmarks": build_benchmarks(merged, merged_cows), "qa_report_url": "data/market_data_qa.json", "quarantine_report_url": "data/quarantine_observations.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
