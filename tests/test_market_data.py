@@ -267,5 +267,76 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertIn("404", health["last_error"])
 
 
+    def test_cattle_channel_discovery_follows_nested_sitemaps_and_filters_hosts(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        sitemap = """<?xml version="1.0"?>
+        <sitemapindex>
+          <sitemap><loc>https://cattlechannel.com/reports-sitemap.xml</loc></sitemap>
+        </sitemapindex>"""
+        child = """<?xml version="1.0"?>
+        <urlset>
+          <url><loc>https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08</loc></url>
+          <url><loc>https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06</loc></url>
+          <url><loc>https://untrusted.example/market-report/idaho/fake-market/2026-10-08</loc></url>
+        </urlset>"""
+        index = """<html><body>
+          <a href="/market-report/oregon/producers-vale/2026-09-09">Report</a>
+        </body></html>"""
+        responses = {
+            "https://cattlechannel.com/sitemap.xml": sitemap,
+            "https://cattlechannel.com/reports-sitemap.xml": child,
+            "https://cattlechannel.com/market-report/": index,
+        }
+        with patch.object(
+            collector, "fetch",
+            side_effect=lambda url: SimpleNamespace(text=responses[url]),
+        ) as mocked_fetch:
+            found = collector.discover_cattle_channel_report_urls()
+
+        self.assertIn(
+            "https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08",
+            found,
+        )
+        self.assertIn(
+            "https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06",
+            found,
+        )
+        self.assertIn(
+            "https://cattlechannel.com/market-report/oregon/producers-vale/2026-09-09",
+            found,
+        )
+        self.assertFalse(any("untrusted.example" in url for url in found))
+        self.assertEqual(
+            [call.args[0] for call in mocked_fetch.call_args_list],
+            [
+                "https://cattlechannel.com/sitemap.xml",
+                "https://cattlechannel.com/reports-sitemap.xml",
+                "https://cattlechannel.com/market-report/",
+            ],
+        )
+
+    def test_cattle_channel_discovery_continues_when_sitemap_fails(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        index = """<html><body>
+          <a href="/market-report/idaho/burley-livestock-auction/2026-10-08">Report</a>
+        </body></html>"""
+        def fake_fetch(url):
+            if url.endswith("sitemap.xml"):
+                raise RuntimeError("temporary sitemap failure")
+            return SimpleNamespace(text=index)
+
+        with patch.object(collector, "fetch", side_effect=fake_fetch):
+            found = collector.discover_cattle_channel_report_urls()
+
+        self.assertEqual(
+            found,
+            {"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08"},
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
