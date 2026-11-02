@@ -62,8 +62,14 @@ jobs:
           local = json.loads(Path("/tmp/local_market.json").read_text(encoding="utf-8"))
           remote = json.loads(Path("/tmp/remote_market.json").read_text(encoding="utf-8"))
           qa_path = Path("data/market_data_qa.json")
+          quarantine_path = Path("data/quarantine_observations.json")
           qa = json.loads(qa_path.read_text(encoding="utf-8"))
-          rejected = qa.get("rejected_observations", [])
+          if quarantine_path.exists():
+              quarantine = json.loads(quarantine_path.read_text(encoding="utf-8"))
+          else:
+              # One-time compatibility with legacy QA reports embedding quarantine rows.
+              quarantine = {"rejected_observations": qa.get("rejected_observations", [])}
+          rejected = quarantine.get("rejected_observations", [])
           rejected_ids = {
               "records": {row.get("id") for row in rejected if row.get("collection") == "records"},
               "cow_records": {row.get("id") for row in rejected if row.get("collection") == "cow_records"},
@@ -91,6 +97,22 @@ jobs:
           rejected_cows = [row for row in rejected if row.get("collection") == "cow_records"]
           collected_qa = json.loads(qa_path.read_text(encoding="utf-8"))
           qa = build_qa_report(local["records"], local["cow_records"], rejected_records, rejected_cows, collected_qa.get("source_fetch_health", {}))
+          quarantine_rows = rejected_records + rejected_cows
+          quarantine_path.write_text(json.dumps({
+              "schema_version": 1,
+              "generated_at": collected_qa.get("generated_at"),
+              "record_count": len(quarantine_rows),
+              "market_record_count": len(rejected_records),
+              "cow_record_count": len(rejected_cows),
+              "rejected_observations": quarantine_rows,
+          }, indent=2) + "\n", encoding="utf-8")
+          qa["quarantine_report_url"] = "data/quarantine_observations.json"
+          qa["quarantine_summary"] = {
+              "total": len(quarantine_rows),
+              "market_records": len(rejected_records),
+              "cow_records": len(rejected_cows),
+          }
+          qa.pop("rejected_observations", None)
           qa_path.write_text(json.dumps(qa, indent=2) + "\n", encoding="utf-8")
           local["schema_version"] = 7
           local["benchmarks"] = build_benchmarks(local["records"], local["cow_records"])
