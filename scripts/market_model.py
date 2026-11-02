@@ -88,10 +88,19 @@ def normalize_observation(original: dict) -> dict:
     else:
         row["price_basis"] = "unclassified"
 
+    # Keep per-cwt cohorts in comparable 100 lb bands. If the source supplied
+    # an actual class range, preserve it rather than replacing it with a bin.
+    benchmark_low = row.get("weight_low")
+    benchmark_high = row.get("weight_high")
+    if benchmark_low is None and benchmark_high is None and unit == "USD/cwt" and row.get("weight") is not None:
+        benchmark_low = int(float(row["weight"]) // 100) * 100
+        benchmark_high = benchmark_low + 99
+    row["benchmark_weight_low"] = benchmark_low
+    row["benchmark_weight_high"] = benchmark_high
     row["benchmark_key"] = "|".join((
         category, unit, state or "REGIONAL_UNASSIGNED", record_type,
-        str(row.get("weight_low") if row.get("weight_low") is not None else ""),
-        str(row.get("weight_high") if row.get("weight_high") is not None else ""),
+        str(benchmark_low if benchmark_low is not None else ""),
+        str(benchmark_high if benchmark_high is not None else ""),
     ))
     return row
 
@@ -123,6 +132,27 @@ def summarize_observations(rows: list[dict]) -> dict | None:
     }
 
 
+def merge_quarantine_history(current_market: list[dict], current_cows: list[dict],
+                            prior: list[dict], accepted_market_ids: set,
+                            accepted_cow_ids: set) -> tuple[list[dict], list[dict]]:
+    """Keep prior quarantine rows until accepted or replaced by a fresh rejection."""
+    market = list(current_market)
+    cows = list(current_cows)
+    current_keys = {
+        (row.get("collection"), row.get("id")) for row in market + cows
+    }
+    for row in prior:
+        collection, rid = row.get("collection"), row.get("id")
+        key = (collection, rid)
+        if key in current_keys:
+            continue
+        if collection == "records" and rid not in accepted_market_ids:
+            market.append(row)
+        elif collection == "cow_records" and rid not in accepted_cow_ids:
+            cows.append(row)
+    return market, cows
+
+
 def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None) -> dict:
     """Build independent benchmark cohorts; never pool units, geographies, or source types."""
     groups: dict[tuple, list[dict]] = defaultdict(list)
@@ -136,7 +166,7 @@ def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None)
             continue
         key = (
             row["state"], row["category"], row["price_unit"], record_type,
-            row.get("weight_low"), row.get("weight_high"),
+            row.get("benchmark_weight_low"), row.get("benchmark_weight_high"),
         )
         groups[key].append(row)
     output = []
