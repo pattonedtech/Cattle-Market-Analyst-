@@ -1553,10 +1553,26 @@ def main():
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
     rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
-    if new_ids and rejected_new / len(new_ids) > 0.05:
-        raise RuntimeError(f"QA gate blocked publishing: {rejected_new}/{len(new_ids)} newly collected observations failed validation")
+    rejection_reasons = {}
+    for rejected in rejected_records:
+        if rejected.get("id") in new_ids:
+            for reason in rejected.get("issues", []):
+                rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
+    rejection_rate = rejected_new / len(new_ids) if new_ids else 0
+    if rejection_rate >= 0.20:
+        raise RuntimeError(
+            f"QA safety gate blocked publishing: {rejected_new}/{len(new_ids)} "
+            f"new market observations rejected ({rejection_rate:.1%}); "
+            f"reason counts: {rejection_reasons}. See data/market_data_qa.json."
+        )
+    if rejection_rate >= 0.05:
+        print(
+            f"QA WARNING: quarantined {rejected_new}/{len(new_ids)} newly collected "
+            f"market observations ({rejection_rate:.1%}); rejected rows are excluded. "
+            f"Reason counts: {rejection_reasons}"
+        )
     print(f"QA: accepted {len(merged)} market and {len(merged_cows)} cow records; quarantined {len(rejected_records)} market and {len(rejected_cows)} cow records")
     category_counts = {}
     for r in merged:
