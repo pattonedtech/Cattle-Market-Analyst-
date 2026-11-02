@@ -980,14 +980,22 @@ def discover_cattle_channel_report_urls():
             continue
 
         content = response.text or ""
-        parsed_xml = BeautifulSoup(content, "xml")
-        xml_nodes = parsed_xml.find_all(["loc", "link"])
-        if xml_nodes:
-            candidates = [
-                node.get_text(strip=True) or node.get("href", "")
-                for node in xml_nodes
-            ]
-        else:
+        candidates = []
+        try:
+            # Use the standard-library XML parser so the workflow does not
+            # require an additional lxml dependency just to read sitemaps.
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(content)
+            for node in root.iter():
+                tag = node.tag.rsplit("}", 1)[-1].lower()
+                if tag == "loc" and node.text:
+                    candidates.append(node.text.strip())
+                elif tag == "link":
+                    href = node.attrib.get("href")
+                    if href:
+                        candidates.append(href.strip())
+        except ET.ParseError:
+            # Some publishers serve an HTML sitemap at the conventional XML path.
             html = BeautifulSoup(content, "html.parser")
             candidates = [
                 urljoin(sitemap_url, link["href"])
