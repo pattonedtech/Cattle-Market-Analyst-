@@ -40,7 +40,7 @@ def fetch(url):
     domain = urlparse(url).netloc or "unknown"
     health = SOURCE_FETCH_HEALTH.setdefault(domain, {
         "requests": 0, "attempts": 0, "successes": 0,
-        "failed_requests": 0, "transient_failures": 0,
+        "failed_requests": 0, "failed_attempts": 0,
         "failed_urls": [], "last_error": None,
         "last_failure_url": None, "last_failure_at": None,
         "last_success_at": None
@@ -57,7 +57,7 @@ def fetch(url):
             return response
         except Exception as exc:
             last_error = exc
-            health["transient_failures"] += 1
+            health["failed_attempts"] += 1
             health["last_error"] = str(exc)[:500]
             health["last_failure_url"] = url
             health["last_failure_at"] = datetime.now(timezone.utc).isoformat()
