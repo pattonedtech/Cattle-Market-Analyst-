@@ -1,0 +1,37 @@
+name: Validate cattle market app
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install collector dependencies
+        run: pip install requests beautifulsoup4 pypdf
+      - name: Validate dashboard JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path("index.html").read_text(encoding="utf-8")
+          start = html.rfind("<script>")
+          end = html.find("</script>", start)
+          if start < 0 or end < 0:
+              raise SystemExit("Could not locate dashboard inline JavaScript.")
+          Path("/tmp/dashboard.js").write_text(html[start + len("<script>"):end], encoding="utf-8")
+          PY
+          node --check /tmp/dashboard.js
+      - name: Run market data quality tests
+        run: python -m unittest discover -s tests -v

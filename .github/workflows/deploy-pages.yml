@@ -26,6 +26,18 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      - name: Validate dashboard JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html = Path("index.html").read_text(encoding="utf-8")
+          start = html.rfind("<script>")
+          end = html.find("</script>", start)
+          if start < 0 or end < 0:
+              raise SystemExit("Could not locate dashboard inline JavaScript.")
+          Path("/tmp/dashboard.js").write_text(html[start + len("<script>"):end], encoding="utf-8")
+          PY
+          node --check /tmp/dashboard.js
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website
