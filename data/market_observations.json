@@ -1,6 +1,6 @@
 {
   "schema_version": 5,
-  "generated_at": "2026-11-02T00:02:25.440368+00:00",
+  "generated_at": "2026-11-02T00:03:50.056935+00:00",
   "record_count": 17699,
   "cow_record_count": 1523,
   "sources": [
@@ -491018,7 +491018,7 @@
   ],
   "qa_report_url": "data/market_data_qa.json",
   "qa_summary": {
-    "market_records_accepted": 17589,
+    "market_records_accepted": 17697,
     "market_records_rejected": 2,
     "cow_records_accepted": 1522,
     "cow_records_rejected": 1

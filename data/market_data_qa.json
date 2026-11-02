@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-02T00:02:25.424843+00:00",
+  "generated_at": "2026-11-02T00:03:50.041274+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
-    "accepted": 17589,
+    "accepted": 17697,
     "rejected": 2
   },
   "cow_market_observations": {
@@ -12,8 +12,8 @@
   },
   "accepted_by_state": {
     "Arizona": 3780,
-    "California": 9842,
-    "Idaho": 100,
+    "California": 9892,
+    "Idaho": 158,
     "Montana": 454,
     "Nevada": 2019,
     "New Mexico": 989,
@@ -24,7 +24,7 @@
     "Wyoming": 52
   },
   "accepted_by_market": {
-    "Burley Livestock Auction": 76,
+    "Burley Livestock Auction": 134,
     "Cattle Country Video Auction (USDA)": 3,
     "Cattlemen's Livestock Auction (USDA)": 151,
     "Cattlemen's Livestock Auction - Belen": 2,
@@ -38,6 +38,7 @@
     "Northwest Direct Cattle Report (USDA)": 4,
     "Northwest Livestock Commission": 19,
     "Overland Stock Yard": 9814,
+    "Overland Stockyard (USDA)": 50,
     "Producers Livestock Vale, OR": 17,
     "Roswell Livestock Auction (USDA)": 199,
     "Santa Teresa Livestock Auction (USDA)": 6,
@@ -51,13 +52,13 @@
     "Wyoming Weekly Cattle Auction Summary (USDA)": 52
   },
   "accepted_by_source": {
-    "Burley Livestock Auction": 58,
+    "Burley Livestock Auction": 116,
     "Cattle Channel (sale report)": 78,
     "Cattlemen's Livestock Auction - Belen": 2,
     "Fallon Livestock": 2019,
     "Marana Stockyards": 3620,
     "Overland Stock Yard": 9814,
-    "USDA AMS Market News": 1810,
+    "USDA AMS Market News": 1860,
     "Visalia Livestock Market": 28,
     "Willcox Livestock Auction": 160
   },
