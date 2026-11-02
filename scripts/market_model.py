@@ -99,7 +99,7 @@ def normalize_observation(original: dict) -> dict:
     row["benchmark_weight_low"] = benchmark_low
     row["benchmark_weight_high"] = benchmark_high
     row["benchmark_key"] = "|".join((
-        category, unit, state or "REGIONAL_UNASSIGNED", record_type,
+        category, unit, state or ("REGIONAL:" + str(row.get("region") or "UNVERIFIED")), record_type,
         str(benchmark_low if benchmark_low is not None else ""),
         str(benchmark_high if benchmark_high is not None else ""),
     ))
@@ -183,7 +183,9 @@ def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None,
         record_type = str(row.get("record_type") or "")
         if record_type not in BENCHMARKABLE_TYPES:
             continue
-        if not row.get("state") or not row.get("category") or not row.get("price_unit"):
+        if not row.get("category") or not row.get("price_unit"):
+            continue
+        if not row.get("state") and not row.get("region"):
             continue
         try:
             sale_date = datetime.strptime(str(row.get("date")), "%Y-%m-%d").date()
@@ -198,26 +200,27 @@ def build_benchmarks(records: list[dict], cow_records: list[dict] | None = None,
             lo = int(row["benchmark_weight_low"])
             hi = int(row["benchmark_weight_high"])
             weight_cohorts.append((f"{lo}-{hi}", lo, hi))
-        geographies = [row["state"]]
-        if row["state"] in WESTERN_STATES:
-            geographies.append("Western")
+        geographies = [(row["state"] or "Regional / unassigned", row.get("region") if not row.get("state") else None)]
+        if row.get("state") in WESTERN_STATES:
+            geographies.append(("Western", None))
         for period_days, cutoff in periods:
             if cutoff is not None and sale_date < cutoff:
                 continue
             for series in source_series:
                 for weight_cohort, weight_low, weight_high in weight_cohorts:
-                    for geography in geographies:
+                    for geography, region_scope in geographies:
                         key = (
-                            geography, row["category"], row["price_unit"], series,
+                            geography, region_scope, row["category"], row["price_unit"], series,
                             origin, period_days, weight_cohort, weight_low, weight_high,
                         )
                         groups[key].append(row)
                         group_sources[key].add(record_type)
     output = []
     for key in sorted(groups, key=lambda k: tuple("" if v is None else str(v) for v in k)):
-        state, category, unit, series, origin, period_days, weight_cohort, weight_low, weight_high = key
+        state, region_scope, category, unit, series, origin, period_days, weight_cohort, weight_low, weight_high = key
         output.append({
             "state": state,
+            "region": region_scope,
             "category": category,
             "price_unit": unit,
             "record_type": series,
