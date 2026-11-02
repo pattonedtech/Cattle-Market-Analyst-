@@ -38,7 +38,7 @@ A GitHub Actions workflow runs the public-source collector daily (and can be run
 
 ## Expanded regional market data and investment models
 
-The collector now includes the USDA AMS Roswell (1782), Clovis (1781), Cattlemen's/Belen (1783), Santa Teresa (1290), New Mexico Weekly Summary (1784), and Southwest Direct Cattle AZ/CA/NV (2940) report families, plus the Marana Stockyards archive (historical weekly reports back to 2022), Visalia snapshots, and Overland video lots. A source register also lists other California, Arizona, Nevada, and New Mexico sale barns; a listed source is not represented as automatically parsed until its parser is enabled. Marana bred-cow and cow-calf-pair sale prices are stored separately as USD/head, not mixed with feeder $/cwt records.
+The collector now includes the USDA AMS Roswell (1782), Clovis (1781), Cattlemen's/Belen (1783), Santa Teresa (1290), New Mexico Weekly Summary (1784), and Southwest Direct Cattle AZ/CA/NV (2940) report families, plus the Marana Stockyards archive (historical weekly reports back to 2022), Visalia snapshots, and Overland video lots. A source register also lists other California, Arizona, Nevada, and New Mexico sale barns; a listed source is not represented as automatically parsed until its parser is enabled. Marana bred-cow sale prices are stored as USD/head and cow-calf-pair prices as USD/family; both remain separate from feeder $/cwt records.
 
 The Investment Outlook supports feeder cattle bought at 400–600 lb, a backgrounding period to 600 lb, finishing days/costs, live-auction or direct-beef sale channels, target net margin, local basis inputs, and a cow ownership cash-flow/NPV worksheet. Deferred feeder and live cattle futures are shown by contract month. Futures are exchange benchmarks, not guaranteed cash sale prices; local basis, grade, weight, shrink, health, and sale channel matter. The cow worksheet's payback estimate is simple cash-flow payback; NPV is separately discounted. No automatic buy/sell recommendation should be treated as validated until sufficient comparable history and basis observations exist.
 
@@ -59,6 +59,7 @@ The scheduled collector retrieves public auction and USDA market reports. Each p
 - The collector validates dates, required fields, HTTPS source links, state and county attribution, market identity, category, weight, head count, price, price range, and unit.
 - Public-source fetches receive one bounded retry; final failures are recorded by source domain in the QA report. Prior quarantined observations remain visible until they are revalidated or superseded by a fresh rejection.
 - Invalid records are excluded from the published observation arrays and recorded in `data/market_data_qa.json` with source URL and machine-readable rejection reasons.
+- Records that cannot be assigned a meaningful cattle category are quarantined; Corriente can remain in an unclassified Corriente category when origin or sex is not identified, with sale regionality preserved.
 - Unusual prices are warnings for review, not automatic proof of an error.
 - The refresh workflow runs unit tests before publication, quarantines invalid observations, emits a warning when at least 5% of newly collected market records fail hard validation, and blocks publication when at least 20% fail. These thresholds are circuit breakers, not permission to accept invalid rows.
 - Source report types (live auction averages, published ranges, video contracts, direct trades, and state summaries) remain distinct. Do not pool unlike sale channels or units into a single benchmark.
@@ -76,3 +77,6 @@ The scheduled collector retrieves public auction and USDA market reports. Each p
 ### Contributing market observations
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the required source evidence and review process. See [SECURITY.md](SECURITY.md) for vulnerability reporting. The source register and live QA summary are displayed in the dashboard; open the linked original report to verify any value before relying on it for a transaction.
+
+
+See [DATA_PLATFORM_ARCHITECTURE.md](docs/DATA_PLATFORM_ARCHITECTURE.md) for the production architecture and [schema.sql](db/schema.sql) for the PostgreSQL migration target. The database schema is not deployed; provisioning and credentials are required before shared writes can be enabled.

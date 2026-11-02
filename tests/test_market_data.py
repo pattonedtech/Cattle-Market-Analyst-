@@ -139,6 +139,20 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
             (None, None),
         )
 
+    def test_qa_report_counts_breeding_categories_separately(self):
+        cow = {
+            "id": "cow1", "date": "2026-10-30", "market": "Test Auction",
+            "state": "California", "county": "Fresno", "category": "Cow-calf pair",
+            "price": 1800, "price_unit": "USD/family", "source": "Test",
+            "source_url": "https://example.org/cows.pdf", "record_type": "published_price_range",
+        }
+        qa = collector.build_qa_report([], [cow], [], [])
+        self.assertEqual(qa["accepted_by_cow_category"]["Cow-calf pair"], 1)
+        self.assertEqual(qa["accepted_by_category"], {})
+        self.assertEqual(qa["accepted_by_cow_state"]["California"], 1)
+        self.assertEqual(qa["cow_geographic_quality"]["cow_records_missing_state"], 0)
+        self.assertEqual(qa["cow_geographic_quality"]["cow_records_missing_county"], 0)
+
     def test_price_outside_sanity_bounds_is_rejected(self):
         accepted, rejected = collector.quality_check(
             [feeder_record(price=0)], "records"
@@ -162,6 +176,22 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(rejected, [])
         self.assertEqual(accepted[0]["corriente_origin"], "Native Corriente")
 
+    def test_unclassifiable_other_category_is_quarantined(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Other", sex="Unknown")], "records"
+        )
+        self.assertEqual(accepted, [])
+        self.assertIn("animal_category_not_classifiable", rejected[0]["issues"])
+
+    def test_corriente_without_sex_or_origin_remains_classifiable_as_unspecified(self):
+        accepted, rejected = collector.quality_check(
+            [feeder_record(category="Corriente cattle (unclassified)", sex="Mixed",
+                           breed="Corriente — type not specified")], "records"
+        )
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["corriente_origin"], "unspecified")
+        self.assertIn("Kings County, California", accepted[0]["sale_regionality"])
+
     def test_fetch_retries_transient_failure_and_tracks_domain_health(self):
         from types import SimpleNamespace
         from unittest.mock import patch
@@ -176,6 +206,27 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["attempts"], 2)
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["successes"], 1)
         self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_requests"], 0)
+        self.assertEqual(collector.SOURCE_FETCH_HEALTH[domain]["failed_attempts"], 1)
+        self.assertIn("temporary", collector.SOURCE_FETCH_HEALTH[domain]["last_error"])
+        self.assertIn("report.pdf", collector.SOURCE_FETCH_HEALTH[domain]["last_failure_url"])
+
+    def test_fetch_does_not_retry_permanent_http_404(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        from requests import HTTPError
+
+        domain = "missing-test.example.org"
+        collector.SOURCE_FETCH_HEALTH.pop(domain, None)
+        error = HTTPError("404 Not Found", response=SimpleNamespace(status_code=404))
+        with patch.object(collector.S, "get", side_effect=error) as get, patch.object(collector.time, "sleep") as sleep:
+            with self.assertRaises(HTTPError):
+                collector.fetch("https://missing-test.example.org/missing.pdf")
+        get.assert_called_once()
+        sleep.assert_not_called()
+        health = collector.SOURCE_FETCH_HEALTH[domain]
+        self.assertEqual(health["failed_requests"], 1)
+        self.assertIn("missing.pdf", health["failed_urls"][0])
+        self.assertIn("404", health["last_error"])
 
 
 if __name__ == "__main__":

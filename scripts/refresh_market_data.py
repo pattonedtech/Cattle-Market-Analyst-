@@ -40,7 +40,10 @@ def fetch(url):
     domain = urlparse(url).netloc or "unknown"
     health = SOURCE_FETCH_HEALTH.setdefault(domain, {
         "requests": 0, "attempts": 0, "successes": 0,
-        "failed_requests": 0, "last_error": None
+        "failed_requests": 0, "failed_attempts": 0,
+        "failed_urls": [], "last_error": None,
+        "last_failure_url": None, "last_failure_at": None,
+        "last_success_at": None
     })
     health["requests"] += 1
     last_error = None
@@ -50,14 +53,25 @@ def fetch(url):
             response = S.get(url, timeout=45)
             response.raise_for_status()
             health["successes"] += 1
-            health["last_error"] = None
+            health["last_success_at"] = datetime.now(timezone.utc).isoformat()
             return response
         except Exception as exc:
             last_error = exc
+            health["failed_attempts"] += 1
+            health["last_error"] = str(exc)[:500]
+            health["last_failure_url"] = url
+            health["last_failure_at"] = datetime.now(timezone.utc).isoformat()
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            # Retry network/timeouts, rate limits, and server errors. A 4xx such
+            # as 404/403 is a source/link problem, not a transient outage.
+            if status is not None and status < 500 and status != 429:
+                break
             if attempt == 0:
                 time.sleep(1)
     health["failed_requests"] += 1
-    health["last_error"] = str(last_error)[:500]
+    if url not in health["failed_urls"]:
+        health["failed_urls"].append(url)
+        health["failed_urls"] = health["failed_urls"][-10:]
     raise last_error
 
 
@@ -339,6 +353,7 @@ def parse_marana():
     except Exception as e:
         print(f"Marana archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Marana Stockyards", "Arizona")
     for url in (report_urls[:220] if needs_backfill() else report_urls[:1]):
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
@@ -413,11 +428,17 @@ def parse_marana():
                             continue
                         if value < 100:
                             continue
+                        described_head = re.search(r"\b(\d+)\s*(?:hd|head)\b", desc, re.I)
                         cow_records.append({
                             "id": stable_id("marana", date, cow_type, desc, value, url),
-                            "date": date, "market": "Marana Stockyards", "region": "Arizona",
+                            "date": date, "market": "Marana Stockyards",
+                            "market_id": stable_id("market", "Marana Stockyards"),
+                            "region": "Arizona", "state": cow_state, "county": cow_county,
+                            "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
                             "category": "Bred cow" if cow_type == "bred" else "Cow-calf pair",
-                            "description": desc, "price": value, "price_unit": "USD/head",
+                            "description": desc, "price": value, "price_unit": "USD/head" if cow_type == "bred" else "USD/family",
+                            "head": int(described_head.group(1)) if described_head else None,
+                            "record_type": "published_individual_price",
                             "source": "Marana Stockyards", "source_url": url
                         })
         except Exception as e:
@@ -439,6 +460,7 @@ def parse_fallon():
     except Exception as e:
         print(f"Fallon archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Fallon Livestock", "Nevada")
     for url in (report_urls[:150] if needs_backfill() else report_urls[:1]):
         try:
             text = pdf_text(url)
@@ -476,7 +498,7 @@ def parse_fallon():
                                               "Fallon Livestock", url, "published_weight_class_range",
                                               lo, hi, "Live auction",
                                               notes=f"Published weight class {low_w}-{high_w} lb; range, not weighted average"))
-                # Bred cow and pair prices are per head and remain separate from cwt series.
+                # Bred cows are priced per head; cow-calf pairs are priced per pair.
                 if "BRED COWS (HD)" in upper or "PAIRS (HD)" in upper:
                     for category, pattern in [
                         ("Bred cow", r"Bred Cows?\s*\(HD\)\s*([\d,.]+)(?:\s*-\s*([\d,.]+))?"),
@@ -488,10 +510,14 @@ def parse_fallon():
                             hi = float((m.group(2) or m.group(1)).replace(",", ""))
                             cow_records.append({
                                 "id": stable_id("fallon", date, category, lo, hi, url),
-                                "date": date, "market": "Fallon Livestock", "region": "Nevada",
-                                "category": category, "description": "Published per-head range",
+                                "date": date, "market": "Fallon Livestock", "market_id": stable_id("market", "Fallon Livestock"),
+                                "region": "Nevada", "state": cow_state, "county": cow_county,
+                                "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
+                                "category": category, "description": "Published breeding-stock price range",
                                 "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
-                                "price_unit": "USD/head", "source": "Fallon Livestock", "source_url": url
+                                "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head",
+                                "record_type": "published_price_range",
+                                "source": "Fallon Livestock", "source_url": url
                             })
         except Exception as e:
             print(f"Fallon report failed {url}: {e}", file=sys.stderr)
@@ -519,6 +545,7 @@ def parse_willcox():
     except Exception as e:
         print(f"Willcox archive index failed: {e}", file=sys.stderr)
     records, cow_records = [], []
+    cow_state, cow_county = geographic_fields("Willcox Livestock Auction", "Arizona")
     for page_url in (report_pages[:100] if needs_backfill() else report_pages[:1]):
         try:
             page = BeautifulSoup(fetch(page_url).text, "html.parser")
@@ -567,10 +594,15 @@ def parse_willcox():
                         head, desc, price = m.groups()
                         cow_records.append({
                             "id": stable_id("willcox", date, n, desc, price, pdf_url),
-                            "date": date, "market": "Willcox Livestock Auction", "region": "Arizona",
+                            "date": date, "market": "Willcox Livestock Auction",
+                            "market_id": stable_id("market", "Willcox Livestock Auction"),
+                            "region": "Arizona", "state": cow_state, "county": cow_county,
+                            "geography_method": "verified_market_registry" if cow_county else "source_report_state_only",
                             "category": "Bred cow" if n == 0 else "Cow-calf pair",
                             "description": f"{head} {desc}", "price": float(price.replace(",", "")),
-                            "price_unit": "USD/head", "source": "Willcox Livestock Auction", "source_url": pdf_url
+                            "price_unit": "USD/head" if n == 0 else "USD/family",
+                            "head": int(head), "record_type": "published_individual_price",
+                            "source": "Willcox Livestock Auction", "source_url": pdf_url
                         })
         except Exception as e:
             print(f"Willcox report failed {page_url}: {e}", file=sys.stderr)
@@ -1048,10 +1080,11 @@ def parse_belen():
                 cow_records.append({
                     "id": stable_id("belen", date, category, lo, hi, url),
                     "date": date, "market": "Cattlemen's Livestock Auction - Belen",
+                    "market_id": stable_id("market", "Cattlemen's Livestock Auction - Belen"),
                     "region": "New Mexico", "state": state, "county": county,
                     "category": category, "description": "Published auction price range; origin/type not specified",
                     "price": (lo+hi)/2, "price_low": lo, "price_high": hi,
-                    "price_unit": "USD/head", "source": "Cattlemen's Livestock Auction - Belen",
+                    "price_unit": "USD/family" if category == "Cow-calf pair" else "USD/head", "source": "Cattlemen's Livestock Auction - Belen",
                     "source_url": url, "record_type": "published_price_range",
                     "head": None, "breed": "Corriente — type not specified" if "Corriente" in category else "Not specified"
                 })
@@ -1112,6 +1145,10 @@ def parse_overland():
                     sex, category = "Heifer", "Corriente heifer" if "CORRIENTE" in desc else "Feeder heifer"
                 elif "STR" in desc or "STEER" in desc:
                     sex, category = "Steer", "Corriente steer" if "CORRIENTE" in desc else "Feeder steer"
+                elif "CORRIENTE" in desc:
+                    # Origin may be identifiable even when sex/class is not.
+                    # Preserve it as unclassified Corriente, never infer a sex.
+                    sex, category = "Mixed", "Corriente cattle (unclassified)"
                 else:
                     sex, category = "Unknown", "Other"
                 breed = "Holstein / dairy" if "HOL" in desc or "HOLSTEIN" in desc else ("Angus" if "ANGUS" in desc else ("Mexican M-branded Corriente" if ("MEXICAN" in desc or "M-BRANDED" in desc or "M BRANDED" in desc) and "CORRIENTE" in desc else ("Native Corriente" if "NATIVE CORRIENTE" in desc else ("Corriente — type not specified" if "CORRIENTE" in desc else ("Beef cross / native" if "NATIVE" in desc or "BEEF" in desc else "Mixed / unknown")))))
@@ -1393,6 +1430,8 @@ def quality_check(rows, collection):
         for field in ("market", "category", "source"):
             if not str(row.get(field) or "").strip():
                 issues.append("missing_" + field)
+        if collection == "records" and (row.get("category") == "Other" or row.get("sex") == "Unknown"):
+            issues.append("animal_category_not_classifiable")
         source_url = str(row.get("source_url") or "")
         parsed_url = urlparse(source_url)
         if parsed_url.scheme != "https" or not parsed_url.netloc:
@@ -1502,8 +1541,26 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         by_sale_regionality[regionality] = by_sale_regionality.get(regionality, 0) + 1
         if row.get("qa_warnings"):
             warning_records += 1
+    cow_by_category, cow_by_record_type, cow_by_market = {}, {}, {}
+    cow_by_state, cow_by_county = {}, {}
+    cow_missing_state = cow_missing_county = 0
+    for row in cow_records:
+        category = row.get("category") or "Unknown"
+        cow_by_category[category] = cow_by_category.get(category, 0) + 1
+        record_type = row.get("record_type") or "unclassified"
+        cow_by_record_type[record_type] = cow_by_record_type.get(record_type, 0) + 1
+        market = row.get("market") or "Unknown"
+        cow_by_market[market] = cow_by_market.get(market, 0) + 1
+        state = row.get("state") or "Regional / unassigned"
+        cow_by_state[state] = cow_by_state.get(state, 0) + 1
+        county_key = f"{row.get('state') or 'Unassigned'} / {row.get('county') or 'County not identified'}"
+        cow_by_county[county_key] = cow_by_county.get(county_key, 0) + 1
+        if not row.get("state"):
+            cow_missing_state += 1
+        if not row.get("county"):
+            cow_missing_county += 1
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
         "market_observations": {"accepted": len(records), "rejected": len(rejected_records)},
@@ -1519,6 +1576,15 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         "accepted_by_market": dict(sorted(by_market.items())),
         "accepted_by_category": dict(sorted(by_category.items())),
         "accepted_by_record_type": dict(sorted(by_record_type.items())),
+        "accepted_by_cow_category": dict(sorted(cow_by_category.items())),
+        "accepted_by_cow_record_type": dict(sorted(cow_by_record_type.items())),
+        "accepted_by_cow_market": dict(sorted(cow_by_market.items())),
+        "accepted_by_cow_state": dict(sorted(cow_by_state.items())),
+        "accepted_by_cow_county": dict(sorted(cow_by_county.items())),
+        "cow_geographic_quality": {
+            "cow_records_missing_state": cow_missing_state,
+            "cow_records_missing_county": cow_missing_county
+        },
         "accepted_corriente_origin": dict(sorted(by_corriente_origin.items())),
         "accepted_sale_regionality": dict(sorted(by_sale_regionality.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
@@ -1604,12 +1670,21 @@ def main():
         rejected_records, rejected_cows, old_quarantine,
         accepted_market_ids, accepted_cow_ids
     )
-    rejected_new = sum(1 for r in rejected_records if r.get("id") in new_ids)
+    rejected_new = sum(
+        1 for r in rejected_records
+        if r.get("id") in new_ids and "animal_category_not_classifiable" not in r.get("issues", [])
+    )
+    newly_unclassified = sum(
+        1 for r in rejected_records
+        if r.get("id") in new_ids and "animal_category_not_classifiable" in r.get("issues", [])
+    )
     rejection_reasons = {}
     for rejected in rejected_records:
-        if rejected.get("id") in new_ids:
+        if rejected.get("id") in new_ids and "animal_category_not_classifiable" not in rejected.get("issues", []):
             for reason in rejected.get("issues", []):
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
+    if newly_unclassified:
+        print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     # Record-level failures are quarantined; the batch threshold below is a circuit breaker.

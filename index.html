@@ -21,7 +21,7 @@
 <div class="field"><label>Cattle category</label><select id="westCategory"><option value="Feeder steer">Feeder steers ($/cwt)</option><option value="Feeder heifer">Feeder heifers ($/cwt)</option><option value="Replacement heifer">Replacement heifers — open / unbred ($/cwt)</option><option value="Bred heifer">Replacement heifers — bred ($/head)</option><option value="Bred cow">Bred cows ($/head)</option><option value="Cow-calf pair">Cow-calf pairs ($/pair)</option><option value="Corriente steer">Corriente steers ($/cwt)</option><option value="Corriente heifer">Corriente heifers ($/cwt)</option><option value="Corriente cattle (unclassified)">Corriente cattle — unclassified ($/cwt)</option><option value="Fresh Corriente">Fresh Corriente — origin unspecified ($/head)</option></select></div>
 <div class="field"><label>Corriente classification</label><select id="westCorriente"><option value="all">All Corriente types</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not recorded</option></select></div>
 <div class="field"><label>Reporting period</label><select id="westPeriod"><option value="90">Latest 90 days</option><option value="365">Latest 12 months</option><option value="all">All available history</option></select></div>
-<div class="field"><label>Price source / method</label><select id="westSource"><option value="auction">Auction and weighted-average reports</option><option value="all">All state-level sources (exploratory)</option><option value="range">Published range midpoints</option><option value="video">Video and direct-trade benchmarks</option></select></div>
+<div class="field"><label>Price source / method</label><select id="westSource"><option value="auction">Auction weighted averages (comparable)</option><option value="all">All source types (counts only; no pooled average)</option><option value="published_weight_class_range">Published weight-class ranges (no average)</option><option value="published_price_range">Published price ranges (no average)</option><option value="published_lot_highlight">Published lot highlights (no average)</option><option value="published_individual_price">Published individual sale prices (observation mean)</option><option value="video_lot_contract">Video lot contracts</option><option value="usda_direct_trade">USDA direct trades</option><option value="usda_video_regional">USDA regional video</option><option value="usda_state_summary">USDA state summaries</option></select></div>
 </div>
 <div class="kpi-label" style="margin-top:10px">Western overall average</div><div class="kpi" id="westOverall">—</div><div class="sub" id="westOverallMeta">Waiting for published market data…</div>
 <div class="tablewrap"><table><thead><tr><th>State</th><th class="num">Average</th><th class="num">Low</th><th class="num">High</th><th class="num">Observations</th><th class="num">Head / lots</th><th>Coverage</th></tr></thead><tbody id="westStateBody"><tr><td colspan="7" class="empty">Loading state averages…</td></tr></tbody><tfoot><tr><th>Western overall</th><th class="num" id="westOverallCell">—</th><th class="num" id="westLow">—</th><th class="num" id="westHigh">—</th><th class="num" id="westCount">0</th><th class="num" id="westHead">—</th><th id="westCoverage">—</th></tr></tfoot></table></div>
@@ -37,7 +37,7 @@
 <div class="fieldgrid">
 <div class="field"><label>Market</label><select id="histMarket"><option value="">All available markets</option><option>Visalia Livestock Market</option><option>Overland Stock Yard</option></select></div>
 <div class="field"><label>Category</label><select id="histCategory"><option value="Feeder steer">Feeder steer</option><option value="Feeder heifer">Feeder heifer</option><option value="Replacement heifer">Replacement heifer</option><option value="Corriente steer">Corriente steer</option><option value="Corriente heifer">Corriente heifer</option><option value="Corriente cattle (unclassified)">Corriente cattle — unclassified</option><option value="Fresh Corriente">Fresh Corriente</option><option value="Cull cow">Cull cow</option><option value="Bull">Bull</option></select></div>
-<div class="field"><label>Corriente origin</label><select id="histCorrienteOrigin"><option value="all">All origins</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not reported</option></select></div><div class="field"><label>Source series</label><select id="histRecordType"><option value="auction">Auction weighted averages (comparable series)</option><option value="all">All types (exploratory only)</option><option value="auction_lot_average">Individual auction-lot averages</option><option value="published_lot_highlight">Published lot highlights</option><option value="published_weight_class_range">Published weight-class ranges</option><option value="published_price_range">Published price ranges</option><option value="video_lot_contract">Video lot contracts</option><option value="usda_auction">USDA auction reports</option><option value="usda_state_summary">USDA state summaries</option><option value="usda_direct_trade">USDA direct trades</option></select></div><div class="field"><label>Weight range</label><select id="histWeight"><option value="all">All recorded weights</option><option value="300">300–399 lb</option><option value="400">400–499 lb</option><option value="500">500–599 lb</option><option value="600">600–699 lb</option><option value="700">700–799 lb</option><option value="800">800–899 lb</option><option value="900">900–999 lb</option></select></div>
+<div class="field"><label>Corriente origin</label><select id="histCorrienteOrigin"><option value="all">All origins</option><option value="Native Corriente">Native Corriente</option><option value="Mexican M-branded Corriente">Mexican M-branded Corriente</option><option value="unspecified">Unspecified / not reported</option></select></div><div class="field"><label>Source series</label><select id="histRecordType"><option value="auction">Auction weighted averages (comparable series)</option><option value="all">All types (exploratory only)</option><option value="auction_lot_average">Individual auction-lot averages</option><option value="published_lot_highlight">Published lot highlights (no average)</option><option value="published_individual_price">Published individual sale prices</option><option value="published_weight_class_range">Published weight-class ranges</option><option value="published_price_range">Published price ranges</option><option value="video_lot_contract">Video lot contracts</option><option value="usda_auction">USDA auction reports</option><option value="third_party_auction_weighted_average">Third-party auction weighted averages</option><option value="usda_state_summary">USDA state summaries</option><option value="usda_direct_trade">USDA direct trades</option><option value="usda_video_regional">USDA regional video</option></select></div><div class="field"><label>Weight range</label><select id="histWeight"><option value="all">All recorded weights</option><option value="300">300–399 lb</option><option value="400">400–499 lb</option><option value="500">500–599 lb</option><option value="600">600–699 lb</option><option value="700">700–799 lb</option><option value="800">800–899 lb</option><option value="900">900–999 lb</option></select></div>
 </div></div>
 <div class="card span-12" id="geoComparison">
 <h2>Geographic market comparison</h2>
@@ -54,8 +54,8 @@
 <div class="notice" id="geoCaveat" style="margin-top:12px">Averages are unweighted averages of published observation records, not head-weighted sale averages. Published ranges, video contracts, direct trades, and auction averages should be compared separately.</div>
 </div>
 <div class="card span-7"><h2>Seasonal price pattern</h2><p class="sub">Average recorded $/cwt by calendar month. This is descriptive history, not a forecast.</p><canvas class="chart" id="seasonChart"></canvas><div id="seasonNote" class="sub"></div></div>
-<div class="card span-5"><h2>Year-over-year</h2><p class="sub">Annual average of matching observations.</p><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Avg $/cwt</th><th class="num">Records</th></tr></thead><tbody id="yearBody"><tr><td colspan="3" class="empty">No data.</td></tr></tbody></table></div></div>
-<div class="card span-12"><h2>Monthly detail</h2><p class="sub">Monthly average, range, and sample size across all available years.</p><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Avg $/cwt</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No data.</td></tr></tbody></table></div></div>
+<div class="card span-5"><h2>Year-over-year</h2><p class="sub">Annual comparable average when the selected series supports averaging; otherwise range/count only.</p><div class="tablewrap"><table><thead><tr><th>Year</th><th class="num">Avg $/cwt</th><th class="num">Records</th></tr></thead><tbody id="yearBody"><tr><td colspan="3" class="empty">No data.</td></tr></tbody></table></div></div>
+<div class="card span-12"><h2>Monthly detail</h2><p class="sub">Monthly comparable average or published range, with sample size across available years.</p><div class="tablewrap"><table><thead><tr><th>Month</th><th class="num">Avg $/cwt</th><th class="num">Low</th><th class="num">High</th><th class="num">Records</th></tr></thead><tbody id="monthBody"><tr><td colspan="5" class="empty">No data.</td></tr></tbody></table></div></div>
 <div class="card span-12"><h2>Data source register</h2><p class="sub">A source being listed does not mean its historical reports are already parsed. Status is shown for each source.</p><div id="sourceList" class="sub">Waiting for source register…</div></div><div class="card span-12"><div class="notice" id="histCaveat">The system will not issue seasonal buy/sell advice until there are enough years of comparable records. Visalia published ranges and Overland video-lot contract prices are different data types and should be analyzed separately.</div></div>
 </div></section>
 <section class="page" id="market"><div class="grid">
@@ -171,7 +171,7 @@
 <script>
 (function(){
 'use strict';
-var KEY='flyingp_market_records_v1', ROLE_KEY='flyingp_market_roles_v1', records=[], futuresContracts=[], cowMarketRecords=[], marketRoles={}, recordsPage=0, recordsPageSize=100, publishedIds=new Set();
+var KEY='flyingp_market_records_v1', ROLE_KEY='flyingp_market_roles_v1', records=[], futuresContracts=[], cowMarketRecords=[], publishedBenchmarks=[], marketRoles={}, recordsPage=0, recordsPageSize=100, publishedIds=new Set();
 function loadMarketRoles(){try{marketRoles=JSON.parse(localStorage.getItem(ROLE_KEY)||'{}');if(!marketRoles||typeof marketRoles!=='object'||Array.isArray(marketRoles))marketRoles={}}catch(e){marketRoles={}}}
 function saveMarketRoles(){localStorage.setItem(ROLE_KEY,JSON.stringify(marketRoles))}
 function marketRole(market){return marketRoles[market]||'none'}
@@ -188,16 +188,16 @@ var response=await fetch('data/market_observations.json?refresh='+Date.now(),{ca
 if(!response.ok)throw new Error('HTTP '+response.status+' while loading published market data');
 var payload=await response.json();
 if(!payload||!Array.isArray(payload.records))throw new Error('Published data did not contain a records array');
-var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];
+var published=payload.records;cowMarketRecords=Array.isArray(payload.cow_records)?payload.cow_records:[];publishedBenchmarks=payload.benchmarks&&Array.isArray(payload.benchmarks.groups)?payload.benchmarks.groups:[];
 var sources=Array.isArray(payload.sources)?payload.sources:[];
 $('sourceList').innerHTML=sources.map(function(x){var u=safeSourceUrl(x.url);return '<p>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(x.name)+'</a>':esc(x.name))+' ('+esc(x.state)+') — '+esc(x.status)+'</p>'}).join('');
 if(payload.qa_summary)$('sourceList').innerHTML+='<p><strong>Data QA:</strong> '+fmt(payload.qa_summary.market_records_accepted)+' accepted; '+fmt(payload.qa_summary.market_records_rejected)+' quarantined. <a href="data/market_data_qa.json" target="_blank" rel="noopener">Open QA report</a>.</p>';
 try{
 var qaResponse=await fetch('data/market_data_qa.json?refresh='+Date.now(),{cache:'no-store'});
 if(qaResponse.ok){
-var qaData=await qaResponse.json(),health=qaData.source_fetch_health||{},domains=Object.keys(health),failed=domains.filter(function(domain){return Number(health[domain].failed_requests||0)>0;});
-$('sourceList').innerHTML+='<p><strong>Source connectivity:</strong> '+domains.length+' domains checked; '+failed.length+' with final request failures.</p>';
-if(failed.length)$('sourceList').innerHTML+='<p class="sub">Failed source domains: '+failed.map(function(domain){return esc(domain)+' ('+fmt(health[domain].failed_requests)+' failed; '+esc(health[domain].last_error||'error unavailable')+')'}).join('; ')+'. See QA report for details.</p>';
+var qaData=await qaResponse.json(),health=qaData.source_fetch_health||{},domains=Object.keys(health),failed=domains.filter(function(domain){return Number(health[domain].failed_requests||0)>0;}),degraded=domains.filter(function(domain){return Number(health[domain].failed_attempts||0)>0;});
+$('sourceList').innerHTML+='<p><strong>Source connectivity:</strong> '+domains.length+' domains checked; '+failed.length+' with final request failures; '+degraded.length+' experienced at least one failed fetch attempt.</p>';
+if(degraded.length)$('sourceList').innerHTML+='<p class="sub">Source diagnostics: '+degraded.map(function(domain){var x=health[domain],urls=Array.isArray(x.failed_urls)?x.failed_urls.join(', '):'',status=Number(x.failed_requests||0)+' final failures / '+Number(x.failed_attempts||0)+' failed attempts';return esc(domain)+' ('+status+'; '+esc(x.last_error||'error unavailable')+(urls?'; URLs: '+esc(urls):'')+')'}).join('; ')+'. See QA report for details.</p>';
 }
 }catch(qaError){console.warn('Source health report could not be loaded:',qaError);}
 publishedIds=new Set(published.map(function(r){return String(r.id)}));
@@ -420,42 +420,74 @@ return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.pr
 function renderWesternOverview(){
 if(!$("westCategory"))return;
 var category=$("westCategory").value,period=$("westPeriod").value,sourceMode=$("westSource").value,corriente=$("westCorriente").value,weightBand=$("westWeight").value;
-var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";$("westCorriente").disabled=!isCorriente;
-var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
+var isCorriente=category.indexOf("Corriente")===0||category==="Fresh Corriente";
+$("westCorriente").disabled=!isCorriente;
 var unit=category==="Bred cow"||category==="Bred heifer"||category==="Fresh Corriente"?"USD/head":category==="Cow-calf pair"?"USD/family":"USD/cwt";
 var weightApplicable=unit==="USD/cwt"&&category!=="Corriente cattle (unclassified)";
 $("westWeight").disabled=!weightApplicable;
 if(!weightApplicable){weightBand="all";$("westWeight").value="all";}
-function normalize(record){
+var periodKey=period==="all"?"all":String(period);
+var series=sourceMode==="auction"?"auction_weighted_average":sourceMode;
+var rangeMode=sourceMode==="published_weight_class_range"||sourceMode==="published_price_range"||sourceMode==="published_lot_highlight";
+var mixedMode=sourceMode==="all"||(isCorriente&&corriente==="all");
+function priceText(value){return value===null||value===undefined?"—":money(value)+(unit==="USD/cwt"?"/cwt":unit==="USD/head"?"/head":"/pair");}
+function fromBenchmark(state){
+var origin=isCorriente?corriente:"not_applicable";
+var group=publishedBenchmarks.find(function(g){return g.state===state&&g.category===category&&g.price_unit===unit&&g.record_type===series&&g.corriente_origin===origin&&g.period_days===periodKey&&g.weight_cohort===weightBand;});
+if(!group)return null;
+return {avg:group.average,low:group.low,high:group.high,count:group.observation_count,averageCount:group.observation_count,head:group.head_count,markets:(group.markets||[]).length,method:group.average_method,sourceTypes:group.source_record_types||[]};
+}
+var stateRows,overall,regionalRows=[];
+if(!mixedMode&&!rangeMode&&publishedBenchmarks.length){
+stateRows=WEST_STATES.map(function(state){return {state:state,stats:fromBenchmark(state)};});
+overall=fromBenchmark("Western");
+}else{
+var cutoff=period==="all"?null:Date.now()-Number(period)*86400000;
+function rawMatch(record){
+if(record.source==="User-entered")return false;
 var state=westernState(record),recordUnit=record.price_unit||"USD/cwt";
-if(recordUnit!==unit)return null;
-if(record.category!==category)return null;
-if(weightBand!=="all"){var band=weightBand.split("-").map(Number),wlo=record.weight_low!=null?Number(record.weight_low):Number(record.weight),whi=record.weight_high!=null?Number(record.weight_high):Number(record.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<band[0]||wlo>band[1])return null;}
-if(isCorriente){
-var origin=corrienteOrigin(record);
-if(corriente!=="all"&&origin!==corriente)return null;
+if(recordUnit!==unit||record.category!==category)return false;
+if(isCorriente&&corriente!=="all"&&corrienteOrigin(record)!==corriente)return false;
+if(sourceMode==="auction"&&!["auction_lot_average","usda_auction","usda_replacement_weighted_average","third_party_auction_weighted_average"].includes(record.record_type))return false;
+if(sourceMode!=="all"&&sourceMode!=="auction"&&record.record_type!==sourceMode)return false;
+if(cutoff&&record.date){var dt=new Date(record.date+"T23:59:59");if(!Number.isNaN(dt.getTime())&&dt.getTime()<cutoff)return false;}
+if(weightBand!=="all"){var band=weightBand.split("-").map(Number),wlo=record.weight_low!=null?Number(record.weight_low):Number(record.weight),whi=record.weight_high!=null?Number(record.weight_high):Number(record.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<band[0]||wlo>band[1])return false;}
+return Number.isFinite(Number(record.price))&&Number(record.price)>0;
 }
-if(!westernSourceAllowed(record,sourceMode))return null;
-if(cutoff&&record.date){var dt=new Date(record.date+"T23:59:59");if(!Number.isNaN(dt.getTime())&&dt.getTime()<cutoff)return null}
-if(!Number.isFinite(Number(record.price))||Number(record.price)<=0)return null;
-return Object.assign({},record,{state:state,price_unit:unit});
+var candidates=records.filter(rawMatch);
+function rangeStats(items){
+if(!items.length)return null;
+return {avg:null,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Published lot highlights and ranges are not averaged"};
 }
-var candidates=records.map(normalize).filter(Boolean);
-cowMarketRecords.forEach(function(r){var n=normalize(r);if(n)candidates.push(n)});
-var stateRows=WEST_STATES.map(function(state){var items=candidates.filter(function(r){return r.state===state});return {state:state,items:items,stats:westernAverage(items)}});
-var stateItems=candidates.filter(function(r){return !!r.state}),overall=westernAverage(stateItems);
-function priceText(value){return value===null||value===undefined?"—":money(value)+(unit==="USD/cwt"?"/cwt":unit==="USD/head"?"/head":"/pair")}
-$("westOverall").textContent=overall?priceText(overall.avg):"No comparable data";
-$("westOverallCell").textContent=overall?priceText(overall.avg):"—";
-$("westOverallMeta").textContent=overall?fmt(overall.count)+" observations ("+fmt(overall.averageCount)+" used in average) · "+fmt(overall.head||0)+" reported head · "+overall.markets+" markets · "+overall.method:"No qualifying state-level observations for this category and filter.";
-$("westStateBody").innerHTML=stateRows.map(function(row){var a=row.stats;return "<tr><td>"+esc(row.state)+"</td><td class='num'>"+(a?priceText(a.avg):"—")+"</td><td class='num'>"+(a?priceText(a.low):"—")+"</td><td class='num'>"+(a?priceText(a.high):"—")+"</td><td class='num'>"+(a?fmt(a.count):"0")+"</td><td class='num'>"+(a&&a.head!==null?fmt(a.head):"—")+"</td><td>"+(a?a.markets+" market(s) · "+a.averageCount+"/"+a.count+" observations used":"No data")+"</td></tr>"}).join("");
-$("westLow").textContent=overall?priceText(overall.low):"—";$("westHigh").textContent=overall?priceText(overall.high):"—";$("westCount").textContent=overall?fmt(overall.count):"0";$("westHead").textContent=overall&&overall.head!==null?fmt(overall.head):"—";$("westCoverage").textContent=stateRows.filter(function(x){return !!x.stats}).length+"/10 states";
-$("westMethod").textContent=(overall?overall.method+" average across state-tagged records; "+overall.averageCount+" of "+overall.count+" observations were used. ":"No average calculated. ")+(sourceMode==="range"?"Published range midpoints are not the same as lot-weighted sale prices. ":sourceMode==="video"?"Video and direct trades are benchmarks and are not blended with local auction averages. ":sourceMode==="all"?"All state-specific source types are selected; mixed methodologies make this an exploratory comparison. ":"Auction and USDA weighted-average sources are selected. ")+"The Western overall is weighted by reported head where available, not an average of the ten state averages. It excludes multi-state reports to avoid double-counting. "+(weightBand==="all"&&unit==="USD/cwt"?"All weights are combined; select a weight class for a tighter like-for-like comparison.":"");
-var regions={};candidates.forEach(function(r){if(r.state)return;var label=String(r.region||"").trim();if(!label||!/(region|multi-state|western|northwest|southwest)/i.test(label))return;if(!regions[label])regions[label]=[];regions[label].push(r)});
-var regionRows=Object.keys(regions).map(function(label){return {label:label,items:regions[label],stats:westernAverage(regions[label])}});
-$("westRegionalBody").innerHTML=regionRows.length?regionRows.map(function(row){var types=Array.from(new Set(row.items.map(function(r){return r.record_type||"auction report"}))).join(", ");return "<tr><td>"+esc(row.label)+"</td><td class='num'>"+priceText(row.stats.avg)+"</td><td class='num'>"+fmt(row.stats.count)+"</td><td class='num'>"+(row.stats.head===null?"—":fmt(row.stats.head))+"</td><td>"+esc(types)+"</td></tr>"}).join(""):"<tr><td colspan='5' class='empty'>No regional benchmark for this category and source filter.</td></tr>";
-var available=stateRows.filter(function(x){return !!x.stats}).map(function(x){return x.state});
-$("overviewStatus").textContent=available.length+" of 10 Western states have qualifying "+category.toLowerCase()+" observations in the selected period. States without published comparable data remain blank. Categories with sparse or absent data require additional local auction feeds or manually entered observations.";
+function countStats(items){
+if(!items.length)return null;
+return {avg:null,low:null,high:null,count:items.length,averageCount:0,head:null,markets:Array.from(new Set(items.map(function(r){return r.market}).filter(Boolean))).length,method:"Mixed source types are not pooled"};
+}
+var summarize=rangeMode?rangeStats:mixedMode?countStats:westernAverage;
+stateRows=WEST_STATES.map(function(state){return {state:state,stats:summarize(candidates.filter(function(r){return westernState(r)===state;}))};});
+var stateItems=candidates.filter(function(r){return !!westernState(r);});
+overall=rangeMode?rangeStats(stateItems):mixedMode?countStats(stateItems):westernAverage(stateItems);
+var regions={};
+candidates.forEach(function(r){if(westernState(r))return;var label=String(r.region||"").trim();if(!label)return;var type=r.record_type||"unclassified",key=label+"|"+type;if(!regions[key])regions[key]=[];regions[key].push(r);});
+regionalRows=Object.keys(regions).map(function(key){var items=regions[key],parts=key.split("|");return {label:parts[0],type:parts[1],count:items.length,head:items.every(function(r){return Number(r.head)>0;})?items.reduce(function(a,r){return a+Number(r.head);},0):null};});
+}
+if(publishedBenchmarks.length&&!mixedMode&&!rangeMode){
+var selectedOrigin=isCorriente?corriente:"not_applicable";
+regionalRows=publishedBenchmarks.filter(function(g){return g.state==="Regional / unassigned"&&g.region&&g.category===category&&g.price_unit===unit&&g.record_type===series&&g.corriente_origin===selectedOrigin&&g.period_days===periodKey&&g.weight_cohort===weightBand;}).map(function(g){return {label:g.region,type:g.record_type,count:g.observation_count,head:g.head_count};});
+}
+$("westOverall").textContent=overall&&overall.avg!==null?priceText(overall.avg):mixedMode?"Select one source/origin to calculate a benchmark":rangeMode?"Range data — no average":"No comparable data";
+$("westOverallCell").textContent=overall&&overall.avg!==null?priceText(overall.avg):"—";
+$("westOverallMeta").textContent=overall?fmt(overall.count)+" observations · "+(overall.head===null?"head counts incomplete":fmt(overall.head)+" reported head")+" · "+overall.markets+" markets · "+overall.method:"No qualifying observations for this category and filter.";
+$("westStateBody").innerHTML=stateRows.map(function(row){var a=row.stats;return "<tr><td>"+esc(row.state)+"</td><td class='num'>"+(a&&a.avg!==null?priceText(a.avg):"—")+"</td><td class='num'>"+(a&&a.low!==null?priceText(a.low):"—")+"</td><td class='num'>"+(a&&a.high!==null?priceText(a.high):"—")+"</td><td class='num'>"+(a?fmt(a.count):"0")+"</td><td class='num'>"+(a&&a.head!==null?fmt(a.head):"—")+"</td><td>"+(a?a.markets+" market(s) · "+a.method:"No data")+"</td></tr>"}).join("");
+$("westLow").textContent=overall&&overall.low!==null?priceText(overall.low):"—";
+$("westHigh").textContent=overall&&overall.high!==null?priceText(overall.high):"—";
+$("westCount").textContent=overall?fmt(overall.count):"0";
+$("westHead").textContent=overall&&overall.head!==null?fmt(overall.head):"—";
+$("westCoverage").textContent=stateRows.filter(function(x){return !!x.stats}).length+"/10 states";
+$("westMethod").textContent= mixedMode?"No pooled average is calculated across different Corriente origins or different source methodologies. Choose one Corriente origin and one source series.":rangeMode?"Published price ranges are shown as an envelope only. Their midpoints are not treated as auction averages.":(overall?overall.method+". ":"No average calculated. ")+(sourceMode==="auction"?"Auction weighted-average observations are combined only within that method family. ":"The selected source series is kept separate. ")+(weightBand==="all"&&unit==="USD/cwt"?"All weights are combined in the all-weight cohort; select a 100 lb weight cohort for a tighter comparison.":"");
+$("westRegionalBody").innerHTML=regionalRows.length?regionalRows.map(function(row){return "<tr><td>"+esc(row.label)+"</td><td class='num'>—</td><td class='num'>"+fmt(row.count)+"</td><td class='num'>"+(row.head===null?"—":fmt(row.head))+"</td><td>"+esc(row.type)+" (regional; not pooled with state averages)</td></tr>"}).join(""):"<tr><td colspan='5' class='empty'>No regional benchmark for this category and source filter.</td></tr>";
+var available=stateRows.filter(function(x){return !!x.stats}).map(function(x){return x.state;});
+$("overviewStatus").textContent=available.length+" of 10 Western states have qualifying "+category.toLowerCase()+" observations in the selected period. Western overall uses the pooled observations from verified western states, not an average of state averages. Regional/unassigned reports remain separate.";
 }
 function renderGeoComparison(){
 var category=$('histCategory')?$('histCategory').value:'Feeder steer';
@@ -477,7 +509,7 @@ if(isCorriente&&originFilter!=='all'&&corrienteOrigin(r)!==originFilter)return f
 if(seriesType==='auction'&&!['auction_lot_average','usda_auction','usda_replacement_weighted_average','third_party_auction_weighted_average'].includes(r.record_type))return false;
 if(seriesType!=='all'&&seriesType!=='auction'&&r.record_type!==seriesType)return false;
 if(band!=='all'){var low=Number(band),wlo=r.weight_low!=null?Number(r.weight_low):Number(r.weight),whi=r.weight_high!=null?Number(r.weight_high):Number(r.weight);if(!Number.isFinite(wlo)||!Number.isFinite(whi)||whi<low||wlo>=low+100)return false}
-return WEST_STATES.indexOf(r.state)>=0&&Number.isFinite(Number(r.price))&&r.date;
+return r.source!=='User-entered'&&WEST_STATES.indexOf(r.state)>=0&&Number.isFinite(Number(r.price))&&r.date;
 });
 var states=Array.from(new Set(eligible.map(function(r){return r.state}).filter(Boolean))).sort();
 $('geoState').innerHTML='<option value="">Select a state</option>'+states.map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>'}).join('');
@@ -494,10 +526,10 @@ var countyRecords=stateRecords.filter(function(r){return r.county===county});
 var geoRecords=level==='state'?eligible:level==='county'?stateRecords.filter(function(r){return !!r.county}):stateRecords.filter(function(r){return !!r.market&&(!county||r.county===county)});
 function stats(items){
 if(!items.length)return null;
-var vals=items.map(function(r){return Number(r.price)}),allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
+var vals=items.map(function(r){return Number(r.price)}),isMixed=seriesType==='all',isRange=seriesType==='published_price_range'||seriesType==='published_weight_class_range'||seriesType==='published_lot_highlight',allHaveHead=items.every(function(r){return Number.isFinite(Number(r.head))&&Number(r.head)>0});
 var heads=allHaveHead?items.reduce(function(a,r){return a+Number(r.head)},0):null;
-var avg=allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/heads:vals.reduce(function(a,b){return a+b},0)/vals.length;
-return {avg:avg,low:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads,method:allHaveHead?'head-weighted (all records)':'observation mean (head counts incomplete)'};
+var avg=isMixed||isRange?null:(allHaveHead?items.reduce(function(a,r){return a+Number(r.price)*Number(r.head)},0)/heads:vals.reduce(function(a,b){return a+b},0)/vals.length);
+return {avg:avg,low:isMixed?null:Math.min.apply(null,items.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,items.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:items.length,markets:new Set(items.map(function(r){return r.market}).filter(Boolean)).size,heads:heads,method:isMixed?'mixed source types not pooled':isRange?'published lot highlights and ranges are not averaged':allHaveHead?'head-weighted (all records)':'observation mean (head counts incomplete)'};
 }
 var groups={};
 geoRecords.forEach(function(r){
@@ -523,7 +555,7 @@ return b.stats.avg-a.stats.avg;
 });
 var unitRecord=eligible[0],unit=unitRecord?(unitRecord.price_unit||'USD/cwt'):'USD/cwt';
 function price(v){return v===null||v===undefined?'—':money(v)+(unit==='USD/cwt'?'/cwt':unit==='USD/head'?'/head':unit==='USD/family'?'/pair':'');}
-function delta(a,b){return a&&b?((a.avg-b.avg)>=0?'+':'')+money(a.avg-b.avg):'—';}
+function delta(a,b){return a&&b&&Number.isFinite(a.avg)&&Number.isFinite(b.avg)?((a.avg-b.avg)>=0?'+':'')+money(a.avg-b.avg):'—';}
 $('geoNameHeader').textContent=level==='state'?'State':level==='county'?'County':'Auction / stock yard';
 $('geoBody').innerHTML=rows.length?rows.map(function(r){
 var a=r.stats;
@@ -546,6 +578,7 @@ var seriesType=$('histRecordType')?$('histRecordType').value:'all';
 var band=$('histWeight')?$('histWeight').value:'all';
 var originFilter=$('histCorrienteOrigin')?$('histCorrienteOrigin').value:'all';
 var arr=records.filter(function(r){
+if(r.source==='User-entered')return false;
 if(r.category!==category)return false;
 var expectedUnit=category==='Bred cow'||category==='Bred heifer'||category==='Fresh Corriente'?'USD/head':category==='Cow-calf pair'?'USD/family':'USD/cwt';
 if((r.price_unit||'USD/cwt')!==expectedUnit)return false;
@@ -558,18 +591,18 @@ return Number.isFinite(Number(r.price))&&r.date;
 });
 var months=Array.from({length:12},(_,i)=>({name:new Date(2000,i,1).toLocaleString('en-US',{month:'short'}),values:[]}));
 var years={};
-arr.forEach(function(r){var d=new Date(r.date+'T12:00:00'),m=d.getMonth(),y=d.getFullYear();months[m].values.push(Number(r.price));if(!years[y])years[y]=[];years[y].push(Number(r.price))});
-function stats(a){return a.length?{avg:a.reduce((x,y)=>x+y,0)/a.length,low:Math.min.apply(null,a),high:Math.max.apply(null,a),n:a.length}:null}
+arr.forEach(function(r){var d=new Date(r.date+'T12:00:00'),m=d.getMonth(),y=d.getFullYear();months[m].values.push(r);if(!years[y])years[y]=[];years[y].push(r)});
+function stats(a){if(!a.length)return null;var isMixed=seriesType==='all',isRange=seriesType==='published_price_range'||seriesType==='published_weight_class_range'||seriesType==='published_lot_highlight',allHaveHead=a.every(function(r){return Number(r.head)>0&&Number.isFinite(Number(r.head))}),head=allHaveHead?a.reduce(function(x,r){return x+Number(r.head)},0):null,avg=isMixed||isRange?null:(allHaveHead?a.reduce(function(x,r){return x+Number(r.price)*Number(r.head)},0)/head:a.reduce(function(x,r){return x+Number(r.price)},0)/a.length);return {avg:avg,low:isMixed?null:Math.min.apply(null,a.map(function(r){return Number(r.price_low!=null?r.price_low:r.price)})),high:isMixed?null:Math.max.apply(null,a.map(function(r){return Number(r.price_high!=null?r.price_high:r.price)})),n:a.length,head:head,method:isMixed?'mixed source types not pooled':isRange?'published lot highlights and ranges are not averaged':allHaveHead?'head-weighted':'observation mean'}}
 var monthly=months.map(function(m){return {name:m.name,...stats(m.values)}});
-var chartData=monthly.filter(x=>x.n).map(x=>({date:x.name,price:x.avg}));
+var chartData=monthly.filter(x=>x.n&&Number.isFinite(x.avg)).map(x=>({date:x.name,price:x.avg}));
 drawChart('seasonChart',chartData);
 $('seasonNote').textContent=arr.length+' matching observations across '+Object.keys(years).length+' calendar years. '+(arr.length<12?'Sample is too small for a dependable seasonal conclusion.':'Interpret with caution: source type, breed mix, and lot quality still affect price.');
 var ys=Object.keys(years).sort();
-$('yearBody').innerHTML=ys.length?ys.map(function(y){var st=stats(years[y]);return '<tr><td>'+y+'</td><td class="num">'+money(st.avg)+'</td><td class="num">'+st.n+'</td></tr>'}).join(''):'<tr><td colspan="3" class="empty">No matching historical records yet.</td></tr>';
-$('monthBody').innerHTML=monthly.map(function(m){return '<tr><td>'+m.name+'</td><td class="num">'+(m.n?money(m.avg):'—')+'</td><td class="num">'+(m.n?money(m.low):'—')+'</td><td class="num">'+(m.n?money(m.high):'—')+'</td><td class="num">'+(m.n?m.n:0)+'</td></tr>'}).join('');
+$('yearBody').innerHTML=ys.length?ys.map(function(y){var st=stats(years[y]);return '<tr><td>'+y+'</td><td class="num">'+(st.avg===null?'—':money(st.avg))+'</td><td class="num">'+st.n+'</td></tr>'}).join(''):'<tr><td colspan="3" class="empty">No matching historical records yet.</td></tr>';
+$('monthBody').innerHTML=monthly.map(function(m){return '<tr><td>'+m.name+'</td><td class="num">'+(m.n&&m.avg!==null?money(m.avg):'—')+'</td><td class="num">'+(m.n&&m.low!==null?money(m.low):'—')+'</td><td class="num">'+(m.n&&m.high!==null?money(m.high):'—')+'</td><td class="num">'+(m.n?m.n:0)+'</td></tr>'}).join('');
 var sources=Array.from(new Set(arr.map(r=>r.market+' ('+(r.record_type||'manual')+')')));var types=Array.from(new Set(arr.map(r=>r.record_type||'manual')));
 $('histCaveat').textContent=arr.length
-? 'Included sources: '+sources.join('; ')+'. Series types present: '+types.join(', ')+'. When this filter is set to All, price ranges, weighted averages and video contracts may be mixed; use a single series type and market for like-for-like seasonal analysis.'
+? 'Included sources: '+sources.join('; ')+'. Series types present: '+types.join(', ')+'. All types and published ranges are displayed without a pooled average; use a single comparable series and market for like-for-like seasonal analysis.'
 : 'No records match these filters yet. Broaden the weight range or market selection, or wait for the scheduled collector to populate the history.';
 }
 ['histMarket','histCategory','histWeight','histRecordType'].forEach(function(id){if($(id))$(id).addEventListener('change',renderHistorical)});
