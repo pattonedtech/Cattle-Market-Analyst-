@@ -159,7 +159,7 @@ def backfill_market_geography(row):
         row["geography_method"] = row.get("geography_method") or "source_report_state_only"
     else:
         row["geography_method"] = row.get("geography_method") or "not_verified"
-    if row.get("market") and not row.get("market_id"):
+    if row.get("market") and row.get("county") and row.get("state") and not row.get("market_id"):
         row["market_id"] = stable_id("market", row["market"])
     return row
 
