@@ -74,7 +74,7 @@ class MarketModelTests(unittest.TestCase):
         result = build_benchmarks(items)
         groups = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] == "all"]
         keys = {(x["category"], x["price_unit"], x["record_type"]) for x in groups}
-        self.assertEqual(len(keys), 3)
+        self.assertEqual(len(keys), 4)
         self.assertNotIn(("Feeder steer", "USD/cwt", "published_weight_class_range"), keys)
         self.assertIn(("Feeder steer", "USD/cwt", "auction_weighted_average"), keys)
 
@@ -83,7 +83,7 @@ class MarketModelTests(unittest.TestCase):
             row(id="a", weight=350, weight_low=300, weight_high=399),
             row(id="b", weight=450, weight_low=400, weight_high=499),
         ])
-        bins = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] != "all"]
+        bins = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] != "all" and x["record_type"] == "auction_lot_average"]
         self.assertEqual(len(bins), 2)
 
     def test_reported_weights_are_binned_into_100_lb_cohorts(self):
