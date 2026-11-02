@@ -16,7 +16,7 @@ The public collector output is `data/market_observations.json` (schema version 7
 | `animal_origin` | Source-stated animal origin only; null when not reported. |
 | `corriente_origin` | `Native Corriente`, `Mexican M-branded Corriente`, `unspecified`, or `not_applicable`; native/M-branded require explicit source wording. |
 | `weight_basis` | `reported_average`, `published_class_midpoint`, `published_class_range`, or `not_reported`. |
-| `price_basis` | Distinguishes weighted averages, range midpoints, lot highlights, video contracts, direct trades, and summaries. |
+| `price_basis` | Distinguishes weighted averages, range midpoints, individual sale prices, lot highlights, video contracts, direct trades, and summaries. |
 | `benchmark_key` | Canonical key that keeps category, unit, state, source type, and weight cohort separate. |
 | `benchmark_weight_low`, `benchmark_weight_high` | Published weight-class bounds, or a 100 lb cohort around a reported average weight for $/cwt observations. |
 | `category`, `sex`, `breed` | Animal class and source-described type. Unknown breed/type is not inferred. |
@@ -25,11 +25,11 @@ The public collector output is `data/market_observations.json` (schema version 7
 | `price`, `price_low`, `price_high` | Reported price or midpoint and its published range. |
 | `price_unit` | `USD/cwt`, `USD/head`, or `USD/family`; never compare unlike units. |
 | `head` | Reported head count, or null if unavailable. |
-| `record_type` | Sale/report method, such as auction average, published weight-class range, published price range, lot highlight, video contract, direct trade, or state summary. |
+| `record_type` | Sale/report method, such as auction average, published weight-class range, published price range, individual sale price, lot highlight, video contract, direct trade, or state summary. |
 | `source`, `source_url` | Publisher and direct URL to the original report. |
 | `qa_status`, `qa_warnings` | Collector validation outcome and non-fatal review flags. |
 
-`published_individual_price` identifies a single published sale price (often breeding-stock lots) when the source does not provide a market weighted average or explicit range. It is benchmarked as a separate observation-mean series and is never pooled with auction weighted averages.\n\nThe QA report also includes `source_fetch_health` by domain: logical requests, attempts, successes, transient failures, final failed requests, failed URLs, and the most recent failure details. Network/timeouts, rate limits, and server errors are retried once; permanent 4xx errors are not retried. Historical quarantined observations remain in the QA report until a stable-ID record is accepted or a new rejection replaces the old reason.
+``published_individual_price` identifies a single published sale price (often breeding-stock lots) when the source does not provide a market weighted average or explicit range. It is benchmarked as a separate observation-mean series and is never pooled with auction weighted averages.\n\nThe QA report also includes `source_fetch_health` by domain: logical requests, attempts, successes, transient failures, final failed requests, failed URLs, and the most recent failure details. Network/timeouts, rate limits, and server errors are retried once; permanent 4xx errors are not retried. Historical quarantined observations remain in the QA report until a stable-ID record is accepted or a new rejection replaces the old reason.
 
 ## Interpretation rules
 
