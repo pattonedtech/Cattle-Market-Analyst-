@@ -595,7 +595,7 @@ def parse_willcox():
                 if "AUCTION SUMMARY" in upper:
                     feeder_section = cow_section = False
                 if feeder_section:
-                    lot_re = re.compile(r"(\\d+)\\s+([A-Z][A-Z/]*(?:\\s+[A-Z][A-Z/]*){0,2})\\s+(\\d{3,4})\\s+\\$([\\d,]+(?:\\.\\d{1,2})?)")
+                    lot_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+(\d{3,4})\s+\$([\d,]+(?:\.\d{1,2})?)")
                     for m in lot_re.finditer(line):
                         head, desc, wt, price = m.groups()
                         desc_upper = desc.upper()
@@ -613,7 +613,7 @@ def parse_willcox():
                             notes=f"Published lot description: {desc}; category requires source classification"
                         ))
                 elif cow_section:
-                    cow_re = re.compile(r"(\\d+)\\s+([A-Z][A-Z/]*(?:\\s+[A-Z][A-Z/]*){0,2})\\s+\\$([\\d,]+(?:\\.\\d{1,2})?)")
+                    cow_re = re.compile(r"(\d+)\s+([A-Z][A-Z/]*(?:\s+[A-Z][A-Z/]*){0,2})\s+\$([\d,]+(?:\.\d{1,2})?)")
                     for n, m in enumerate(cow_re.finditer(line)):
                         head, desc, price = m.groups()
                         desc_upper = desc.upper()
