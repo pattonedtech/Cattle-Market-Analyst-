@@ -953,6 +953,115 @@ def parse_roswell_web():
     return []
 
 
+def normalize_cattle_channel_report_url(candidate, base_url, report_pattern):
+    """Return one canonical, safe report URL, or None for non-report URLs."""
+    href = urljoin(base_url, str(candidate or "").strip())
+    parsed = urlparse(href)
+    try:
+        port = parsed.port
+    except ValueError:
+        return None
+    if (
+        parsed.scheme.lower() != "https"
+        or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
+        or port not in (None, 443)
+        or parsed.username is not None
+        or parsed.password is not None
+        or not report_pattern.fullmatch(parsed.path)
+    ):
+        return None
+    date_match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", parsed.path)
+    try:
+        datetime.strptime(date_match.group(1), "%Y-%m-%d")
+    except (AttributeError, ValueError):
+        return None
+    # Canonical host/path removes www, fragments, and tracking query strings so
+    # the same sale report cannot be fetched twice under alternate URL forms.
+    return "https://cattlechannel.com" + parsed.path.rstrip("/")
+
+
+def discover_cattle_channel_report_urls():
+    """Discover valid Idaho/Oregon reports from the live sitemap and index."""
+    report_pattern = re.compile(
+        r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?",
+        re.I,
+    )
+    discovered = set()
+    sitemap_queue = ["https://cattlechannel.com/sitemap.xml"]
+    visited_sitemaps = set()
+
+    while sitemap_queue and len(visited_sitemaps) < 10:
+        sitemap_url = sitemap_queue.pop(0)
+        if sitemap_url in visited_sitemaps:
+            continue
+        visited_sitemaps.add(sitemap_url)
+        try:
+            response = fetch(sitemap_url)
+        except Exception as exc:
+            print(f"Cattle Channel sitemap unavailable {sitemap_url}: {exc}", file=sys.stderr)
+            continue
+
+        content = response.text or ""
+        candidates = []
+        try:
+            import xml.etree.ElementTree as ET
+            root = ET.fromstring(content)
+            for node in root.iter():
+                tag = node.tag.rsplit("}", 1)[-1].lower()
+                if tag == "loc" and node.text:
+                    candidates.append(node.text.strip())
+                elif tag == "link" and node.attrib.get("href"):
+                    candidates.append(node.attrib["href"].strip())
+        except ET.ParseError:
+            html = BeautifulSoup(content, "html.parser")
+            candidates = [
+                urljoin(sitemap_url, link["href"])
+                for link in html.find_all("a", href=True)
+            ]
+
+        for candidate in candidates:
+            href = urljoin(sitemap_url, candidate.strip())
+            parsed = urlparse(href)
+            try:
+                port = parsed.port
+            except ValueError:
+                continue
+            # Only recurse into same-site HTTPS XML resources. Keep this bounded
+            # to avoid following arbitrary external links or crawling whole sites.
+            if (
+                parsed.scheme.lower() != "https"
+                or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
+                or port not in (None, 443)
+                or parsed.username is not None
+                or parsed.password is not None
+            ):
+                continue
+            report_url = normalize_cattle_channel_report_url(href, sitemap_url, report_pattern)
+            if report_url:
+                discovered.add(report_url)
+            elif parsed.path.lower().endswith(".xml"):
+                child_sitemap = "https://cattlechannel.com" + parsed.path
+                if child_sitemap not in visited_sitemaps and child_sitemap not in sitemap_queue:
+                    sitemap_queue.append(child_sitemap)
+
+    index_url = "https://cattlechannel.com/market-report/"
+    try:
+        index = BeautifulSoup(fetch(index_url).text, "html.parser")
+        for link in index.find_all("a", href=True):
+            report_url = normalize_cattle_channel_report_url(
+                link["href"], index_url, report_pattern
+            )
+            if report_url:
+                discovered.add(report_url)
+    except Exception as exc:
+        print(f"Cattle Channel report index unavailable {index_url}: {exc}", file=sys.stderr)
+
+    print(
+        "Cattle Channel discovery: "
+        f"{len(visited_sitemaps)} sitemap(s) checked; "
+        f"{len(discovered)} valid Idaho/Oregon report URL(s) found"
+    )
+    return discovered
 def parse_cattle_channel_west():
     """Add public Idaho/Oregon sale summaries from Cattle Channel."""
     fallback_urls = [
@@ -962,35 +1071,7 @@ def parse_cattle_channel_west():
         "https://cattlechannel.com/market-report/oregon/producers-vale/2026-09-09",
     ]
     urls = set(fallback_urls)
-    for sitemap_url in [
-        "https://cattlechannel.com/wp-sitemap.xml",
-        "https://cattlechannel.com/sitemap_index.xml",
-        "https://cattlechannel.com/wp-sitemap-posts-market-report-1.xml",
-        "https://cattlechannel.com/sitemap.xml",
-        "https://cattlechannel.com/feed/",
-    ]:
-        try:
-            sitemap = BeautifulSoup(fetch(sitemap_url).text, "xml")
-            nodes = sitemap.find_all(["loc", "link"])
-            for node in nodes:
-                href = node.get_text(strip=True) or node.get("href", "")
-                if href and re.search(r"/market-report/(?:idaho|oregon)/", href, re.I):
-                    urls.add(href)
-        except Exception:
-            continue
-    for archive_url in [
-        "https://cattlechannel.com/market-report/idaho/",
-        "https://cattlechannel.com/market-report/oregon/",
-        "https://cattlechannel.com/market-report/",
-    ]:
-        try:
-            archive = BeautifulSoup(fetch(archive_url).text, "html.parser")
-            for link in archive.find_all("a", href=True):
-                href = urljoin(archive_url, link["href"])
-                if re.search(r"/market-report/(?:idaho|oregon)/[^/]+/20\d{2}-\d{2}-\d{2}/?$", href, re.I):
-                    urls.add(href)
-        except Exception as e:
-            print(f"Cattle Channel archive unavailable {archive_url}: {e}", file=sys.stderr)
+    urls.update(discover_cattle_channel_report_urls())
     records, seen = [], set()
     def report_date_from_url(url):
         match = re.search(r"/(20\d{2}-\d{2}-\d{2})/?$", url)
@@ -1002,10 +1083,15 @@ def parse_cattle_channel_west():
         state_key = parts[1].lower() if len(parts) > 1 else ""
         if state_key in urls_by_state:
             urls_by_state[state_key].append(candidate)
-    urls = []
-    for state_key in ("idaho", "oregon"):
-        urls.extend(sorted(urls_by_state[state_key], key=report_date_from_url, reverse=True)[:20])
-    print("Cattle Channel report pages selected: " + "; ".join(f"{k}={len(v)}" for k, v in urls_by_state.items()))
+    selected_by_state = {
+        state_key: sorted(candidates, key=report_date_from_url, reverse=True)[:20]
+        for state_key, candidates in urls_by_state.items()
+    }
+    urls = [url for state_key in ("idaho", "oregon") for url in selected_by_state[state_key]]
+    print(
+        "Cattle Channel report pages selected: "
+        + "; ".join(f"{state_key}={len(selected_by_state[state_key])}" for state_key in ("idaho", "oregon"))
+    )
     for url in urls:
         try:
             soup = BeautifulSoup(fetch(url).text, "html.parser")
@@ -1398,8 +1484,8 @@ SOURCES = [
     {"name":"Northwest Direct Cattle Report","state":"WA/OR/ID/UT","kind":"multi-state direct trade","url":"https://mymarketnews.ams.usda.gov/viewReport/3059","status":"automated: regional only; not assigned to individual states"},
     {"name":"Western Video Market","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3242","status":"automated: western regional report; not assigned to individual states"},
     {"name":"Cattle Country Video Auction","state":"Multi-state","kind":"video auction","url":"https://mymarketnews.ams.usda.gov/viewReport/3241","status":"automated: multi-state lots; not assigned to Wyoming"},
-    {"name":"Cattle Channel — Idaho sale reports","state":"ID","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08","status":"automated third-party summaries; official Burley reports are collected separately"},
-    {"name":"Cattle Channel — Oregon sale reports","state":"OR","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06","status":"automated fetch of published report pages; new report URLs need periodic discovery"},
+    {"name":"Cattle Channel — Idaho sale reports","state":"ID","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/idaho/burley-livestock-auction/2026-10-08","status":"automated third-party summaries discovered through live sitemap/report index; official Burley reports are collected separately"},
+    {"name":"Cattle Channel — Oregon sale reports","state":"OR","kind":"third-party auction summaries","url":"https://cattlechannel.com/market-report/oregon/northwest-livestock-commission/2026-10-06","status":"automated report-page discovery through live sitemap and report index; official USDA series retained separately"},
     {"name":"Willcox Livestock Auction","state":"AZ","kind":"live auction","url":"https://willcoxlivestockauction.com/","status":"automated: published weekly report PDFs"},
     {"name":"USDA Southwest Direct Cattle (AZ/CA/NV)","state":"AZ/CA/NV","kind":"direct trade weighted average","url":"https://mymarketnews.ams.usda.gov/viewReport/2940","status":"automated: current USDA report"},
     {"name":"Fallon Livestock","state":"NV","kind":"live auction","url":"https://www.fallonlivestock.com/market-reports.html","status":"automated: archived weekly weight-class ranges and bred-cow/pair values"},
