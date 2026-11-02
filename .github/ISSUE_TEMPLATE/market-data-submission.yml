@@ -1,0 +1,89 @@
+name: Submit a market observation
+description: Suggest a source-backed cattle market observation for maintainer review.
+title: "[Market data] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is public. Do not include consignor names, phone numbers, private sale slips, payment details, or confidential information. A direct public report link is required for inclusion.
+  - type: input
+    id: source_url
+    attributes:
+      label: Direct source report URL
+      description: Link to the exact PDF or dated report, not just the auction home page.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: input
+    id: sale_date
+    attributes:
+      label: Sale date
+      description: Use YYYY-MM-DD.
+      placeholder: "2026-10-29"
+    validations:
+      required: true
+  - type: input
+    id: market
+    attributes:
+      label: Auction / stockyard name
+    validations:
+      required: true
+  - type: input
+    id: state
+    attributes:
+      label: State
+      description: State of the physical reporting market. Use "Regional" for multi-state reports.
+    validations:
+      required: true
+  - type: input
+    id: county
+    attributes:
+      label: County
+      description: Leave blank if you cannot verify the physical auction location's county.
+  - type: input
+    id: category
+    attributes:
+      label: Cattle category and sex
+      description: Match the source wording; do not infer breed or Corriente origin.
+    validations:
+      required: true
+  - type: input
+    id: weight
+    attributes:
+      label: Weight or published weight class
+      description: Include units and class bounds where available.
+  - type: input
+    id: price
+    attributes:
+      label: Price and unit
+      description: Preserve the report's unit, such as USD/cwt, USD/head, or USD/family.
+    validations:
+      required: true
+  - type: dropdown
+    id: record_type
+    attributes:
+      label: Sale / report type
+      options:
+        - Live auction average
+        - Published weight-class range
+        - Published price range
+        - Published lot highlight
+        - Video contract
+        - Direct trade
+        - State / regional summary
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification notes
+      description: Identify the exact report table, page, or line and any unit conversion. State what the source does not report.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Public data and privacy
+      options:
+        - label: I confirm this submission contains only public market information and no personal or confidential data.
+          required: true
