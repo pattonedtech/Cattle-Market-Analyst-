@@ -72,24 +72,37 @@ class MarketModelTests(unittest.TestCase):
             row(id="d", price=310, price_unit="USD/cwt", record_type="published_weight_class_range"),
         ]
         result = build_benchmarks(items)
-        keys = {(x["category"], x["price_unit"], x["record_type"]) for x in result["groups"]}
+        groups = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] == "all"]
+        keys = {(x["category"], x["price_unit"], x["record_type"]) for x in groups}
         self.assertEqual(len(keys), 3)
         self.assertNotIn(("Feeder steer", "USD/cwt", "published_weight_class_range"), keys)
+        self.assertIn(("Feeder steer", "USD/cwt", "auction_weighted_average"), keys)
 
     def test_weight_classes_remain_separate_benchmark_cohorts(self):
         result = build_benchmarks([
             row(id="a", weight=350, weight_low=300, weight_high=399),
             row(id="b", weight=450, weight_low=400, weight_high=499),
         ])
-        self.assertEqual(len(result["groups"]), 2)
+        bins = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] != "all"]
+        self.assertEqual(len(bins), 2)
 
     def test_reported_weights_are_binned_into_100_lb_cohorts(self):
         result = build_benchmarks([
             row(id="a", weight=350, weight_low=None, weight_high=None),
             row(id="b", weight=450, weight_low=None, weight_high=None),
         ])
-        bands = {(x["weight_low"], x["weight_high"]) for x in result["groups"]}
+        bands = {(x["weight_low"], x["weight_high"]) for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] != "all"}
         self.assertEqual(bands, {(300, 399), (400, 499)})
+
+    def test_benchmarks_include_periods_and_separate_corriente_origin(self):
+        rows = [
+            row(id="native", category="Corriente steer", breed="Native Corriente", date="2026-10-30"),
+            row(id="unknown", category="Corriente steer", breed="Corriente", date="2026-10-30"),
+        ]
+        result = build_benchmarks(rows, as_of=__import__("datetime").date(2026, 11, 1))
+        groups = [x for x in result["groups"] if x["state"] == "California" and x["period_days"] == "all" and x["weight_cohort"] == "all" and x["record_type"] == "auction_weighted_average"]
+        self.assertEqual({x["corriente_origin"] for x in groups}, {"Native Corriente", "unspecified"})
+        self.assertTrue(any(x["state"] == "Western" for x in result["groups"]))
 
     def test_quarantine_history_persists_until_revalidated(self):
         prior = [
