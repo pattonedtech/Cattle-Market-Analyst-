@@ -957,10 +957,14 @@ def normalize_cattle_channel_report_url(candidate, base_url, report_pattern):
     """Return one canonical, safe report URL, or None for non-report URLs."""
     href = urljoin(base_url, str(candidate or "").strip())
     parsed = urlparse(href)
+    try:
+        port = parsed.port
+    except ValueError:
+        return None
     if (
         parsed.scheme.lower() != "https"
         or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
-        or parsed.port not in (None, 443)
+        or port not in (None, 443)
         or parsed.username is not None
         or parsed.password is not None
         or not report_pattern.fullmatch(parsed.path)
@@ -1018,12 +1022,16 @@ def discover_cattle_channel_report_urls():
         for candidate in candidates:
             href = urljoin(sitemap_url, candidate.strip())
             parsed = urlparse(href)
+            try:
+                port = parsed.port
+            except ValueError:
+                continue
             # Only recurse into same-site HTTPS XML resources. Keep this bounded
             # to avoid following arbitrary external links or crawling whole sites.
             if (
                 parsed.scheme.lower() != "https"
                 or (parsed.hostname or "").lower() not in {"cattlechannel.com", "www.cattlechannel.com"}
-                or parsed.port not in (None, 443)
+                or port not in (None, 443)
                 or parsed.username is not None
                 or parsed.password is not None
             ):
@@ -1031,7 +1039,7 @@ def discover_cattle_channel_report_urls():
             report_url = normalize_cattle_channel_report_url(href, sitemap_url, report_pattern)
             if report_url:
                 discovered.add(report_url)
-            elif parsed.path.lower().endswith((".xml", ".xml.gz")):
+            elif parsed.path.lower().endswith(".xml"):
                 child_sitemap = "https://cattlechannel.com" + parsed.path
                 if child_sitemap not in visited_sitemaps and child_sitemap not in sitemap_queue:
                     sitemap_queue.append(child_sitemap)
