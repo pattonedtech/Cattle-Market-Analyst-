@@ -44,6 +44,8 @@ The Investment Outlook supports feeder cattle bought at 400–600 lb, a backgrou
 
 ## Public data, provenance, and quality assurance
 
+Current source coverage includes official auction reports from Visalia, Overland, Marana, Willcox, Fallon, Burley, and Ranchers Choice Stockyard, plus USDA and Cattle Channel regional series. Ranchers Choice reports preserve weight-class ranges, lot highlights, slaughter cow/bull ranges, and per-head/per-family breeding values as separate observation types. Dos Palos Y and additional California yards remain listed as source leads until their PDF parsers pass QA.
+
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for field definitions and comparison rules.
 
 The public Pages site is a read-only presentation of the repository's published dataset. It is not a shared multi-user database. Observations manually entered in a browser are stored in that browser's local storage and are not automatically shared with other visitors or written to GitHub. Export a CSV to back up local entries. Do not enter personal, confidential, customer, or payment information.
