@@ -427,11 +427,13 @@ def parse_marana():
                             continue
                         if value < 100:
                             continue
+                        described_head = re.search(r"\\b(\\d+)\\s*(?:hd|head)\\b", desc, re.I)
                         cow_records.append({
                             "id": stable_id("marana", date, cow_type, desc, value, url),
                             "date": date, "market": "Marana Stockyards", "region": "Arizona",
                             "category": "Bred cow" if cow_type == "bred" else "Cow-calf pair",
                             "description": desc, "price": value, "price_unit": "USD/head" if cow_type == "bred" else "USD/family",
+                            "head": int(described_head.group(1)) if described_head else None,
                             "record_type": "published_individual_price",
                             "source": "Marana Stockyards", "source_url": url
                         })
@@ -588,7 +590,7 @@ def parse_willcox():
                             "category": "Bred cow" if n == 0 else "Cow-calf pair",
                             "description": f"{head} {desc}", "price": float(price.replace(",", "")),
                             "price_unit": "USD/head" if n == 0 else "USD/family",
-                            "record_type": "published_individual_price",
+                            "head": int(head), "record_type": "published_individual_price",
                             "source": "Willcox Livestock Auction", "source_url": pdf_url
                         })
         except Exception as e:
