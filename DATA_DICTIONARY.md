@@ -56,3 +56,10 @@ The collector enforces category-specific units where the category has an unambig
 - Unclassified Corriente cattle retain the exact source-reported unit and remain separated by unit in benchmarks.
 
 A unit mismatch is quarantined. Do not silently reinterpret a per-head price as a per-pair price or vice versa. Published individual sale prices (including breeding-stock lots) are a separate observation-mean series; they are not auction weighted averages.
+
+## QA and quarantine artifacts
+
+- `data/market_data_qa.json` is the lightweight QA summary. It contains accepted/rejected counts, geographic/category/source coverage, source-fetch diagnostics, and the quarantine archive URL.
+- `data/quarantine_observations.json` contains the full rejected source rows and machine-readable reason codes. These rows are not part of the published market or breeding-stock observation arrays.
+- The dashboard fetches only the lightweight QA summary during normal page load. The detailed quarantine archive is downloaded only when a user opens its link.
+- Historical quarantine rows are retained until the same stable observation ID passes validation or a fresh rejection replaces the prior reason.
