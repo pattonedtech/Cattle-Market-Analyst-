@@ -40,7 +40,10 @@ def fetch(url):
     domain = urlparse(url).netloc or "unknown"
     health = SOURCE_FETCH_HEALTH.setdefault(domain, {
         "requests": 0, "attempts": 0, "successes": 0,
-        "failed_requests": 0, "last_error": None
+        "failed_requests": 0, "transient_failures": 0,
+        "failed_urls": [], "last_error": None,
+        "last_failure_url": None, "last_failure_at": None,
+        "last_success_at": None
     })
     health["requests"] += 1
     last_error = None
@@ -50,14 +53,25 @@ def fetch(url):
             response = S.get(url, timeout=45)
             response.raise_for_status()
             health["successes"] += 1
-            health["last_error"] = None
+            health["last_success_at"] = datetime.now(timezone.utc).isoformat()
             return response
         except Exception as exc:
             last_error = exc
+            health["transient_failures"] += 1
+            health["last_error"] = str(exc)[:500]
+            health["last_failure_url"] = url
+            health["last_failure_at"] = datetime.now(timezone.utc).isoformat()
+            status = getattr(getattr(exc, "response", None), "status_code", None)
+            # Retry network/timeouts, rate limits, and server errors. A 4xx such
+            # as 404/403 is a source/link problem, not a transient outage.
+            if status is not None and status < 500 and status != 429:
+                break
             if attempt == 0:
                 time.sleep(1)
     health["failed_requests"] += 1
-    health["last_error"] = str(last_error)[:500]
+    if url not in health["failed_urls"]:
+        health["failed_urls"].append(url)
+        health["failed_urls"] = health["failed_urls"][-10:]
     raise last_error
 
 
