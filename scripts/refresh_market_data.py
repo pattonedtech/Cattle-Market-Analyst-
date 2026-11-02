@@ -13,6 +13,7 @@ from io import BytesIO
 import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
+from market_model import normalize_observation, build_benchmarks
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -1343,7 +1344,7 @@ def quality_check(rows, collection):
     allowed_units = {"USD/cwt", "USD/head", "USD/family"}
     valid_states = set(STATE_NAMES.values())
     for original in rows:
-        row = dict(original)
+        row = normalize_observation(original)
         issues, warnings = [], []
         if row.get("weight") in (0, "0", ""):
             row["weight"] = None
@@ -1450,6 +1451,7 @@ def quality_check(rows, collection):
 
 def build_qa_report(records, cow_records, rejected_records, rejected_cows):
     by_state, by_county, by_market, by_source, by_domain, by_geo_method = {}, {}, {}, {}, {}, {}
+    by_category, by_record_type, by_corriente_origin, by_sale_regionality = {}, {}, {}, {}
     missing_state = missing_county = warning_records = 0
     for row in records:
         state = row.get("state") or "Regional / unassigned"
@@ -1468,6 +1470,15 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows):
         by_domain[domain] = by_domain.get(domain, 0) + 1
         method = row.get("geography_method") or "not_recorded"
         by_geo_method[method] = by_geo_method.get(method, 0) + 1
+        category = row.get("category") or "Unknown"
+        by_category[category] = by_category.get(category, 0) + 1
+        record_type = row.get("record_type") or "unclassified"
+        by_record_type[record_type] = by_record_type.get(record_type, 0) + 1
+        origin = row.get("corriente_origin") or "not_applicable"
+        if origin != "not_applicable":
+            by_corriente_origin[origin] = by_corriente_origin.get(origin, 0) + 1
+        regionality = row.get("sale_regionality") or "not verified"
+        by_sale_regionality[regionality] = by_sale_regionality.get(regionality, 0) + 1
         if row.get("qa_warnings"):
             warning_records += 1
     return {
@@ -1485,6 +1496,10 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows):
         },
         "accepted_by_state": dict(sorted(by_state.items())),
         "accepted_by_market": dict(sorted(by_market.items())),
+        "accepted_by_category": dict(sorted(by_category.items())),
+        "accepted_by_record_type": dict(sorted(by_record_type.items())),
+        "accepted_corriente_origin": dict(sorted(by_corriente_origin.items())),
+        "accepted_sale_regionality": dict(sorted(by_sale_regionality.items())),
         "accepted_by_source": dict(sorted(by_source.items())),
         "accepted_by_source_domain": dict(sorted(by_domain.items())),
         "rejected_observations": rejected_records + rejected_cows,
@@ -1601,8 +1616,8 @@ def main():
     if cottonwood_backfill_complete:
         source_versions["cottonwood"] = 1
     OUT.write_text(json.dumps({
-        "schema_version": 6, "generated_at": datetime.now(timezone.utc).isoformat(),
-        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
+        "schema_version": 7, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "record_count": len(merged), "cow_record_count": len(merged_cows), "sources": SOURCES, "source_versions": source_versions, "records": merged, "cow_records": merged_cows, "benchmarks": build_benchmarks(merged, merged_cows), "qa_report_url": "data/market_data_qa.json", "qa_summary": {"market_records_accepted": len(merged), "market_records_rejected": len(rejected_records), "cow_records_accepted": len(merged_cows), "cow_records_rejected": len(rejected_cows)},
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
