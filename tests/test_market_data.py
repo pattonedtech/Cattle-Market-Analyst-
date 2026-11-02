@@ -1,4 +1,5 @@
 """Unit tests for publication-gate validation of public market observations."""
+import re
 import sys
 import unittest
 from pathlib import Path
