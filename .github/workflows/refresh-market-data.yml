@@ -7,8 +7,11 @@ on:
       - "scripts/refresh_market_data.py"
       - "tests/**"
       - ".github/workflows/refresh-market-data.yml"
+# Two daily windows provide a same-day recovery opportunity if GitHub drops a scheduled event.
+  # Keep both runs away from the top of the hour, when GitHub reports the most schedule congestion.
   schedule:
     - cron: "17 14 * * *"
+    - cron: "17 22 * * *"
   workflow_dispatch:
 
 permissions:
