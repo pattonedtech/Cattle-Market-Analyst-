@@ -104,6 +104,14 @@ class MarketModelTests(unittest.TestCase):
         self.assertEqual({x["corriente_origin"] for x in groups}, {"Native Corriente", "unspecified"})
         self.assertTrue(any(x["state"] == "Western" for x in result["groups"]))
 
+    def test_regional_benchmarks_keep_region_and_do_not_enter_western_total(self):
+        regional = row(id="regional", state=None, county=None,
+                       region="Northwest Region (WA/OR/ID)", record_type="usda_direct_trade")
+        result = build_benchmarks([regional], as_of=__import__("datetime").date(2026, 11, 1))
+        groups = [x for x in result["groups"] if x["period_days"] == "all" and x["weight_cohort"] == "all"]
+        self.assertTrue(any(x["state"] == "Regional / unassigned" and x["region"] == "Northwest Region (WA/OR/ID)" for x in groups))
+        self.assertFalse(any(x["state"] == "Western" for x in groups))
+
     def test_quarantine_history_persists_until_revalidated(self):
         prior = [
             {"id": "bad1", "collection": "records", "issues": ["missing_source"]},
