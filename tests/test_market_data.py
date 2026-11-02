@@ -149,6 +149,9 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         qa = collector.build_qa_report([], [cow], [], [])
         self.assertEqual(qa["accepted_by_cow_category"]["Cow-calf pair"], 1)
         self.assertEqual(qa["accepted_by_category"], {})
+        self.assertEqual(qa["accepted_by_cow_state"]["California"], 1)
+        self.assertEqual(qa["cow_geographic_quality"]["cow_records_missing_state"], 0)
+        self.assertEqual(qa["cow_geographic_quality"]["cow_records_missing_county"], 0)
 
     def test_price_outside_sanity_bounds_is_rejected(self):
         accepted, rejected = collector.quality_check(
