@@ -1531,7 +1531,7 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         market = row.get("market") or "Unknown"
         cow_by_market[market] = cow_by_market.get(market, 0) + 1
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
         "market_observations": {"accepted": len(records), "rejected": len(rejected_records)},
