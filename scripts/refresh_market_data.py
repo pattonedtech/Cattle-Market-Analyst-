@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "market_observations.json"
 QA_OUT = DATA / "market_data_qa.json"
+QUARANTINE_OUT = DATA / "quarantine_observations.json"
 FUTURES_OUT = DATA / "futures.json"
 SOURCE_FETCH_HEALTH = {}
 S = requests.Session()
@@ -1648,7 +1649,16 @@ def main():
             old_cows = old_payload.get("cow_records", [])
         except Exception:
             pass
-    if QA_OUT.exists():
+    # Quarantine is stored separately so the dashboard can fetch the small QA
+    # summary without downloading thousands of rejected source rows.
+    if QUARANTINE_OUT.exists():
+        try:
+            previous_quarantine = json.loads(QUARANTINE_OUT.read_text(encoding="utf-8"))
+            old_quarantine = previous_quarantine.get("rejected_observations", [])
+        except Exception:
+            old_quarantine = []
+    elif QA_OUT.exists():
+        # One-time migration from the legacy embedded quarantine report.
         try:
             previous_qa = json.loads(QA_OUT.read_text(encoding="utf-8"))
             old_quarantine = previous_qa.get("rejected_observations", [])
@@ -1696,6 +1706,23 @@ def main():
     if newly_unclassified:
         print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
     qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
+    quarantine_rows = rejected_records + rejected_cows
+    quarantine_report = {
+        "schema_version": 1,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "record_count": len(quarantine_rows),
+        "market_record_count": len(rejected_records),
+        "cow_record_count": len(rejected_cows),
+        "rejected_observations": quarantine_rows,
+    }
+    QUARANTINE_OUT.write_text(json.dumps(quarantine_report, indent=2) + "\n", encoding="utf-8")
+    qa_report["quarantine_report_url"] = "data/quarantine_observations.json"
+    qa_report["quarantine_summary"] = {
+        "total": len(quarantine_rows),
+        "market_records": len(rejected_records),
+        "cow_records": len(rejected_cows),
+    }
+    qa_report.pop("rejected_observations", None)
     QA_OUT.write_text(json.dumps(qa_report, indent=2) + "\n", encoding="utf-8")
     # Record-level failures are quarantined; the batch threshold below is a circuit breaker.
     rejection_rate = rejected_new / len(new_ids) if new_ids else 0
