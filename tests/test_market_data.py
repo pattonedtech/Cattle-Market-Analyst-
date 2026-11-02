@@ -85,6 +85,32 @@ class MarketDataQualityTests(unittest.TestCase):
             ("Idaho", "Cassia"),
         )
 
+    def test_ranchers_choice_pdf_weight_classes_are_normalized(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        html = '<a href="https://rancherschoicestockyard.com/test-report.pdf">PDF</a>'
+        pdf = """Market Report
+Monday, September 28, 2026
+Total Head: 512
+ON ON
+Steers Heifers
+FALSE 300-399 lbs $3.25 - $3.25 / lb 300-399 lbs $2.85 - $3.20 / lb
+Feeder Bulls
+FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
+"""
+        with patch.object(collector, "fetch", return_value=SimpleNamespace(text=html)), patch.object(
+            collector, "pdf_text", return_value=pdf
+        ):
+            records, cow_records = collector.parse_ranchers_choice()
+        self.assertEqual(len(records), 3)
+        self.assertEqual(cow_records, [])
+        steer = next(row for row in records if row["category"] == "Feeder steer")
+        self.assertEqual(steer["weight_low"], 300)
+        self.assertEqual(steer["weight_high"], 399)
+        self.assertEqual(steer["price"], 325)
+        self.assertEqual(steer["price_unit"], "USD/cwt")
+
     def test_ranchers_choice_resolves_to_san_benito_county(self):
         self.assertEqual(
             collector.geographic_fields("Ranchers Choice Stockyard", "California"),
