@@ -221,6 +221,12 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
         self.assertEqual(accepted, [])
         self.assertIn("animal_category_not_classifiable", rejected[0]["issues"])
 
+    def test_unclassifiable_breeding_stock_is_quarantined(self):
+        cow = feeder_record(category="Other", sex="Unknown", price_unit=None)
+        accepted, rejected = collector.quality_check([cow], "cow_records")
+        self.assertEqual(accepted, [])
+        self.assertIn("animal_category_not_classifiable", rejected[0]["issues"])
+
     def test_corriente_without_sex_or_origin_remains_classifiable_as_unspecified(self):
         accepted, rejected = collector.quality_check(
             [feeder_record(category="Corriente cattle (unclassified)", sex="Mixed",
