@@ -7,6 +7,7 @@ auction prices, direct trades, video contracts, and price ranges remain distinct
 from __future__ import annotations
 import json, re, hashlib, sys, time
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from pathlib import Path
 from urllib.parse import urljoin, quote, urlparse
 from io import BytesIO
@@ -98,39 +99,39 @@ STATE_NAMES = {
     "Idaho": "Idaho", "Montana": "Montana", "Wyoming": "Wyoming", "Utah": "Utah", "Washington": "Washington", "Oregon": "Oregon"
 }
 MARKET_COUNTIES = [
-    ("visalia", "California", "Tulare"),
-    ("ranchers choice", "California", "San Benito"),
-    ("101 livestock", "California", "San Benito"),
-    ("overland", "California", "Kings"),
-    ("dos palos", "California", "Merced"),
-    ("escalon", "California", "San Joaquin"),
-    ("turlock", "California", "Stanislaus"),
-    ("modesto livestock", "California", "Stanislaus"),
-    ("tulare sales yard", "California", "Tulare"),
-    ("tulare county stockyard", "California", "Tulare"),
-    ("burley", "Idaho", "Cassia"),
-    ("twin falls", "Idaho", "Twin Falls"),
-    ("jerome", "Idaho", "Jerome"),
-    ("blackfoot", "Idaho", "Bingham"),
-    ("caldwell", "Idaho", "Canyon"),
-    ("emmett", "Idaho", "Gem"),
-    ("cottonwood", "Idaho", "Idaho"),
-    ("lewiston", "Idaho", "Nez Perce"),
-    ("northwest livestock commission", "Oregon", "Umatilla"),
-    ("producers vale", "Oregon", "Malheur"),
-    ("vale", "Oregon", "Malheur"),
-    ("madras", "Oregon", "Jefferson"),
-    ("eugene", "Oregon", "Lane"),
-    ("la grande", "Oregon", "Union"),
-    ("klamath falls", "Oregon", "Klamath"),
-    ("lebanon auction yard", "Oregon", "Linn"),
-    ("marana", "Arizona", "Pima"),
-    ("willcox", "Arizona", "Cochise"),
-    ("fallon", "Nevada", "Churchill"),
-    ("roswell", "New Mexico", "Chaves"),
-    ("clovis", "New Mexico", "Curry"),
-    ("cattlemen's livestock auction", "New Mexico", "Valencia"),
-    ("santa teresa", "New Mexico", "Doña Ana")
+    ("visalia", "California", "Tulare", "America/Los_Angeles"),
+    ("ranchers choice", "California", "San Benito", "America/Los_Angeles"),
+    ("101 livestock", "California", "San Benito", "America/Los_Angeles"),
+    ("overland", "California", "Kings", "America/Los_Angeles"),
+    ("dos palos", "California", "Merced", "America/Los_Angeles"),
+    ("escalon", "California", "San Joaquin", "America/Los_Angeles"),
+    ("turlock", "California", "Stanislaus", "America/Los_Angeles"),
+    ("modesto livestock", "California", "Stanislaus", "America/Los_Angeles"),
+    ("tulare sales yard", "California", "Tulare", "America/Los_Angeles"),
+    ("tulare county stockyard", "California", "Tulare", "America/Los_Angeles"),
+    ("burley", "Idaho", "Cassia", "America/Boise"),
+    ("twin falls", "Idaho", "Twin Falls", "America/Boise"),
+    ("jerome", "Idaho", "Jerome", "America/Boise"),
+    ("blackfoot", "Idaho", "Bingham", "America/Boise"),
+    ("caldwell", "Idaho", "Canyon", "America/Boise"),
+    ("emmett", "Idaho", "Gem", "America/Boise"),
+    ("cottonwood", "Idaho", "Idaho", "America/Los_Angeles"),
+    ("lewiston", "Idaho", "Nez Perce", "America/Los_Angeles"),
+    ("northwest livestock commission", "Oregon", "Umatilla", "America/Los_Angeles"),
+    ("producers vale", "Oregon", "Malheur", "America/Boise"),
+    ("vale", "Oregon", "Malheur", "America/Boise"),
+    ("madras", "Oregon", "Jefferson", "America/Los_Angeles"),
+    ("eugene", "Oregon", "Lane", "America/Los_Angeles"),
+    ("la grande", "Oregon", "Union", "America/Los_Angeles"),
+    ("klamath falls", "Oregon", "Klamath", "America/Los_Angeles"),
+    ("lebanon auction yard", "Oregon", "Linn", "America/Los_Angeles"),
+    ("marana", "Arizona", "Pima", "America/Phoenix"),
+    ("willcox", "Arizona", "Cochise", "America/Phoenix"),
+    ("fallon", "Nevada", "Churchill", "America/Los_Angeles"),
+    ("roswell", "New Mexico", "Chaves", "America/Denver"),
+    ("clovis", "New Mexico", "Curry", "America/Denver"),
+    ("cattlemen's livestock auction", "New Mexico", "Valencia", "America/Denver"),
+    ("santa teresa", "New Mexico", "Doña Ana", "America/Denver")
 ]
 
 def geographic_fields(market, region):
@@ -139,11 +140,82 @@ def geographic_fields(market, region):
     county = None
     if state:
         label = str(market or "").lower()
-        for marker, market_state, market_county in MARKET_COUNTIES:
+        for marker, market_state, market_county, _market_timezone in MARKET_COUNTIES:
             if marker in label and market_state == state:
                 county = market_county
                 break
     return state, county
+
+
+def market_timezone(market, state=None):
+    """Resolve an IANA timezone only from a verified physical market registry entry."""
+    label = str(market or "").strip().lower()
+    raw_state = str(state or "").strip()
+    normalized_state = STATE_NAMES.get(raw_state, STATE_NAMES.get(raw_state.upper()))
+    if not label:
+        return None
+    matches = [
+        (marker, zone) for marker, market_state, _county, zone in MARKET_COUNTIES
+        if marker in label and (not normalized_state or market_state == normalized_state)
+    ]
+    if not matches:
+        return None
+    _marker, zone = max(matches, key=lambda item: len(item[0]))
+    try:
+        ZoneInfo(zone)
+    except ZoneInfoNotFoundError:
+        return None
+    return zone
+
+
+def _as_utc_datetime(value=None):
+    value = value or datetime.now(timezone.utc)
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
+def future_sale_date_issue(row, as_of_utc=None):
+    """Return a quarantine reason when a sale date is future or its local date is uncertain."""
+    raw_date = row.get("date")
+    if not raw_date:
+        return None
+    try:
+        sale_date = datetime.strptime(str(raw_date), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+    now_utc = _as_utc_datetime(as_of_utc)
+    zone_name = market_timezone(row.get("market"), row.get("state") or row.get("region"))
+    if zone_name:
+        row["market_timezone"] = zone_name
+        local_today = now_utc.astimezone(ZoneInfo(zone_name)).date()
+        return "sale_date_in_future" if sale_date > local_today else None
+    row["market_timezone"] = None
+    # UTC may have rolled over while a western market is still on the prior date.
+    # Quarantine same-day UTC observations when no verified market timezone exists.
+    if sale_date >= now_utc.date():
+        return "market_timezone_unverified"
+    return None
+
+
+def publication_date_gate(rows, collection, as_of_utc=None):
+    """Final defense-in-depth date check immediately before publication."""
+    accepted, rejected = [], []
+    for row in rows:
+        issue = future_sale_date_issue(row, as_of_utc)
+        if issue:
+            rejected.append({
+                "id": row.get("id"), "date": row.get("date"), "market": row.get("market"),
+                "state": row.get("state"), "county": row.get("county"), "category": row.get("category"),
+                "market_timezone": row.get("market_timezone"), "weight": row.get("weight"),
+                "price": row.get("price"), "price_unit": row.get("price_unit"),
+                "source_url": row.get("source_url"), "collection": collection,
+                "issues": [issue], "warnings": row.get("qa_warnings", [])
+            })
+        else:
+            accepted.append(row)
+    return accepted, rejected
+
 
 def backfill_market_geography(row):
     """Backfill only verified registry facts; never erase source-reported geography."""
@@ -1501,7 +1573,7 @@ SOURCES = [
 ]
 
 
-def quality_check(rows, collection):
+def quality_check(rows, collection, as_of_utc=None):
     """Reject structurally unsafe observations; retain source-linked rejection details."""
     accepted, rejected = [], []
     seen = set()
@@ -1528,9 +1600,10 @@ def quality_check(rows, collection):
             issues.append("missing_sale_date")
         else:
             try:
-                parsed_date = datetime.strptime(str(row["date"]), "%Y-%m-%d").date()
-                if parsed_date > datetime.now(timezone.utc).date():
-                    issues.append("sale_date_in_future")
+                datetime.strptime(str(row["date"]), "%Y-%m-%d").date()
+                date_issue = future_sale_date_issue(row, as_of_utc)
+                if date_issue:
+                    issues.append(date_issue)
             except ValueError:
                 issues.append("sale_date_not_iso_yyyy_mm_dd")
         for field in ("market", "category", "source"):
@@ -1615,7 +1688,7 @@ def quality_check(rows, collection):
             rejected.append({
                 "id": row.get("id"), "date": row.get("date"), "market": row.get("market"),
                 "state": row.get("state"), "county": row.get("county"), "category": row.get("category"),
-                "weight": row.get("weight"), "price": row.get("price"), "price_unit": row.get("price_unit"),
+                "market_timezone": row.get("market_timezone"), "weight": row.get("weight"), "price": row.get("price"), "price_unit": row.get("price_unit"),
                 "source_url": row.get("source_url"), "collection": collection, "issues": sorted(set(issues)), "warnings": sorted(set(warnings))
             })
         else:
@@ -1788,6 +1861,11 @@ def main():
     new_ids = {r.get("id") for r in records}
     merged, rejected_records = quality_check(merged, "records")
     merged_cows, rejected_cows = quality_check(merged_cows, "cow_records")
+    # Independent final date gate immediately before any publication artifacts.
+    merged, publication_rejected = publication_date_gate(merged, "records")
+    merged_cows, publication_cow_rejected = publication_date_gate(merged_cows, "cow_records")
+    rejected_records.extend(publication_rejected)
+    rejected_cows.extend(publication_cow_rejected)
     # Quarantine is durable history. Keep prior rejected rows unless the same
     # stable ID is now accepted or a fresh validation produced an updated rejection.
     accepted_market_ids = {r.get("id") for r in merged}
