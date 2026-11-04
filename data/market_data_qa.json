@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-04T02:22:26.683842+00:00",
+  "generated_at": "2026-11-04T19:52:01.123724+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
     "accepted": 12492,
@@ -221,7 +221,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:14.676395+00:00"
+      "last_success_at": "2026-11-04T19:51:47.474749+00:00"
     },
     "burleylivestock.auction": {
       "requests": 2,
@@ -233,7 +233,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:21:49.639785+00:00"
+      "last_success_at": "2026-11-04T19:51:07.542249+00:00"
     },
     "cattlechannel.com": {
       "requests": 45,
@@ -245,7 +245,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:19.495304+00:00"
+      "last_success_at": "2026-11-04T19:51:51.477688+00:00"
     },
     "cottonwoodlivestock.com": {
       "requests": 4,
@@ -257,7 +257,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:21:56.885920+00:00"
+      "last_success_at": "2026-11-04T19:51:11.095269+00:00"
     },
     "rancherschoicestockyard.com": {
       "requests": 18,
@@ -269,7 +269,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:01.097730+00:00"
+      "last_success_at": "2026-11-04T19:51:35.690288+00:00"
     },
     "test.willcoxlivestockauction.com": {
       "requests": 3,
@@ -281,7 +281,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:04.752246+00:00"
+      "last_success_at": "2026-11-04T19:51:38.419878+00:00"
     },
     "willcoxlivestockauction.com": {
       "requests": 2,
@@ -293,7 +293,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:04.550528+00:00"
+      "last_success_at": "2026-11-04T19:51:38.203410+00:00"
     },
     "www.ams.usda.gov": {
       "requests": 26,
@@ -305,7 +305,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:14.006413+00:00"
+      "last_success_at": "2026-11-04T19:51:46.903063+00:00"
     },
     "www.fallonlivestock.com": {
       "requests": 2,
@@ -317,7 +317,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:20.098924+00:00"
+      "last_success_at": "2026-11-04T19:51:52.396893+00:00"
     },
     "www.maranastockyards.com": {
       "requests": 1,
@@ -329,7 +329,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:01.404371+00:00"
+      "last_success_at": "2026-11-04T19:51:36.091890+00:00"
     },
     "www.maranastockyards.us": {
       "requests": 1,
@@ -341,7 +341,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:01.893760+00:00"
+      "last_success_at": "2026-11-04T19:51:36.642607+00:00"
     },
     "www.overlandstockyard.com": {
       "requests": 11,
@@ -353,7 +353,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:21:46.084761+00:00"
+      "last_success_at": "2026-11-04T19:51:03.964353+00:00"
     },
     "www.roswelllivestockauction.com": {
       "requests": 1,
@@ -365,7 +365,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:22:14.370910+00:00"
+      "last_success_at": "2026-11-04T19:51:47.273311+00:00"
     },
     "www.visalialivestock.com": {
       "requests": 3,
@@ -377,7 +377,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-04T02:21:48.554644+00:00"
+      "last_success_at": "2026-11-04T19:51:06.537812+00:00"
     }
   },
   "source_registry": [
