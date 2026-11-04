@@ -42,6 +42,64 @@ class MarketDataQualityTests(unittest.TestCase):
         self.assertEqual(rejected, [])
         self.assertEqual(accepted[0]["qa_status"], "passed")
 
+    def test_overland_sale_date_uses_california_local_date_at_utc_rollover(self):
+        from datetime import datetime, timezone
+
+        row = feeder_record(date="2026-11-04")
+        before_local_midnight = datetime(2026, 11, 4, 2, 22, tzinfo=timezone.utc)
+        accepted, rejected = collector.quality_check(
+            [row], "records", as_of_utc=before_local_midnight
+        )
+        self.assertEqual(accepted, [])
+        self.assertIn("sale_date_in_future", rejected[0]["issues"])
+        self.assertEqual(rejected[0]["market_timezone"], "America/Los_Angeles")
+
+        at_local_date = datetime(2026, 11, 4, 8, 1, tzinfo=timezone.utc)
+        accepted, rejected = collector.quality_check(
+            [row], "records", as_of_utc=at_local_date
+        )
+        self.assertEqual(len(accepted), 1)
+        self.assertEqual(rejected, [])
+        self.assertEqual(accepted[0]["market_timezone"], "America/Los_Angeles")
+
+    def test_idaho_markets_resolve_to_their_actual_timezones(self):
+        self.assertEqual(
+            collector.market_timezone("Burley Livestock Auction", "Idaho"),
+            "America/Boise",
+        )
+        self.assertEqual(
+            collector.market_timezone("Lewiston Livestock Auction", "Idaho"),
+            "America/Los_Angeles",
+        )
+
+    def test_unknown_market_timezone_quarantines_ambiguous_current_utc_date(self):
+        from datetime import datetime, timezone
+
+        row = feeder_record(
+            market="Unverified Idaho Auction",
+            state="Idaho",
+            region="Idaho",
+            date="2026-11-04",
+        )
+        accepted, rejected = collector.quality_check(
+            [row], "records",
+            as_of_utc=datetime(2026, 11, 4, 2, 22, tzinfo=timezone.utc),
+        )
+        self.assertEqual(accepted, [])
+        self.assertIn("market_timezone_unverified", rejected[0]["issues"])
+
+    def test_publication_gate_rechecks_dates_and_quarantines_future_records(self):
+        from datetime import datetime, timezone
+
+        rows = [feeder_record(date="2026-11-04")]
+        accepted, rejected = collector.publication_date_gate(
+            rows, "records",
+            as_of_utc=datetime(2026, 11, 4, 2, 22, tzinfo=timezone.utc),
+        )
+        self.assertEqual(accepted, [])
+        self.assertEqual(len(rejected), 1)
+        self.assertIn("sale_date_in_future", rejected[0]["issues"])
+
     def test_missing_source_url_is_rejected(self):
         accepted, rejected = collector.quality_check(
             [feeder_record(source_url="")], "records"
