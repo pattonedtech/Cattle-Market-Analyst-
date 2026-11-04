@@ -99,6 +99,17 @@ jobs:
                   merged.values(),
                   key=lambda item: (item.get("date", ""), item.get("market", ""), item.get("id", ""))
               )
+          # Final publication gate runs after remote/local ID merge too, so a
+          # concurrent or newer remote snapshot cannot reintroduce future-dated rows.
+          sys.path.insert(0, "scripts")
+          from refresh_market_data import publication_date_gate
+          local["records"], late_rejected_records = publication_date_gate(local.get("records", []), "records")
+          local["cow_records"], late_rejected_cows = publication_date_gate(local.get("cow_records", []), "cow_records")
+          rejected_by_key = {(row.get("collection"), row.get("id")): row for row in rejected}
+          for row in late_rejected_records + late_rejected_cows:
+              rejected_by_key[(row.get("collection"), row.get("id"))] = row
+          rejected = list(rejected_by_key.values())
+
           local["record_count"] = len(local.get("records", []))
           local["cow_record_count"] = len(local.get("cow_records", []))
           accepted_market_ids = {row.get("id") for row in local.get("records", [])}
