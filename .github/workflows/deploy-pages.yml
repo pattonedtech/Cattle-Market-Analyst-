@@ -47,3 +47,5 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+
+# Republish trigger: refresh GitHub Pages deployment.
