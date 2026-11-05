@@ -1625,6 +1625,11 @@ def quality_check(rows, collection, as_of_utc=None):
         parsed_url = urlparse(source_url)
         if parsed_url.scheme != "https" or not parsed_url.netloc:
             issues.append("missing_or_invalid_https_source_url")
+        # Never publish observations sourced from test/staging/development hosts.
+        # The previous Willcox collector used test.willcoxlivestockauction.com,
+        # which produced 160 apparently valid but non-production observations.
+        if (parsed_url.hostname or "").lower().split(".")[0] in {"test", "staging", "dev", "development"}:
+            issues.append("nonproduction_source_domain")
         if row.get("state") and row["state"] not in valid_states:
             issues.append("unrecognized_state")
         if inferred_state and row.get("state") and inferred_state != row["state"]:
@@ -1795,8 +1800,10 @@ def main():
     ranchers_records, ranchers_cows = parse_ranchers_choice()
     records += ranchers_records
     marana_records, marana_cows = parse_marana()
-    willcox_records, willcox_cows = parse_willcox()
-    records += marana_records + willcox_records
+    # Willcox parser is intentionally disabled until its official production
+    # report URL is verified; the previous collector read a test subdomain.
+    willcox_records, willcox_cows = [], []
+    records += marana_records
     usda_cow_records = []
     records += parse_usda_report(1782, "Roswell Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)
     records += parse_usda_report(1781, "Clovis Livestock Auction (USDA)", "New Mexico", "usda_auction", usda_cow_records)

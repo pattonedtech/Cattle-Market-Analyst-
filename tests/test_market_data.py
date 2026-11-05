@@ -42,6 +42,20 @@ class MarketDataQualityTests(unittest.TestCase):
         self.assertEqual(rejected, [])
         self.assertEqual(accepted[0]["qa_status"], "passed")
 
+    def test_nonproduction_test_domain_is_quarantined(self):
+        row = feeder_record(
+            market="Willcox Livestock Auction",
+            region="Arizona",
+            state="Arizona",
+            county="Cochise",
+            source="Willcox Livestock Auction",
+            source_url="https://test.willcoxlivestockauction.com/reports/market-report.pdf",
+        )
+        accepted, rejected = collector.quality_check([row], "records")
+        self.assertEqual(accepted, [])
+        self.assertIn("nonproduction_source_domain", rejected[0]["issues"])
+
+
     def test_overland_sale_date_uses_california_local_date_at_utc_rollover(self):
         from datetime import datetime, timezone
 
