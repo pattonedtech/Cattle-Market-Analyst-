@@ -1,18 +1,11 @@
 name: Refresh cattle market history
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "scripts/refresh_market_data.py"
-      - "tests/**"
-      - ".github/workflows/refresh-market-data.yml"
-  # GitHub Actions cron is UTC: 7:17 AM / 3:17 PM Pacific during daylight time,
-  # and 6:17 AM / 2:17 PM Pacific during standard time.
-  # The two runs provide a same-day recovery window and avoid the top of the hour.
+  # Refresh market data twice weekly. 17:17 UTC is 9:17 AM Pacific in
+  # standard time and 10:17 AM Pacific in daylight time.
   schedule:
-    - cron: "17 14 * * *"
-    - cron: "17 22 * * *"
+    - cron: "17 17 * * 1"
+    - cron: "17 17 * * 5"
   workflow_dispatch:
 
 permissions:
