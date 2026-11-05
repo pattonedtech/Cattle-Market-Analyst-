@@ -1,6 +1,6 @@
 {
   "schema_version": 7,
-  "generated_at": "2026-11-04T20:50:40.409836+00:00",
+  "generated_at": "2026-11-05T02:30:49.001933+00:00",
   "record_count": 12492,
   "cow_record_count": 907,
   "sources": [
@@ -468897,7 +468897,7 @@
   ],
   "benchmarks": {
     "schema_version": 2,
-    "as_of": "2026-11-04",
+    "as_of": "2026-11-05",
     "methodology": "Benchmarks are grouped by state/Western, category, exact price unit, source series, Corriente origin, reporting period, and weight cohort. Auction weighted-average types may be combined only in the explicit auction_weighted_average series. Video, direct trade, ranges, and state summaries remain separate. Head weighting is used only when every observation has a positive head count; otherwise all observations contribute equally.",
     "groups": [
       {
@@ -535912,7 +535912,7 @@
   "quarantine_report_url": "data/quarantine_observations.json",
   "qa_summary": {
     "market_records_accepted": 12492,
-    "market_records_rejected": 7813,
+    "market_records_rejected": 8497,
     "cow_records_accepted": 907,
     "cow_records_rejected": 650
   },
