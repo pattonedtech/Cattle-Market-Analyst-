@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-06T22:09:30.968603+00:00",
-  "record_count": 9605,
-  "market_record_count": 8916,
-  "cow_record_count": 689,
+  "generated_at": "2026-11-10T00:43:10.841442+00:00",
+  "record_count": 9378,
+  "market_record_count": 8691,
+  "cow_record_count": 687,
   "rejected_observations": [
     {
       "id": "082fffa50fc3e9ca19",
@@ -149338,20 +149338,160 @@
       "warnings": []
     },
     {
-      "id": "00e68dfdf6e8cf4e48",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "00e35d94e22d8b1dfb",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1336.0,
-      "price": 4250.0,
+      "weight": 131.0,
+      "price": 185.93,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "08281f8f7ae5615f09",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 111.0,
+      "price": 74.39,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "08384e0bfd484591df",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 166.0,
+      "price": 93.65,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "1323e7ba8e2d9f980c",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 112.0,
+      "price": 285.64,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "15b6519963d2754688",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 182.0,
+      "price": 273.84,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "1e5aa8c04269835704",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 159.0,
+      "price": 65.58,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "2faa0180e7470beccf",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 184.0,
+      "price": 261.45,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "2ff603de70ff86d103",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 1903.0,
+      "price": 3150.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified",
@@ -149359,4325 +149499,460 @@
       ]
     },
     {
-      "id": "010faa017a5646dd2c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "42b8ddb083226f82f5",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1210.0,
-      "price": 2600.0,
+      "weight": 106.0,
+      "price": 84.44,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "0148d708529197b848",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 335.0,
-      "price": 340.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "02ca05c85bbdfb586f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "48079847327a9d80b3",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Feeder heifer",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 687.0,
-      "price": 356.83,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0432cb9fd1a338f182",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 826.0,
-      "price": 282.36,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "04871d91f341f709fc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 667.0,
-      "price": 338.42,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0623c335d06e77cbe4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 625.0,
-      "price": 290.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "06f677cf477b93bd9d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 260.0,
-      "price": 580.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0825424ad72d041d1a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 572.0,
-      "price": 364.91,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "08b4d89607528e0714",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 650.0,
-      "price": 317.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0bd64d4aab197b41c6",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 970.0,
-      "price": 3220.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "0ce5b35b456e80e673",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 528.0,
-      "price": 330.68,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0d1827a7eb016f645d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1865.0,
-      "price": 3550.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "0e37b33ef05d86cdf8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 662.0,
-      "price": 281.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0e5188e26476caac80",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 665.0,
-      "price": 300.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0e5e917c3d476e2cf8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 635.0,
-      "price": 266.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "0fafa891964b8b0e6c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 622.0,
-      "price": 355.87,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "12f295b7464ed1be0a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1029.0,
-      "price": 1900.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "14b266141d5536dc88",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 945.0,
-      "price": 260.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1536d5351524337b18",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 909.0,
-      "price": 2162.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "16236c06e3159c967d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1629.0,
-      "price": 156.56,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "16d36028760af5cedb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 427.0,
-      "price": 380.55,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1719ec9d7eeb23c5db",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 328.0,
-      "price": 529.92,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1722b122964c6041de",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 358.0,
-      "price": 412.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1ab5d39bba569130c9",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1128.0,
-      "price": 1689.47,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "1ae52f1aa055d6f453",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1135.0,
-      "price": 1987.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "1cc1aca567c2c3febd",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 443.0,
-      "price": 235.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1f5298c82e9c14f432",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1070.0,
-      "price": 1637.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "1f74d3cba113f70ed4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 385.0,
-      "price": 407.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "1fe0944ba8f3e17ce8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 523.0,
-      "price": 369.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "213347ec16e7f3592e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 870.0,
-      "price": 3500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "2133a1e254dedb10df",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 1010.0,
-      "price": 155.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "245c438635d3a22be7",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 1061.0,
-      "price": 259.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "25ee1dcdf2aa6a44bd",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 378.0,
-      "price": 520.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "270448677a2ab36d53",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 441.0,
-      "price": 445.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "272ae3156f1cb737ba",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 855.0,
-      "price": 225.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "27ba2c9e067ece1aa4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 411.0,
-      "price": 452.87,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "28097f221586116ee3",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 596.0,
-      "price": 314.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "285b37d4d0b13b6c94",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 380.0,
-      "price": 452.34,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "2ac21870ae1939602a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 585.0,
-      "price": 353.01,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "2ff5ce31cbc58d53ba",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 540.0,
-      "price": 365.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "307b846d35d4a024eb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1160.0,
-      "price": 157.69,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3355a49d9870e7c004",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 847.0,
-      "price": 260.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3454ffbc585e37579b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1294.0,
-      "price": 2080.56,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "348229dd4d50e2ce10",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 987.0,
-      "price": 1716.67,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "364e740fe2cd530dc7",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 977.0,
-      "price": 2000.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "36b419a287f559f783",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 990.0,
-      "price": 3965.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "38c687bb82e8195f5e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 673.0,
-      "price": 222.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "395f4dc152e674df56",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 376.0,
-      "price": 448.27,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3a1c468ee466c76a6b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1131.0,
-      "price": 2836.36,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "3a77bd7fd5d4304347",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 777.0,
-      "price": 272.86,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3c174ba605dbe8e374",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 408.0,
-      "price": 465.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3cc759d1f878ffbcae",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 335.0,
-      "price": 438.71,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3d0a0b76b097d6c143",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1081.0,
-      "price": 3923.17,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "3e00afe565c63efd74",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 442.0,
-      "price": 323.06,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "3e8bb984382390180e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1028.0,
-      "price": 1575.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "3f5e3e04a93c920a93",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1363.0,
-      "price": 2625.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "401a454d66161a0261",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 820.0,
-      "price": 1200.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "40c3a8784caa04b366",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 469.0,
-      "price": 406.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "432a92b21c28de41b7",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 980.0,
-      "price": 1700.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "43be25fe701ecd83b1",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1230.0,
-      "price": 3100.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "44443733b9d964a252",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 769.0,
-      "price": 306.83,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "44df927d35e09d2559",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 435.0,
-      "price": 335.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "462464bca10aa60281",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 542.0,
-      "price": 360.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "494e18bec462d8d422",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 613.0,
-      "price": 220.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "4af95706f850640854",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 393.0,
-      "price": 240.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "4c1613a4da42e56fff",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 900.0,
-      "price": 225.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "4c7a60fefac0f2d449",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1585.0,
-      "price": 2700.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "4dbd14c5f6fb7bea2d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 332.0,
-      "price": 445.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "4eb6ba5d9ad55e681c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 419.0,
-      "price": 400.68,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "507b9be05cd6da49db",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1258.0,
-      "price": 2875.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "50bd38574a03ec6cbc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 890.0,
-      "price": 251.79,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "53e6e49611bf5fc7ff",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 450.0,
-      "price": 382.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "54104ea44bf477eadc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 300.0,
-      "price": 345.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "54592d9b01180a3ad7",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 465.0,
-      "price": 466.08,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "546fe522a6b2567a0c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 683.0,
-      "price": 370.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "5592c4bbaad6da4258",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1150.0,
-      "price": 1900.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "56bb04fcfffd789d96",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1182.0,
-      "price": 2516.67,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "5766744fef08d11963",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 765.0,
-      "price": 316.79,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "577bc5b69d11de6fda",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1030.0,
-      "price": 2500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "58da4945a3dd246318",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 978.0,
-      "price": 193.54,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "5b98acfefcef13d36d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1177.0,
-      "price": 121.78,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "5bf981a00a1b4babbf",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 510.0,
-      "price": 337.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "5de3b23f0a41ea5d5b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 620.0,
-      "price": 1575.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "612ea0889d686f5858",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 287.0,
-      "price": 285.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "61ef6b8a6d9a7148c0",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 850.0,
+      "weight": 150.0,
       "price": 280.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "6268ffbeccc71ca0e8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "647db695481714fd24",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1585.0,
-      "price": 175.92,
+      "weight": 231.0,
+      "price": 134.26,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "672105eeab642ce74d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "6e09151d0637334d46",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 988.0,
-      "price": 2450.0,
+      "weight": 140.0,
+      "price": 97.5,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "687b3c131ca40e382e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 314.0,
-      "price": 560.1,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "688034d32bcff94e3b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 419.0,
-      "price": 431.35,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "68ef82ac3914c52c74",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 471.0,
-      "price": 390.8,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6997d0da4969db36f0",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 582.0,
-      "price": 339.69,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "69cd546984ddfc3c49",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1145.0,
-      "price": 149.4,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6aab1af4475774136e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 479.0,
-      "price": 416.51,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6adf815e2ae6229c35",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1590.0,
-      "price": 3500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "6c146892e4f905eac2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 415.0,
-      "price": 375.49,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6cdf0c1a6d8cf1e4cb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 715.0,
-      "price": 294.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6e77f0f5ebddf09b4f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1565.0,
-      "price": 121.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "6faa6dfa0627695d51",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 370.0,
-      "price": 270.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "70bfd13465da4b2373",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 732.0,
-      "price": 293.33,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "713f15489899f58d84",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 995.0,
-      "price": 162.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7169bd0703084cdf2f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 325.0,
-      "price": 503.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "72d6efb1b2dfb40d92",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 609.0,
-      "price": 303.22,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7540f9004464b225ec",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1306.0,
-      "price": 2900.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "7764cb2fd62d9aa656",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 325.0,
-      "price": 190.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "77a5f742f56d7b8f4d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 428.0,
-      "price": 436.54,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "796fc1500b2ccc7e1e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 990.0,
-      "price": 1625.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "7a68b0c895487958a8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 667.0,
-      "price": 275.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7b51c821dc1eed5e47",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 712.0,
-      "price": 295.27,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7cc033fcaefaf791e2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 927.0,
-      "price": 211.33,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7cf857180ee02c53a1",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1275.0,
-      "price": 1950.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "7e473d0449f4dc52d6",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1125.0,
-      "price": 3000.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "7f210ba91debb9df58",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 538.0,
-      "price": 320.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "7f2b82b6f7dbbc55bb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 524.0,
-      "price": 391.43,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "83e9d0171f6d054fab",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1330.0,
-      "price": 2500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "85353a7d3ad5a60d46",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 751.0,
-      "price": 252.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "8751cc5a3130204932",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 743.0,
-      "price": 275.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "87ffe79e7a85c989f8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1042.0,
-      "price": 110.97,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "8b90ddfb0f998695a5",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 575.0,
-      "price": 351.32,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "8bcef2cba511c0c48f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 227.0,
-      "price": 1250.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "8da3ab1271f14f99fc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 420.0,
-      "price": 260.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "8f5e42dfa0b90ed291",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 416.0,
-      "price": 513.8,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "92fff46ed0c1f6fb30",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 587.0,
-      "price": 117.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "95391428441e351ea2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 525.0,
-      "price": 181.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "965031a5f0c6c628f6",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1167.0,
-      "price": 2980.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "971d3ff60249387cfb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 995.0,
-      "price": 1650.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "9b845772359011de52",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 685.0,
-      "price": 305.04,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9c4a9d78dcdddeb07e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 391.0,
-      "price": 503.92,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9cc8febe7834031ae5",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1067.0,
-      "price": 4050.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "9d144c6db840a94427",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 271.0,
-      "price": 505.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9d31f1c1e627c84811",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 682.0,
-      "price": 323.21,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9d9f596b242c889424",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 740.0,
-      "price": 240.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9da2556deda68204ac",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 530.0,
-      "price": 356.52,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "9f975194f9d872d1b5",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 429.0,
-      "price": 464.71,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a1a48a988b29f8721c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1398.0,
-      "price": 2775.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "a389d5dc3540150344",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 748.0,
-      "price": 294.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a3ad4ced6fa148925a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 538.0,
-      "price": 360.46,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a40aaad306e16bafcf",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 558.0,
-      "price": 310.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a4dc27245ebe81721f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 714.0,
-      "price": 325.65,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a553b31c1156d060b9",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 963.0,
-      "price": 97.8,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a61e5fa339b79ca9b1",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 765.0,
-      "price": 1100.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "a62c9612f9637df143",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1089.0,
-      "price": 176.14,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "a6a9ce5bf4596eaef2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1268.0,
-      "price": 2400.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "a780ac649dd0d3e85d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1025.0,
-      "price": 2450.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "a81f9492107e16f74c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 580.0,
-      "price": 350.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "aa3a2b866283a0a6b0",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 668.0,
-      "price": 268.65,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "aac50d357fab76e68b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1579.0,
-      "price": 2530.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "ab14f9fe3bb1979e2f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 750.0,
-      "price": 1375.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "abce55ec10496f4d7d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 820.0,
-      "price": 1500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "acb40ecc73d2a16af3",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1955.0,
-      "price": 4000.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "ae52424adb5e7d1b32",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 339.0,
-      "price": 450.59,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "afe01585a12303a59e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 813.0,
-      "price": 260.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b006fcb62f5d37f058",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1048.0,
-      "price": 179.73,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b0a1961ea2487d1810",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 890.0,
-      "price": 220.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b0c3a33804e4462298",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 323.0,
-      "price": 575.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b3671f17a576d2bc0a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 666.0,
-      "price": 306.49,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b43391136e8a5e46db",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 563.0,
-      "price": 380.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b508fc67654f80e22e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1120.0,
-      "price": 1850.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "b58df62e10d22976b8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1472.0,
-      "price": 2500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "b675b99149714bbe5d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 427.0,
-      "price": 488.83,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b8a7ef4574cd554ad4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 481.0,
-      "price": 415.24,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "b8af018a82c3f1a8e4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 373.0,
-      "price": 406.87,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "ba649e6ac75f3806dc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1095.0,
-      "price": 2250.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "ba99efa25dc355b145",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 381.0,
-      "price": 424.27,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "bb9f3d3f15581fe182",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1285.0,
-      "price": 1775.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "bd0b1eb20e63835d2e",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 1131.0,
-      "price": 140.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "beba5d19c0b10644e2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 343.0,
-      "price": 466.54,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "bfcad3f8646d7e7c16",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 592.0,
-      "price": 320.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "c0fe30b61c4ae2ad45",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1150.0,
-      "price": 1850.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "c18711624d8589d1b1",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 545.0,
-      "price": 427.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "c2da7b7a7957c3c5dc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1098.0,
-      "price": 134.75,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "c2f1993487a84213bc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1233.0,
-      "price": 2775.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "c301db4a9306fc62b3",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1326.0,
-      "price": 2662.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "c3e96e3e755577e96b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1079.0,
-      "price": 1665.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "c58fc8bc3f5a850cc8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1142.0,
-      "price": 127.18,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "cc6b5e8b011dbd60d8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 580.0,
-      "price": 279.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "ccabf1069778e9dc54",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 868.0,
-      "price": 310.25,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "cd180ce791c7a65e2d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 672.0,
-      "price": 320.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "cdacde4ad35d989d45",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 478.0,
-      "price": 414.69,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "cf03e726e73c8bf197",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1253.0,
-      "price": 1700.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "d0c1545fa0690c6dc9",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 825.0,
-      "price": 252.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d170413e500295fefb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 573.0,
-      "price": 387.51,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d18faf205b8faeef12",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 468.0,
-      "price": 423.74,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d1df3055c08fc3da44",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 873.0,
-      "price": 206.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d22b00db0ef5337a05",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 240.0,
-      "price": 1300.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "d316b6d75075cf9229",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 673.0,
-      "price": 360.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d3deae82a63d0b2bce",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 610.0,
-      "price": 380.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d49c1cb971fbb9ae6b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 495.0,
-      "price": 337.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d620d1e7c176447748",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1265.0,
-      "price": 2425.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "d63524aed96509cedb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1015.0,
-      "price": 1500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "d74265bc783762f189",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 905.0,
-      "price": 250.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d7a3a26788af2a88d8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 680.0,
-      "price": 319.34,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d7dd243fbfe9ffbe22",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 621.0,
-      "price": 329.41,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d8a2d3f46811bd20cc",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 439.0,
-      "price": 461.24,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d8fcb4a9e32e4b61c6",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 532.0,
-      "price": 310.83,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "d94addeca581eb04e4",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 491.0,
-      "price": 367.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "da28126e5731fd02b9",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 495.0,
-      "price": 405.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "da7a184e4794dbe840",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 445.0,
-      "price": 400.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "db4d5068e213667410",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 383.0,
-      "price": 487.66,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "db8fda33663e010857",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1305.0,
-      "price": 2550.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "dbdd58a094b991e1e2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 680.0,
-      "price": 265.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
         "county_not_identified"
-      ]
-    },
-    {
-      "id": "e12f084a597f018935",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1315.0,
-      "price": 3300.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
       ]
     },
     {
-      "id": "e216abd0b835b6fc6c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "7391f3aea9ac8f0022",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Feeder steer",
+      "category": "Bred heifer",
       "market_timezone": null,
       "weight": 780.0,
-      "price": 270.0,
+      "price": 295.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "e2c61c864417f05fa7",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "795653d7766943c970",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 925.0,
-      "price": 1300.0,
+      "weight": 125.0,
+      "price": 185.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "e45308b9b44bd72e82",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1103.0,
-      "price": 2650.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "e45f30e34ba881ce25",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 495.0,
-      "price": 358.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "e4cc0bb72ac8a1f8a0",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "7bc7c3ad131e83f766",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1075.0,
-      "price": 1200.0,
+      "weight": 132.0,
+      "price": 160.04,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "e6466e50c57c2cdf5d",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1155.0,
-      "price": 2800.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "e76c14dc61dd2c1556",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1226.0,
-      "price": 2052.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "e9edc29f7a0f2904e2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 527.0,
-      "price": 408.87,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "eaa306fdc227d8630f",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "7d548889118a2c8795",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1193.0,
-      "price": 2256.82,
+      "weight": 186.0,
+      "price": 157.87,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
+        "county_not_identified"
       ]
     },
     {
-      "id": "ec7e2c0bb994618a48",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "81274c5c8d9d6fc6ae",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Feeder heifer",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 688.0,
+      "weight": 115.0,
+      "price": 295.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "8207db63ef7131329c",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 237.0,
+      "price": 365.21,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "830eaad7ee62a2979f",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 173.0,
+      "price": 81.2,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "885de9f51769ae6968",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 210.0,
+      "price": 157.5,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "89f0be4316a495db59",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 148.0,
       "price": 210.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "eda0f4231ce61f3383",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "90a2279721bc7a3646",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Feeder heifer",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 398.0,
-      "price": 338.0,
+      "weight": 222.0,
+      "price": 235.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "edbcf46b09b63f39b2",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "9502e5a3b24d4d9861",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1177.0,
-      "price": 2088.1,
+      "weight": 178.0,
+      "price": 138.28,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "972634351efcbc3037",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 125.0,
+      "price": 257.5,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "99dda28dbf5bdda8a9",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 130.0,
+      "price": 272.5,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "9f28e55a192860aead",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 102.0,
+      "price": 304.2,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "a3116a4eaee0e67542",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 140.0,
+      "price": 115.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "a3b60b6e89fdfd4fb7",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 179.0,
+      "price": 135.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "b7ea67fd4015b312c7",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 137.0,
+      "price": 71.14,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "b9cb0f89bf7843c98f",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 123.0,
+      "price": 270.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
+      ],
+      "warnings": [
+        "county_not_identified"
+      ]
+    },
+    {
+      "id": "c2e835e6f8526a0b9a",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
+      "county": null,
+      "category": "Bred heifer",
+      "market_timezone": null,
+      "weight": 1080.0,
+      "price": 2800.0,
+      "price_unit": "USD/cwt",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
+      "collection": "records",
+      "issues": [
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified",
@@ -153685,868 +149960,64 @@
       ]
     },
     {
-      "id": "ef79e1b2c435885a97",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "c3e4d9e10e5492d5c6",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 1155.0,
-      "price": 3100.0,
+      "weight": 310.0,
+      "price": 140.0,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "ef7f5e4a8746bb2384",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 583.0,
-      "price": 307.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "efbeafdc237741191a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "d8ffd7bf3998d4da40",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Cull cow",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 870.0,
-      "price": 1675.0,
+      "weight": 140.0,
+      "price": 171.55,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "f23063d61e465e7855",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1175.0,
-      "price": 3900.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "f26d2cf1e1748d4025",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 621.0,
-      "price": 343.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
     },
     {
-      "id": "f3b56d43f6d778fc92",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
+      "id": "f934920b8ff5b88af9",
+      "date": "2026-11-09",
+      "market": "Utah Weekly Cattle Auction Summary (USDA)",
+      "state": "Utah",
       "county": null,
-      "category": "Feeder heifer",
+      "category": "Bred heifer",
       "market_timezone": null,
-      "weight": 577.0,
-      "price": 315.25,
+      "weight": 120.0,
+      "price": 272.5,
       "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
+      "source_url": "https://www.ams.usda.gov/mnreports/ams_2039.pdf",
       "collection": "records",
       "issues": [
-        "market_timezone_unverified"
+        "category_unit_mismatch"
       ],
       "warnings": [
         "county_not_identified"
       ]
-    },
-    {
-      "id": "f559bd5ab6cb416fb8",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 586.0,
-      "price": 324.97,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "f5e769579ed2b3a7b9",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1548.0,
-      "price": 146.79,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "f786d31805d59b5b2c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1645.0,
-      "price": 2700.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "f7c073f662200bf576",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Bull",
-      "market_timezone": null,
-      "weight": 719.0,
-      "price": 278.33,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "f7cad0402b1624fda0",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1202.0,
-      "price": 1758.33,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "f9f0e9b79c79c7f8eb",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 1470.0,
-      "price": 3500.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "fafe6a88b8a3cce52c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 282.0,
-      "price": 525.17,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "fb8f97952ebff78c0a",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Cull cow",
-      "market_timezone": null,
-      "weight": 970.0,
-      "price": 2100.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "fbef988de8dac1b82b",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 385.0,
-      "price": 425.39,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "fc591418583b0d35bf",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 355.0,
-      "price": 350.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "fd91bd7aca98c03998",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 615.0,
-      "price": 330.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "fdbe94826db462492c",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 622.0,
-      "price": 327.14,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "feca1d49edf08d60df",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 261.0,
-      "price": 1200.48,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified",
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "fecd2069d6e42511f1",
-      "date": "2026-11-06",
-      "market": "New Mexico Weekly Cattle Summary (USDA)",
-      "state": "New Mexico",
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 516.0,
-      "price": 426.56,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_1784.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "county_not_identified"
-      ]
-    },
-    {
-      "id": "11d5dba0dd591f3c24",
-      "date": "2026-11-06",
-      "market": "Northwest Direct Cattle Report (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 760.0,
-      "price": 310.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3059.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "77f430072f08fa5694",
-      "date": "2026-11-06",
-      "market": "Northwest Direct Cattle Report (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 740.0,
-      "price": 340.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3059.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "01cd2765a1068c35e5",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 545.0,
-      "price": 410.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "0a1caf41dfe9fff626",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 575.0,
-      "price": 422.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "0da843b90d34f78d45",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 1100.0,
-      "price": 3950.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "20b7e3349fc53d20b8",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 800.0,
-      "price": 342.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "2bd476276b5e2f0480",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 715.0,
-      "price": 348.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "363b0bbc0a91235a9d",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 750.0,
-      "price": 330.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "4d0fc51f9c7b53d2ff",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 650.0,
-      "price": 377.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "52ced0accbaf5c7e58",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 525.0,
-      "price": 385.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "5fd759ff876576498c",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 650.0,
-      "price": 357.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "6c6801d730007d0a3f",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 650.0,
-      "price": 425.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "71a2bb97f40b39cc47",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 665.0,
-      "price": 345.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "8cb1b5136891b31eaf",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 775.0,
-      "price": 366.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "90598740be8e273eb7",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 1300.0,
-      "price": 3900.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "93a2861ff2b807325f",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 515.0,
-      "price": 397.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "9ed38114db240c3c14",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 715.0,
-      "price": 346.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "a43884a4ddb6d1f916",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 575.0,
-      "price": 397.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "aeb0766e3fa14d09e4",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 585.0,
-      "price": 425.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "b3a083a308fbe5d7a0",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 1450.0,
-      "price": 4400.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": [
-        "unusual_cwt_price_review_source"
-      ]
-    },
-    {
-      "id": "cf679e65fe7d9ce993",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 550.0,
-      "price": 417.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "e04250a47667d45e22",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 880.0,
-      "price": 330.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "e395ab202504edb68b",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 975.0,
-      "price": 325.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "fcf35843d3f231e490",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder heifer",
-      "market_timezone": null,
-      "weight": 575.0,
-      "price": 377.5,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "fda20fa786fe4ae469",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 675.0,
-      "price": 385.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
     },
     {
       "id": "6ad5f8cc580f4612a1",
@@ -166263,42 +161734,6 @@
       "collection": "cow_records",
       "issues": [
         "nonproduction_source_domain"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "518220e6a293fcf88b",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Bred cow",
-      "market_timezone": null,
-      "weight": 1300.0,
-      "price": 3900.0,
-      "price_unit": "USD/head",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "cow_records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "8a9bab5ca1a283bf12",
-      "date": "2026-11-06",
-      "market": "Western Video Market (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Bred heifer",
-      "market_timezone": null,
-      "weight": 1100.0,
-      "price": 4057.14,
-      "price_unit": "USD/head",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_3242.pdf",
-      "collection": "cow_records",
-      "issues": [
-        "market_timezone_unverified"
       ],
       "warnings": []
     }
