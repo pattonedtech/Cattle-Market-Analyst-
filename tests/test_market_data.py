@@ -472,6 +472,7 @@ class FuturesContractCoverageTests(unittest.TestCase):
         self.assertEqual(gfx26["price_cwt"], 337.775)
         self.assertEqual(gfx26["change"], -8.7)
         self.assertEqual(gfx26["source"], "CME Group official settlements")
+        self.assertEqual(gfx26["quote_date"], "2026-11-13")
 
     def test_missing_primary_front_month_uses_cme_fallback_and_records_qa(self):
         import json
@@ -553,6 +554,45 @@ class FuturesContractCoverageTests(unittest.TestCase):
             "GFX26",
         )
 
+
+    def test_cme_fallback_rejects_stale_or_undated_contract_quotes(self):
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        table = """
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>NOV 26</td><td>345.800</td><td>345.800</td><td>337.000</td>
+              <td>337.475</td><td>-8.700</td><td>337.775</td><td>4,677</td><td>9,713</td></tr>
+        </table>
+        """
+
+        for date_markup in ("<p>Trade date Friday, 30 Oct 2026</p>", ""):
+            with self.subTest(date_markup=date_markup):
+                cme_html = date_markup + table
+
+                def fake_fetch(url):
+                    if "farmbucks.com" in url:
+                        return SimpleNamespace(text="<html><body>No feeder chain</body></html>")
+                    if "cmegroup.com" in url:
+                        return SimpleNamespace(text=cme_html)
+                    raise AssertionError(f"Unexpected URL: {url}")
+
+                with tempfile.TemporaryDirectory() as directory:
+                    output = Path(directory) / "futures.json"
+                    with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                        collector, "FUTURES_OUT", output
+                    ):
+                        with self.assertRaisesRegex(
+                            RuntimeError,
+                            "Futures QA gate blocked publication.*GFX26",
+                        ):
+                            collector.fetch_futures(date(2026, 11, 14))
+                    self.assertFalse(output.exists())
 
     def test_futures_coverage_is_included_in_qa_report(self):
         coverage = {
