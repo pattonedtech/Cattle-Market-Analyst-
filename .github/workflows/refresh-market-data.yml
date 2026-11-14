@@ -128,7 +128,7 @@ jobs:
           from refresh_market_data import build_qa_report
           from market_model import build_benchmarks
           collected_qa = json.loads(qa_path.read_text(encoding="utf-8"))
-          qa = build_qa_report(local["records"], local["cow_records"], rejected_records, rejected_cows, collected_qa.get("source_fetch_health", {}))
+          qa = build_qa_report(local["records"], local["cow_records"], rejected_records, rejected_cows, collected_qa.get("source_fetch_health", {}), collected_qa.get("futures_contract_qa"))
           quarantine_rows = rejected_records + rejected_cows
           quarantine_path.write_text(json.dumps({
               "schema_version": 1,
