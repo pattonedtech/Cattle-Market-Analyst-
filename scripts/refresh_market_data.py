@@ -1508,6 +1508,9 @@ CME_FEEDER_SETTLEMENTS_URL = (
     "https://www.cmegroup.com/markets/agriculture/livestock/"
     "feeder-cattle/settlements"
 )
+FARMBUCKS_FEEDER_FUTURES_URL = (
+    "https://farmbucks.com/futures/livestock/feeder-cattle"
+)
 
 
 def _nth_weekday(year, month, weekday, occurrence):
@@ -1728,13 +1731,15 @@ def fetch_futures(as_of_date=None):
     url = "https://farmbucks.com/futures/livestock"
     active_contract = active_cme_feeder_front_month(as_of_date)
     contracts_by_symbol = {}
-    try:
-        soup = BeautifulSoup(fetch(url).text, "html.parser")
-        page_text = " ".join(soup.get_text(" ", strip=True).split())
-        pattern = re.compile(
-            r"\b(GF|LE)([A-Z])(\d{2})\s+([A-Za-z]{3})\s+(20\d{2})\s+"
-            r"([\d.]+)\s+¢/lb\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)%",
-            re.I,
+    pattern = re.compile(
+        r"\b(GF|LE)([A-Z])(\d{2})\s+([A-Za-z]{3})\s+(20\d{2})\s+"
+        r"([\d.]+)\s+¢/lb\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)%",
+        re.I,
+    )
+
+    def add_farmbucks_contracts(html, source_url):
+        page_text = " ".join(
+            BeautifulSoup(html, "html.parser").get_text(" ", strip=True).split()
         )
         for match in pattern.finditer(page_text):
             product, month_code, year_two, month_name, year, price, change, pct = match.groups()
@@ -1753,10 +1758,26 @@ def fetch_futures(as_of_date=None):
                 "quote_unit": "cents/lb",
                 "equivalent_unit": "USD/cwt",
                 "source": "Farmbucks (data credited to DTN/CME)",
-                "source_url": url,
+                "source_url": source_url,
             }
+
+    try:
+        add_farmbucks_contracts(fetch(url).text, url)
     except Exception as exc:
         print(f"Deferred futures chain unavailable: {exc}", file=sys.stderr)
+
+    # Farmbucks' general livestock overview can omit the expiring feeder
+    # front month while retaining the deferred contracts. Its dedicated
+    # feeder page includes the complete GF chain, so check it before falling
+    # back to CME settlements.
+    if active_contract["symbol"] not in contracts_by_symbol:
+        try:
+            add_farmbucks_contracts(
+                fetch(FARMBUCKS_FEEDER_FUTURES_URL).text,
+                FARMBUCKS_FEEDER_FUTURES_URL,
+            )
+        except Exception as exc:
+            print(f"Dedicated Farmbucks feeder chain unavailable: {exc}", file=sys.stderr)
 
     fallback_used = False
     if active_contract["symbol"] not in contracts_by_symbol:
