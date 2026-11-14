@@ -1565,6 +1565,8 @@ def cme_market_holidays(year):
         _nth_weekday(year, 2, 0, 3),   # Presidents Day
         _last_weekday(year, 5, 0),     # Memorial Day
         _nth_weekday(year, 9, 0, 1),   # Labor Day
+        _nth_weekday(year, 10, 0, 2),  # Columbus Day
+        _observed_holiday(date(year, 11, 11)),  # Veterans Day
         _nth_weekday(year, 11, 3, 4),  # Thanksgiving
         _easter_sunday(year) - timedelta(days=2),  # Good Friday
     })
@@ -1644,7 +1646,6 @@ def parse_cme_feeder_settlements(html):
     if trade_date_match:
         quote_date = datetime.strptime(trade_date_match.group(1), "%d %b %Y").date()
     contracts = []
-    month_codes = {code: month for month, code in CME_FEEDER_MONTH_CODES.items()}
     for table in soup.find_all("table"):
         rows = table.find_all("tr")
         headers = [
@@ -1656,6 +1657,13 @@ def parse_cme_feeder_settlements(html):
         )
         change_index = next(
             (i for i, label in enumerate(headers) if label == "change"), 5
+        )
+        volume_index = next(
+            (i for i, label in enumerate(headers) if "volume" in label), None
+        )
+        open_interest_index = next(
+            (i for i, label in enumerate(headers)
+             if "open interest" in label or label.endswith(" oi")), None
         )
         for row in rows[1:]:
             cells = [cell.get_text(" ", strip=True) for cell in row.find_all(["th", "td"])]
@@ -1669,12 +1677,20 @@ def parse_cme_feeder_settlements(html):
                 continue
             month_name, year_two = match.groups()
             month = datetime.strptime(month_name.title(), "%b").month
-            if month not in month_codes:
+            if month not in CME_FEEDER_MONTH_CODES:
                 continue
             settlement = _cme_number(cells[settle_index])
             if settlement is None or settlement <= 0:
                 continue
             change = _cme_number(cells[change_index])
+            estimated_volume = (
+                _cme_number(cells[volume_index])
+                if volume_index is not None and volume_index < len(cells) else None
+            )
+            prior_day_open_interest = (
+                _cme_number(cells[open_interest_index])
+                if open_interest_index is not None and open_interest_index < len(cells) else None
+            )
             prior_settlement = settlement - change if change is not None else None
             change_pct = (
                 change / prior_settlement * 100
@@ -1682,7 +1698,7 @@ def parse_cme_feeder_settlements(html):
             )
             year = 2000 + int(year_two)
             contracts.append({
-                "symbol": f"GF{month_codes[month]}{year_two}",
+                "symbol": f"GF{CME_FEEDER_MONTH_CODES[month]}{year_two}",
                 "product": "Feeder cattle",
                 "contract_month": f"{month_name.title()} {year}",
                 "month": month,
@@ -1690,6 +1706,8 @@ def parse_cme_feeder_settlements(html):
                 "price_cwt": settlement,
                 "change": change,
                 "change_pct": change_pct,
+                "estimated_volume": estimated_volume,
+                "prior_day_open_interest": prior_day_open_interest,
                 "quote_unit": "cents/lb",
                 "equivalent_unit": "USD/cwt",
                 "source": "CME Group official settlements",
@@ -1755,7 +1773,21 @@ def fetch_futures(as_of_date=None):
                 if isinstance(requested_date, datetime):
                     requested_date = requested_date.date()
                 quote_age = (requested_date - quote_date).days if quote_date else None
-                if quote_age is not None and 0 <= quote_age <= 4:
+                has_market_activity = any(
+                    value is not None and value > 0
+                    for value in (
+                        fallback.get("estimated_volume"),
+                        fallback.get("prior_day_open_interest"),
+                    )
+                )
+                if not has_market_activity:
+                    print(
+                        "CME feeder settlement fallback rejected: CME reports no "
+                        "volume and no open interest; this web-only settlement is "
+                        "not based on market activity.",
+                        file=sys.stderr,
+                    )
+                elif quote_age is not None and 0 <= quote_age <= 4:
                     contracts_by_symbol[fallback["symbol"]] = fallback
                     fallback_used = True
                 else:
