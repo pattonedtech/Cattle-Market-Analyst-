@@ -1636,7 +1636,7 @@ def parse_cme_feeder_settlements(html):
     soup = BeautifulSoup(html, "html.parser")
     page_text = " ".join(soup.get_text(" ", strip=True).split())
     trade_date_match = re.search(
-        r"(?:Trade date|Last Updated)\\s+(?:[A-Za-z]+,\\s*)?(\\d{1,2}\\s+[A-Za-z]{3}\\s+20\\d{2})",
+        r"(?:Trade date|Last Updated)\s+(?:[A-Za-z]+,\s*)?(\d{1,2}\s+[A-Za-z]{3}\s+20\d{2})",
         page_text,
         flags=re.I,
     )
