@@ -1632,8 +1632,17 @@ def _cme_number(value):
 
 
 def parse_cme_feeder_settlements(html):
-    """Parse CME's public feeder-cattle settlements table into contract quotes."""
+    """Parse CME's public feeder-cattle settlements table into dated contract quotes."""
     soup = BeautifulSoup(html, "html.parser")
+    page_text = " ".join(soup.get_text(" ", strip=True).split())
+    trade_date_match = re.search(
+        r"(?:Trade date|Last Updated)\\s+(?:[A-Za-z]+,\\s*)?(\\d{1,2}\\s+[A-Za-z]{3}\\s+20\\d{2})",
+        page_text,
+        flags=re.I,
+    )
+    quote_date = None
+    if trade_date_match:
+        quote_date = datetime.strptime(trade_date_match.group(1), "%d %b %Y").date()
     contracts = []
     month_codes = {code: month for month, code in CME_FEEDER_MONTH_CODES.items()}
     for table in soup.find_all("table"):
@@ -1685,6 +1694,7 @@ def parse_cme_feeder_settlements(html):
                 "equivalent_unit": "USD/cwt",
                 "source": "CME Group official settlements",
                 "source_url": CME_FEEDER_SETTLEMENTS_URL,
+                "quote_date": quote_date.isoformat() if quote_date else None,
             })
     return contracts
 
@@ -1738,8 +1748,20 @@ def fetch_futures(as_of_date=None):
                 None,
             )
             if fallback:
-                contracts_by_symbol[fallback["symbol"]] = fallback
-                fallback_used = True
+                quote_date = datetime.strptime(fallback["quote_date"], "%Y-%m-%d").date() if fallback.get("quote_date") else None
+                requested_date = as_of_date or datetime.now(timezone.utc).date()
+                if isinstance(requested_date, datetime):
+                    requested_date = requested_date.date()
+                quote_age = (requested_date - quote_date).days if quote_date else None
+                if quote_age is not None and 0 <= quote_age <= 4:
+                    contracts_by_symbol[fallback["symbol"]] = fallback
+                    fallback_used = True
+                else:
+                    print(
+                        "CME feeder settlement fallback rejected as stale or undated: "
+                        f"quote_date={fallback.get('quote_date')}, as_of={requested_date.isoformat()}",
+                        file=sys.stderr,
+                    )
         except Exception as exc:
             print(f"CME feeder settlement fallback unavailable: {exc}", file=sys.stderr)
 
