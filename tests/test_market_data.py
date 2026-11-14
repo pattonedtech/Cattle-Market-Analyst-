@@ -537,24 +537,6 @@ class FuturesContractCoverageTests(unittest.TestCase):
 
 
 
-    def test_cme_fallback_rejects_undated_or_stale_contract_quote(self):
-        html = """
-        <p>Trade date Friday, 30 Oct 2026</p>
-        <table>
-          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
-              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
-          <tr><td>NOV 26</td><td>345.800</td><td>345.800</td><td>337.000</td>
-              <td>337.475</td><td>-8.700</td><td>337.775</td><td>4,677</td><td>9,713</td></tr>
-        </table>
-        """
-        contracts = collector.parse_cme_feeder_settlements(html)
-        self.assertEqual(contracts[0]["quote_date"], "2026-10-30")
-        self.assertEqual(
-            (collector.active_cme_feeder_front_month(__import__("datetime").date(2026, 11, 14))["symbol"]),
-            "GFX26",
-        )
-
-
     def test_cme_fallback_rejects_stale_or_undated_contract_quotes(self):
         import tempfile
         from datetime import date
