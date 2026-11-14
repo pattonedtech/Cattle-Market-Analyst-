@@ -559,6 +559,45 @@ class FuturesContractCoverageTests(unittest.TestCase):
         self.assertIn("GFX26", {item["symbol"] for item in payload["contracts"]})
         self.assertEqual(payload["contract_qa"], qa)
 
+    def test_dedicated_farmbucks_feeder_chain_supplies_active_front_month(self):
+        import json
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        general_page = """
+        <p>Feeder Cattle</p>
+        <p>GFF27 Jan 2027 335.35 ¢/lb +3.68 +1.11%</p>
+        """
+        dedicated_page = """
+        <p>GFX26 Nov 2026 339.03 ¢/lb +3.35 +1.00%</p>
+        <p>GFF27 Jan 2027 335.35 ¢/lb +3.68 +1.11%</p>
+        """
+
+        def fake_fetch(url):
+            if url == "https://farmbucks.com/futures/livestock":
+                return SimpleNamespace(text=general_page)
+            if url == collector.FARMBUCKS_FEEDER_FUTURES_URL:
+                return SimpleNamespace(text=dedicated_page)
+            raise AssertionError(f"Unexpected URL: {url}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "futures.json"
+            with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                collector, "FUTURES_OUT", output
+            ):
+                qa = collector.fetch_futures(date(2026, 11, 14))
+            payload = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(qa["required_active_feeder_contract"], "GFX26")
+        self.assertEqual(qa["source"], "Farmbucks (data credited to DTN/CME)")
+        self.assertFalse(qa["fallback_used"])
+        gfx26 = next(item for item in payload["contracts"] if item["symbol"] == "GFX26")
+        self.assertEqual(gfx26["price_cwt"], 339.03)
+        self.assertEqual(gfx26["source_url"], collector.FARMBUCKS_FEEDER_FUTURES_URL)
+
     def test_missing_active_contract_from_both_sources_blocks_publication(self):
         import tempfile
         from datetime import date
