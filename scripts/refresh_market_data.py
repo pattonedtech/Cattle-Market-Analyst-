@@ -6,7 +6,8 @@ auction prices, direct trades, video contracts, and price ranges remain distinct
 """
 from __future__ import annotations
 import json, re, hashlib, sys, time
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+import calendar
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 from pathlib import Path
 from urllib.parse import urljoin, quote, urlparse
@@ -1495,35 +1496,290 @@ def fetch_usda_outlook():
     print(f"USDA ERS outlook: {result['status']} ({result.get('report_date')})")
 
 
-def fetch_futures():
-    # Farmbucks publishes an indicative deferred CME contract chain, supplied by DTN/CME.
-    # Quotes are cents/lb; numerically equal to dollars/cwt (e.g. 337.78 cents/lb = $337.78/cwt).
-    url = "https://farmbucks.com/futures/livestock"
+# CME feeder-cattle contract calendar. CME lists Jan, Mar, Apr, May, Aug,
+# Sep, Oct, and Nov contracts. November expires on the Thursday before
+# Thanksgiving; other months use the last Thursday, subject to CME holiday
+# adjustments described in the product specifications.
+CME_FEEDER_MONTH_CODES = {
+    1: "F", 3: "H", 4: "J", 5: "K", 8: "Q", 9: "U",
+    10: "V", 11: "X",
+}
+CME_FEEDER_SETTLEMENTS_URL = (
+    "https://www.cmegroup.com/markets/agriculture/livestock/"
+    "feeder-cattle/settlements"
+)
+
+
+def _nth_weekday(year, month, weekday, occurrence):
+    first_weekday, days_in_month = calendar.monthrange(year, month)
+    first = 1 + (weekday - first_weekday) % 7
+    day = first + (occurrence - 1) * 7
+    return date(year, month, day) if day <= days_in_month else None
+
+
+def _last_weekday(year, month, weekday):
+    days_in_month = calendar.monthrange(year, month)[1]
+    last = date(year, month, days_in_month)
+    return last - timedelta(days=(last.weekday() - weekday) % 7)
+
+
+def _observed_holiday(day):
+    if day.weekday() == 5:
+        return day - timedelta(days=1)
+    if day.weekday() == 6:
+        return day + timedelta(days=1)
+    return day
+
+
+def _easter_sunday(year):
+    # Gregorian computus (Meeus/Jones/Butcher).
+    a = year % 19
+    b, c = divmod(year, 100)
+    d, e = divmod(b, 4)
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    month = (h + l - 7 * m + 114) // 31
+    day = (h + l - 7 * m + 114) % 31 + 1
+    return date(year, month, day)
+
+
+def cme_market_holidays(year):
+    """Return major CME livestock-market holidays used for expiry adjustments.
+
+    The November feeder contract has its own Thanksgiving-relative rule.
+    For other months, this local calendar covers recurring full-market
+    holidays; CME's published specifications remain the authority.
+    """
+    holidays = set()
+    for holiday_year in (year - 1, year, year + 1):
+        holidays.add(_observed_holiday(date(holiday_year, 1, 1)))
+        holidays.add(_observed_holiday(date(holiday_year, 6, 19)))
+        holidays.add(_observed_holiday(date(holiday_year, 7, 4)))
+        holidays.add(_observed_holiday(date(holiday_year, 12, 25)))
+    holidays.update({
+        _nth_weekday(year, 1, 0, 3),   # Martin Luther King Jr. Day
+        _nth_weekday(year, 2, 0, 3),   # Presidents Day
+        _last_weekday(year, 5, 0),     # Memorial Day
+        _nth_weekday(year, 9, 0, 1),   # Labor Day
+        _nth_weekday(year, 11, 3, 4),  # Thanksgiving
+        _easter_sunday(year) - timedelta(days=2),  # Good Friday
+    })
+    return {day for day in holidays if day is not None}
+
+
+def cme_feeder_last_trade_date(year, month, holidays=None):
+    """Calculate the CME feeder-cattle last trade date from CME Rule 10202.H."""
+    holidays = set(holidays if holidays is not None else cme_market_holidays(year))
+    if month == 11:
+        thanksgiving = _nth_weekday(year, 11, 3, 4)
+        candidate = thanksgiving - timedelta(days=7)
+    else:
+        candidate = _last_weekday(year, month, 3)  # Thursday
+    # CME moves expiry back a week if the candidate Thursday or any of the
+    # four preceding weekdays is a holiday. Check five actual weekdays.
+    while True:
+        window = []
+        cursor = candidate
+        while len(window) < 5:
+            if cursor.weekday() < 5:
+                window.append(cursor)
+            cursor -= timedelta(days=1)
+        if not any(day in holidays for day in window):
+            return candidate
+        candidate -= timedelta(days=7)
+
+
+def active_cme_feeder_front_month(as_of_date=None):
+    """Return the earliest listed, not-yet-expired CME feeder contract."""
+    as_of_date = as_of_date or datetime.now(timezone.utc).date()
+    if isinstance(as_of_date, datetime):
+        as_of_date = as_of_date.date()
+    candidates = []
+    start_month_index = as_of_date.year * 12 + as_of_date.month - 1
+    for offset in range(0, 19):
+        year, month_zero = divmod(start_month_index + offset, 12)
+        month = month_zero + 1
+        if month not in CME_FEEDER_MONTH_CODES:
+            continue
+        expiry = cme_feeder_last_trade_date(year, month)
+        if expiry >= as_of_date:
+            symbol = f"GF{CME_FEEDER_MONTH_CODES[month]}{year % 100:02d}"
+            candidates.append({
+                "symbol": symbol,
+                "product": "Feeder cattle",
+                "contract_month": f"{calendar.month_abbr[month]} {year}",
+                "month": month,
+                "year": year,
+                "expiration_date": expiry.isoformat(),
+            })
+    if not candidates:
+        raise RuntimeError(
+            f"No active CME feeder-cattle contract found for {as_of_date.isoformat()}."
+        )
+    return min(candidates, key=lambda item: (item["year"], item["month"]))
+
+
+def _cme_number(value):
+    value = str(value or "").strip().replace(",", "")
+    if value in {"", "-", "—", "–", "UNCH"}:
+        return None
+    match = re.search(r"[+-]?\d+(?:\.\d+)?", value)
+    return float(match.group(0)) if match else None
+
+
+def parse_cme_feeder_settlements(html):
+    """Parse CME's public feeder-cattle settlements table into contract quotes."""
+    soup = BeautifulSoup(html, "html.parser")
     contracts = []
+    month_codes = {code: month for month, code in CME_FEEDER_MONTH_CODES.items()}
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        headers = [
+            cell.get_text(" ", strip=True).lower()
+            for cell in (rows[0].find_all(["th", "td"]) if rows else [])
+        ]
+        settle_index = next(
+            (i for i, label in enumerate(headers) if "settle" in label), 6
+        )
+        change_index = next(
+            (i for i, label in enumerate(headers) if label == "change"), 5
+        )
+        for row in rows[1:]:
+            cells = [cell.get_text(" ", strip=True) for cell in row.find_all(["th", "td"])]
+            if len(cells) <= max(settle_index, change_index):
+                continue
+            match = re.fullmatch(
+                r"(JAN|MAR|APR|MAY|AUG|SEP|OCT|NOV)\s+(\d{2})",
+                cells[0].strip().upper(),
+            )
+            if not match:
+                continue
+            month_name, year_two = match.groups()
+            month = datetime.strptime(month_name.title(), "%b").month
+            if month not in month_codes:
+                continue
+            settlement = _cme_number(cells[settle_index])
+            if settlement is None or settlement <= 0:
+                continue
+            change = _cme_number(cells[change_index])
+            prior_settlement = settlement - change if change is not None else None
+            change_pct = (
+                change / prior_settlement * 100
+                if prior_settlement and prior_settlement > 0 else None
+            )
+            year = 2000 + int(year_two)
+            contracts.append({
+                "symbol": f"GF{month_codes[month]}{year_two}",
+                "product": "Feeder cattle",
+                "contract_month": f"{month_name.title()} {year}",
+                "month": month,
+                "year": year,
+                "price_cwt": settlement,
+                "change": change,
+                "change_pct": change_pct,
+                "quote_unit": "cents/lb",
+                "equivalent_unit": "USD/cwt",
+                "source": "CME Group official settlements",
+                "source_url": CME_FEEDER_SETTLEMENTS_URL,
+            })
+    return contracts
+
+
+def fetch_futures(as_of_date=None):
+    """Fetch deferred futures and enforce coverage of the active CME feeder contract.
+
+    Farmbucks remains the broad-chain source. If it omits the dynamically
+    identified active feeder contract, CME's official settlement table is used
+    as an independent, contract-specific fallback. Missing both sources blocks
+    publication rather than silently publishing an incomplete futures curve.
+    """
+    url = "https://farmbucks.com/futures/livestock"
+    active_contract = active_cme_feeder_front_month(as_of_date)
+    contracts_by_symbol = {}
     try:
         soup = BeautifulSoup(fetch(url).text, "html.parser")
-        text = " ".join(soup.get_text(" ", strip=True).split())
-        pat = re.compile(r"\b(GF|LE)([A-Z])(\d{2})\s+([A-Za-z]{3})\s+(20\d{2})\s+([\d.]+)\s+¢/lb\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)%", re.I)
-        for m in pat.finditer(text):
-            product, month_code, year2, month_name, year, price, change, pct = m.groups()
-            code = product.upper() + month_code.upper() + year2
-            contracts.append({
-                "symbol": code, "product": "Feeder cattle" if product.upper()=="GF" else "Live cattle",
-                "contract_month": month_name + " " + year, "month": datetime.strptime(month_name,"%b").month,
-                "year": int(year), "price_cwt": float(price), "change": float(change),
-                "change_pct": float(pct), "quote_unit": "cents/lb",
-                "equivalent_unit": "USD/cwt", "source": "Farmbucks (data credited to DTN/CME)",
-                "source_url": url
-            })
-    except Exception as e:
-        print(f"Deferred futures chain unavailable: {e}", file=sys.stderr)
+        page_text = " ".join(soup.get_text(" ", strip=True).split())
+        pattern = re.compile(
+            r"\b(GF|LE)([A-Z])(\d{2})\s+([A-Za-z]{3})\s+(20\d{2})\s+"
+            r"([\d.]+)\s+¢/lb\s+([+-]?[\d.]+)\s+([+-]?[\d.]+)%",
+            re.I,
+        )
+        for match in pattern.finditer(page_text):
+            product, month_code, year_two, month_name, year, price, change, pct = match.groups()
+            symbol = product.upper() + month_code.upper() + year_two
+            contracts_by_symbol[symbol] = {
+                "symbol": symbol,
+                "product": "Feeder cattle" if product.upper() == "GF" else "Live cattle",
+                "contract_month": month_name + " " + year,
+                "month": datetime.strptime(month_name, "%b").month,
+                "year": int(year),
+                "price_cwt": float(price),
+                "change": float(change),
+                "change_pct": float(pct),
+                "quote_unit": "cents/lb",
+                "equivalent_unit": "USD/cwt",
+                "source": "Farmbucks (data credited to DTN/CME)",
+                "source_url": url,
+            }
+    except Exception as exc:
+        print(f"Deferred futures chain unavailable: {exc}", file=sys.stderr)
+
+    fallback_used = False
+    if active_contract["symbol"] not in contracts_by_symbol:
+        try:
+            cme_response = fetch(CME_FEEDER_SETTLEMENTS_URL)
+            cme_contracts = parse_cme_feeder_settlements(cme_response.text)
+            fallback = next(
+                (item for item in cme_contracts if item["symbol"] == active_contract["symbol"]),
+                None,
+            )
+            if fallback:
+                contracts_by_symbol[fallback["symbol"]] = fallback
+                fallback_used = True
+        except Exception as exc:
+            print(f"CME feeder settlement fallback unavailable: {exc}", file=sys.stderr)
+
+    if active_contract["symbol"] not in contracts_by_symbol:
+        raise RuntimeError(
+            "Futures QA gate blocked publication: active CME feeder contract "
+            f"{active_contract['symbol']} ({active_contract['contract_month']}) "
+            f"expires {active_contract['expiration_date']} but is missing from "
+            "the Farmbucks futures chain and CME official settlements fallback. "
+            "Inspect source availability/parser coverage; do not publish an "
+            "incomplete active-contract curve."
+        )
+
+    contracts = list(contracts_by_symbol.values())
+    futures_qa = {
+        "status": "passed",
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "as_of_date": (as_of_date or datetime.now(timezone.utc).date()).isoformat(),
+        "required_active_feeder_contract": active_contract["symbol"],
+        "contract_month": active_contract["contract_month"],
+        "expiration_date": active_contract["expiration_date"],
+        "source": contracts_by_symbol[active_contract["symbol"]]["source"],
+        "fallback_used": fallback_used,
+        "rule_source": "CME Feeder Cattle Futures Contract Specifications / Rule 10202.H",
+    }
     FUTURES_OUT.parent.mkdir(parents=True, exist_ok=True)
     FUTURES_OUT.write_text(json.dumps({
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "disclaimer": "Deferred futures are exchange benchmarks, not local cash bids. Apply a local basis and allow for contract-to-cash differences.",
-        "contracts": contracts
+        "contract_qa": futures_qa,
+        "contracts": contracts,
     }, indent=2) + "\n", encoding="utf-8")
+    print(
+        "Futures QA: active feeder contract "
+        f"{active_contract['symbol']} present via {futures_qa['source']}"
+        + (" (independent CME fallback)" if fallback_used else "")
+    )
     print(f"Saved {len(contracts)} deferred futures contracts")
+    return futures_qa
+
 
 SOURCES = [
     {"name":"Visalia Livestock Market","state":"CA","kind":"auction snapshot","url":"https://www.visalialivestock.com/market-snapshot.html","status":"automated: published price ranges; current public archive is limited to recent snapshots"},
@@ -1703,7 +1959,7 @@ def quality_check(rows, collection, as_of_utc=None):
     return accepted, rejected
 
 
-def build_qa_report(records, cow_records, rejected_records, rejected_cows, source_fetch_health=None):
+def build_qa_report(records, cow_records, rejected_records, rejected_cows, source_fetch_health=None, futures_contract_qa=None):
     by_state, by_county, by_market, by_source, by_domain, by_geo_method = {}, {}, {}, {}, {}, {}
     by_category, by_record_type, by_corriente_origin, by_sale_regionality = {}, {}, {}, {}
     missing_state = missing_county = warning_records = 0
@@ -1784,6 +2040,7 @@ def build_qa_report(records, cow_records, rejected_records, rejected_cows, sourc
         "accepted_by_source": dict(sorted(by_source.items())),
         "accepted_by_source_domain": dict(sorted(by_domain.items())),
         "source_fetch_health": dict(sorted((source_fetch_health or {}).items())),
+        "futures_contract_qa": futures_contract_qa or {"status": "not_checked"},
         "rejected_observations": rejected_records + rejected_cows,
         "source_registry": SOURCES
     }
@@ -1896,7 +2153,7 @@ def main():
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
     if newly_unclassified:
         print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
-    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH)
+    # Futures coverage is a publication gate: fail before writing the published market snapshot.\n    futures_contract_qa = fetch_futures()\n    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH, futures_contract_qa)
     quarantine_rows = rejected_records + rejected_cows
     quarantine_report = {
         "schema_version": 1,
@@ -1961,7 +2218,6 @@ def main():
         "methodology": "Auction prices, USDA state summaries, direct trades, video contracts and published price bands are retained as separate record types. They are not pooled into one price series."
     }, indent=2) + "\n", encoding="utf-8")
     print(f"Saved {len(merged)} unique market observations to {OUT}")
-    fetch_futures()
     fetch_usda_outlook()
 
 
