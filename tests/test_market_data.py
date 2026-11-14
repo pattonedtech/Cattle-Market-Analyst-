@@ -450,6 +450,15 @@ class FuturesContractCoverageTests(unittest.TestCase):
         self.assertEqual(active["symbol"], "GFX26")
         self.assertEqual(active["expiration_date"], "2026-11-19")
 
+    def test_cme_last_trade_date_moves_back_for_holiday_in_prior_four_weekdays(self):
+        from datetime import date
+
+        # Oct 27, 2026 is Tuesday within the five-weekday window ending Oct 29.
+        expiry = collector.cme_feeder_last_trade_date(
+            2026, 10, holidays={date(2026, 10, 27)}
+        )
+        self.assertEqual(expiry, date(2026, 10, 22))
+
     def test_front_month_rolls_forward_after_gfx26_final_trading_day(self):
         from datetime import date
 
