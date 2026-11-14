@@ -1720,6 +1720,8 @@ def fetch_futures(as_of_date=None):
         )
         for match in pattern.finditer(page_text):
             product, month_code, year_two, month_name, year, price, change, pct = match.groups()
+            if float(price) <= 0:
+                continue
             symbol = product.upper() + month_code.upper() + year_two
             contracts_by_symbol[symbol] = {
                 "symbol": symbol,
