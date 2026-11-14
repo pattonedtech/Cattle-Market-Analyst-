@@ -2175,7 +2175,8 @@ def main():
                 rejection_reasons[reason] = rejection_reasons.get(reason, 0) + 1
     if newly_unclassified:
         print(f"QA: quarantined {newly_unclassified} newly collected lots with unclassifiable animal categories; these remain out of published benchmarks.")
-    # Futures coverage is a publication gate: fail before writing the published market snapshot.\n    futures_contract_qa = fetch_futures()\n    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH, futures_contract_qa)
+    # Futures coverage is a publication gate: fail before writing the published market snapshot.
+    futures_contract_qa = fetch_futures()\n    qa_report = build_qa_report(merged, merged_cows, rejected_records, rejected_cows, SOURCE_FETCH_HEALTH, futures_contract_qa)
     quarantine_rows = rejected_records + rejected_cows
     quarantine_report = {
         "schema_version": 1,
