@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-13T22:41:43.014552+00:00",
-  "record_count": 9381,
-  "market_record_count": 8694,
+  "generated_at": "2026-11-17T00:50:11.476344+00:00",
+  "record_count": 9379,
+  "market_record_count": 8692,
   "cow_record_count": 687,
   "rejected_observations": [
     {
@@ -150018,42 +150018,6 @@
       "warnings": [
         "county_not_identified"
       ]
-    },
-    {
-      "id": "068d4231c4b3ddbf38",
-      "date": "2026-11-13",
-      "market": "Southwest Direct Cattle Report (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 325.0,
-      "price": 465.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_2940.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
-    },
-    {
-      "id": "5e8460c4af22d37447",
-      "date": "2026-11-13",
-      "market": "Southwest Direct Cattle Report (USDA)",
-      "state": null,
-      "county": null,
-      "category": "Feeder steer",
-      "market_timezone": null,
-      "weight": 350.0,
-      "price": 460.0,
-      "price_unit": "USD/cwt",
-      "source_url": "https://www.ams.usda.gov/mnreports/ams_2940.pdf",
-      "collection": "records",
-      "issues": [
-        "market_timezone_unverified"
-      ],
-      "warnings": []
     },
     {
       "id": "3a0a6c22171db470df",

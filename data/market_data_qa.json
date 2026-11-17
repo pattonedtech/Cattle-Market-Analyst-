@@ -1,23 +1,23 @@
 {
   "schema_version": 3,
-  "generated_at": "2026-11-13T22:41:50.775649+00:00",
+  "generated_at": "2026-11-17T00:50:18.058473+00:00",
   "policy": "Only source-linked observations passing structural, geographic, unit, date, and price checks are published. Rejected rows are listed with source URLs and reason codes; regional reports are not assigned to a yard or county.",
   "market_observations": {
-    "accepted": 13813,
-    "rejected": 8694
+    "accepted": 14733,
+    "rejected": 8692
   },
   "cow_market_observations": {
-    "accepted": 890,
+    "accepted": 894,
     "rejected": 687
   },
   "geographic_quality": {
-    "market_records_missing_state": 175,
-    "market_records_missing_county": 2805,
-    "market_records_with_warnings": 3037,
+    "market_records_missing_state": 177,
+    "market_records_missing_county": 3583,
+    "market_records_with_warnings": 3832,
     "accepted_by_geography_method": {
-      "regional_report_unassigned": 175,
-      "source_report_state_only": 2630,
-      "verified_market_registry": 11008
+      "regional_report_unassigned": 177,
+      "source_report_state_only": 3406,
+      "verified_market_registry": 11150
     },
     "accepted_by_county": {
       "Arizona / Pima": 3656,
@@ -27,48 +27,48 @@
       "Idaho / Cassia": 226,
       "Idaho / Idaho": 569,
       "Idaho / Twin Falls": 24,
-      "Montana / County not identified": 920,
+      "Montana / County not identified": 1122,
       "Nevada / Churchill": 2019,
       "New Mexico / Chaves": 509,
-      "New Mexico / County not identified": 1062,
-      "New Mexico / Curry": 619,
+      "New Mexico / County not identified": 1443,
+      "New Mexico / Curry": 621,
       "New Mexico / Do\u00f1a Ana": 22,
-      "New Mexico / Valencia": 154,
+      "New Mexico / Valencia": 294,
       "Oregon / Linn": 39,
       "Oregon / Malheur": 91,
       "Oregon / Umatilla": 35,
-      "Unassigned / County not identified": 175,
-      "Utah / County not identified": 388,
+      "Unassigned / County not identified": 177,
+      "Utah / County not identified": 526,
       "Washington / County not identified": 113,
-      "Wyoming / County not identified": 147
+      "Wyoming / County not identified": 202
     }
   },
   "accepted_by_state": {
     "Arizona": 3656,
     "California": 3045,
     "Idaho": 819,
-    "Montana": 920,
+    "Montana": 1122,
     "Nevada": 2019,
-    "New Mexico": 2366,
+    "New Mexico": 2889,
     "Oregon": 165,
-    "Regional / unassigned": 175,
-    "Utah": 388,
+    "Regional / unassigned": 177,
+    "Utah": 526,
     "Washington": 113,
-    "Wyoming": 147
+    "Wyoming": 202
   },
   "accepted_by_market": {
     "Burley Livestock Auction": 226,
     "Cattle Country Video Auction (USDA)": 18,
-    "Cattlemen's Livestock Auction (USDA)": 151,
-    "Cattlemen's Livestock Auction - Belen": 3,
-    "Clovis Livestock Auction (USDA)": 619,
+    "Cattlemen's Livestock Auction (USDA)": 290,
+    "Cattlemen's Livestock Auction - Belen": 4,
+    "Clovis Livestock Auction (USDA)": 621,
     "Cottonwood Livestock Auction": 569,
     "Fallon Livestock": 2019,
     "Lebanon Auction Yard": 39,
     "Marana Stockyards": 3656,
     "Montana Weekly Cattle Auction Summary (USDA)": 227,
-    "Montana Weekly Livestock Auction Summary (USDA)": 693,
-    "New Mexico Weekly Cattle Summary (USDA)": 1062,
+    "Montana Weekly Livestock Auction Summary (USDA)": 895,
+    "New Mexico Weekly Cattle Summary (USDA)": 1443,
     "Northern Livestock Video Auction (USDA)": 78,
     "Northwest Direct Cattle Report (USDA)": 6,
     "Northwest Livestock Commission": 35,
@@ -78,47 +78,48 @@
     "Ranchers Choice Stockyard": 59,
     "Roswell Livestock Auction (USDA)": 509,
     "Santa Teresa Livestock Auction (USDA)": 22,
-    "Southwest Direct Cattle Report (USDA)": 8,
+    "Southwest Direct Cattle Report (USDA)": 10,
     "Toppenish Livestock Commission (USDA)": 113,
     "Twin Falls Livestock Commission": 24,
-    "Utah Weekly Cattle Auction Summary (USDA)": 388,
+    "Utah Weekly Cattle Auction Summary (USDA)": 526,
     "Visalia Livestock Market": 28,
     "Western Video Market (USDA)": 65,
-    "Wyoming Weekly Cattle Auction Summary (USDA)": 147
+    "Wyoming Weekly Cattle Auction Summary (USDA)": 202
   },
   "accepted_by_category": {
-    "Bull": 386,
-    "Corriente cattle (unclassified)": 3,
-    "Cull cow": 1407,
-    "Feeder heifer": 4226,
-    "Feeder steer": 7789,
+    "Bull": 464,
+    "Corriente cattle (unclassified)": 4,
+    "Cull cow": 1704,
+    "Feeder heifer": 4489,
+    "Feeder steer": 8070,
     "Replacement heifer": 2
   },
   "accepted_by_record_type": {
     "auction_lot_average": 3864,
     "published_lot_highlight": 13,
-    "published_price_range": 96,
+    "published_price_range": 97,
     "published_weight_class_range": 2569,
     "third_party_auction_weighted_average": 207,
-    "usda_auction": 1414,
-    "usda_direct_trade": 14,
-    "usda_state_summary": 2517,
+    "usda_auction": 1555,
+    "usda_direct_trade": 16,
+    "usda_state_summary": 3293,
     "usda_video_regional": 211,
     "video_lot_contract": 2908
   },
   "accepted_by_cow_category": {
-    "Bred cow": 831,
-    "Bred heifer": 16,
+    "Bred cow": 833,
+    "Bred heifer": 17,
     "Cow-calf pair": 40,
-    "Fresh Corriente": 3
+    "Fresh Corriente": 4
   },
   "accepted_by_cow_record_type": {
     "published_individual_price": 825,
-    "published_price_range": 41,
-    "usda_replacement_weighted_average": 24
+    "published_price_range": 43,
+    "usda_replacement_weighted_average": 26
   },
   "accepted_by_cow_market": {
-    "Cattlemen's Livestock Auction - Belen": 8,
+    "Cattle Country Video Auction (USDA)": 2,
+    "Cattlemen's Livestock Auction - Belen": 10,
     "Cottonwood Livestock Auction": 22,
     "Fallon Livestock": 7,
     "Marana Stockyards": 825,
@@ -131,37 +132,37 @@
     "California": 4,
     "Idaho": 22,
     "Nevada": 7,
-    "New Mexico": 8,
-    "Regional / unassigned": 24
+    "New Mexico": 10,
+    "Regional / unassigned": 26
   },
   "accepted_by_cow_county": {
     "Arizona / Pima": 825,
     "California / San Benito": 4,
     "Idaho / Idaho": 22,
     "Nevada / Churchill": 7,
-    "New Mexico / Valencia": 8,
-    "Unassigned / County not identified": 24
+    "New Mexico / Valencia": 10,
+    "Unassigned / County not identified": 26
   },
   "cow_geographic_quality": {
-    "cow_records_missing_state": 24,
-    "cow_records_missing_county": 24
+    "cow_records_missing_state": 26,
+    "cow_records_missing_county": 26
   },
   "accepted_corriente_origin": {
-    "unspecified": 3
+    "unspecified": 4
   },
   "accepted_sale_regionality": {
     "Burley Livestock Auction, Cassia County, Idaho": 226,
     "Cattle Country Video Auction (USDA) \u2014 Multi-state video auction (state/county not assigned)": 18,
-    "Cattlemen's Livestock Auction (USDA), Valencia County, New Mexico": 151,
-    "Cattlemen's Livestock Auction - Belen, Valencia County, New Mexico": 3,
-    "Clovis Livestock Auction (USDA), Curry County, New Mexico": 619,
+    "Cattlemen's Livestock Auction (USDA), Valencia County, New Mexico": 290,
+    "Cattlemen's Livestock Auction - Belen, Valencia County, New Mexico": 4,
+    "Clovis Livestock Auction (USDA), Curry County, New Mexico": 621,
     "Cottonwood Livestock Auction, Idaho County, Idaho": 569,
     "Fallon Livestock, Churchill County, Nevada": 2019,
     "Lebanon Auction Yard, Linn County, Oregon": 39,
     "Marana Stockyards, Pima County, Arizona": 3656,
     "Montana Weekly Cattle Auction Summary (USDA), Montana (county not identified)": 227,
-    "Montana Weekly Livestock Auction Summary (USDA), Montana (county not identified)": 693,
-    "New Mexico Weekly Cattle Summary (USDA), New Mexico (county not identified)": 1062,
+    "Montana Weekly Livestock Auction Summary (USDA), Montana (county not identified)": 895,
+    "New Mexico Weekly Cattle Summary (USDA), New Mexico (county not identified)": 1443,
     "Northern Livestock Video Auction (USDA) \u2014 Multi-state Western and North Central (state/county not assigned)": 78,
     "Northwest Direct Cattle Report (USDA) \u2014 Northwest Region (WA/OR/ID/UT) (state/county not assigned)": 6,
     "Northwest Livestock Commission, Umatilla County, Oregon": 35,
@@ -171,33 +172,33 @@
     "Ranchers Choice Stockyard, San Benito County, California": 59,
     "Roswell Livestock Auction (USDA), Chaves County, New Mexico": 509,
     "Santa Teresa Livestock Auction (USDA), Do\u00f1a Ana County, New Mexico": 22,
-    "Southwest Direct Cattle Report (USDA) \u2014 Southwest Region (AZ/CA/NV) (state/county not assigned)": 8,
+    "Southwest Direct Cattle Report (USDA) \u2014 Southwest Region (AZ/CA/NV) (state/county not assigned)": 10,
     "Toppenish Livestock Commission (USDA), Washington (county not identified)": 113,
     "Twin Falls Livestock Commission, Twin Falls County, Idaho": 24,
-    "Utah Weekly Cattle Auction Summary (USDA), Utah (county not identified)": 388,
+    "Utah Weekly Cattle Auction Summary (USDA), Utah (county not identified)": 526,
     "Visalia Livestock Market, Tulare County, California": 28,
     "Western Video Market (USDA) \u2014 Multi-state Western Region (AZ/CA/ID/NV/OR/UT/WA) (state/county not assigned)": 65,
-    "Wyoming Weekly Cattle Auction Summary (USDA), Wyoming (county not identified)": 147
+    "Wyoming Weekly Cattle Auction Summary (USDA), Wyoming (county not identified)": 202
   },
   "accepted_by_source": {
     "Burley Livestock Auction": 208,
     "Cattle Channel (sale report)": 207,
-    "Cattlemen's Livestock Auction - Belen": 3,
+    "Cattlemen's Livestock Auction - Belen": 4,
     "Cottonwood Livestock Auction": 569,
     "Fallon Livestock": 2019,
     "Marana Stockyards": 3656,
     "Overland Stock Yard": 2908,
     "Ranchers Choice Stockyard": 59,
-    "USDA AMS Market News": 4156,
+    "USDA AMS Market News": 5075,
     "Visalia Livestock Market": 28
   },
   "accepted_by_source_domain": {
-    "belenlivestockauction.com": 3,
+    "belenlivestockauction.com": 4,
     "burleylivestock.auction": 208,
     "cattlechannel.com": 207,
     "cottonwoodlivestock.com": 569,
     "rancherschoicestockyard.com": 59,
-    "www.ams.usda.gov": 4156,
+    "www.ams.usda.gov": 5075,
     "www.fallonlivestock.com": 2019,
     "www.maranastockyards.us": 3656,
     "www.overlandstockyard.com": 2908,
@@ -214,7 +215,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:35.009007+00:00"
+      "last_success_at": "2026-11-17T00:50:05.056811+00:00"
     },
     "burleylivestock.auction": {
       "requests": 2,
@@ -226,7 +227,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:17.188048+00:00"
+      "last_success_at": "2026-11-17T00:49:36.525420+00:00"
     },
     "cattlechannel.com": {
       "requests": 45,
@@ -238,7 +239,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:40.915056+00:00"
+      "last_success_at": "2026-11-17T00:50:09.103880+00:00"
     },
     "cottonwoodlivestock.com": {
       "requests": 4,
@@ -250,7 +251,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:20.203328+00:00"
+      "last_success_at": "2026-11-17T00:49:43.441632+00:00"
     },
     "rancherschoicestockyard.com": {
       "requests": 18,
@@ -262,7 +263,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:24.429909+00:00"
+      "last_success_at": "2026-11-17T00:49:54.815232+00:00"
     },
     "www.ams.usda.gov": {
       "requests": 26,
@@ -274,7 +275,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:34.403221+00:00"
+      "last_success_at": "2026-11-17T00:50:04.639776+00:00"
     },
     "www.fallonlivestock.com": {
       "requests": 2,
@@ -286,7 +287,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:41.315402+00:00"
+      "last_success_at": "2026-11-17T00:50:09.701195+00:00"
     },
     "www.maranastockyards.com": {
       "requests": 1,
@@ -298,7 +299,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:24.596999+00:00"
+      "last_success_at": "2026-11-17T00:49:55.017563+00:00"
     },
     "www.maranastockyards.us": {
       "requests": 1,
@@ -310,7 +311,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:25.025265+00:00"
+      "last_success_at": "2026-11-17T00:49:55.522968+00:00"
     },
     "www.overlandstockyard.com": {
       "requests": 11,
@@ -322,7 +323,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:13.680444+00:00"
+      "last_success_at": "2026-11-17T00:49:32.325712+00:00"
     },
     "www.roswelllivestockauction.com": {
       "requests": 1,
@@ -334,7 +335,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:34.613961+00:00"
+      "last_success_at": "2026-11-17T00:50:04.757617+00:00"
     },
     "www.visalialivestock.com": {
       "requests": 3,
@@ -346,7 +347,7 @@
       "last_error": null,
       "last_failure_url": null,
       "last_failure_at": null,
-      "last_success_at": "2026-11-13T22:41:16.177587+00:00"
+      "last_success_at": "2026-11-17T00:49:35.255690+00:00"
     }
   },
   "source_registry": [
@@ -661,8 +662,8 @@
   ],
   "quarantine_report_url": "data/quarantine_observations.json",
   "quarantine_summary": {
-    "total": 9381,
-    "market_records": 8694,
+    "total": 9379,
+    "market_records": 8692,
     "cow_records": 687
   }
 }
