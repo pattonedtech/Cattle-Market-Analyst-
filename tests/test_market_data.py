@@ -440,5 +440,271 @@ FALSE 300-399 lbs $2.60 - $2.60 / lb - lbs $.00 - $.00 / lb
                 )
 
 
+
+
+class FuturesContractCoverageTests(unittest.TestCase):
+    def test_gfx26_is_active_until_cme_november_expiration(self):
+        from datetime import date
+
+        active = collector.active_cme_feeder_front_month(date(2026, 11, 14))
+        self.assertEqual(active["symbol"], "GFX26")
+        self.assertEqual(active["expiration_date"], "2026-11-19")
+
+    def test_cme_last_trade_date_moves_back_for_holiday_in_prior_four_weekdays(self):
+        from datetime import date
+
+        # Oct 27, 2026 is Tuesday within the five-weekday window ending Oct 29.
+        expiry = collector.cme_feeder_last_trade_date(
+            2026, 10, holidays={date(2026, 10, 27)}
+        )
+        self.assertEqual(expiry, date(2026, 10, 22))
+
+    def test_front_month_rolls_forward_after_gfx26_final_trading_day(self):
+        from datetime import date
+
+        active = collector.active_cme_feeder_front_month(date(2026, 11, 20))
+        self.assertEqual(active["symbol"], "GFF27")
+        self.assertNotEqual(active["symbol"], "GFX26")
+
+    def test_cme_calendar_includes_exchange_holidays_and_adjusts_may_2026(self):
+        from datetime import date
+
+        holidays = collector.cme_market_holidays(2026)
+        self.assertIn(date(2026, 10, 12), holidays)  # Columbus Day
+        self.assertIn(date(2026, 11, 11), holidays)  # Veterans Day
+        # Memorial Day falls within the five-weekday expiry window for May.
+        self.assertEqual(
+            collector.cme_feeder_last_trade_date(2026, 5),
+            date(2026, 5, 21),
+        )
+
+    def test_cme_settlement_parser_maps_every_listed_contract_month(self):
+        html = """
+        <p>Trade date Friday, 13 Nov 2026</p>
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>JAN 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>300.000</td><td>1</td><td>1</td></tr>
+          <tr><td>MAR 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>301.000</td><td>1</td><td>1</td></tr>
+          <tr><td>APR 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>302.000</td><td>1</td><td>1</td></tr>
+          <tr><td>MAY 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>303.000</td><td>1</td><td>1</td></tr>
+          <tr><td>AUG 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>304.000</td><td>1</td><td>1</td></tr>
+          <tr><td>SEP 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>305.000</td><td>1</td><td>1</td></tr>
+          <tr><td>OCT 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>306.000</td><td>1</td><td>1</td></tr>
+          <tr><td>NOV 27</td><td>1</td><td>1</td><td>1</td><td>1</td><td>+1</td><td>307.000</td><td>1</td><td>1</td></tr>
+        </table>
+        """
+        contracts = collector.parse_cme_feeder_settlements(html)
+        self.assertEqual(
+            {item["symbol"] for item in contracts},
+            {"GFF27", "GFH27", "GFJ27", "GFK27", "GFQ27", "GFU27", "GFV27", "GFX27"},
+        )
+
+    def test_cme_settlement_parser_reads_gfx26_contract_specific_quote(self):
+        html = """
+        <p>Trade date Friday, 13 Nov 2026</p>
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>NOV 26</td><td>345.800</td><td>345.800</td><td>337.000</td>
+              <td>337.475</td><td>-8.700</td><td>337.775</td><td>4,677</td><td>9,713</td></tr>
+        </table>
+        """
+        contracts = collector.parse_cme_feeder_settlements(html)
+        gfx26 = next(item for item in contracts if item["symbol"] == "GFX26")
+        self.assertEqual(gfx26["price_cwt"], 337.775)
+        self.assertEqual(gfx26["change"], -8.7)
+        self.assertEqual(gfx26["source"], "CME Group official settlements")
+        self.assertEqual(gfx26["quote_date"], "2026-11-13")
+        self.assertEqual(gfx26["estimated_volume"], 4677)
+        self.assertEqual(gfx26["prior_day_open_interest"], 9713)
+
+    def test_missing_primary_front_month_uses_cme_fallback_and_records_qa(self):
+        import json
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        cme_html = """
+        <p>Trade date Friday, 13 Nov 2026</p>
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>NOV 26</td><td>345.800</td><td>345.800</td><td>337.000</td>
+              <td>337.475</td><td>-8.700</td><td>337.775</td><td>4,677</td><td>9,713</td></tr>
+        </table>
+        """
+
+        def fake_fetch(url):
+            if "farmbucks.com" in url:
+                return SimpleNamespace(text="<html><body>No feeder chain</body></html>")
+            if "cmegroup.com" in url:
+                return SimpleNamespace(text=cme_html)
+            raise AssertionError(f"Unexpected URL: {url}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "futures.json"
+            with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                collector, "FUTURES_OUT", output
+            ):
+                qa = collector.fetch_futures(date(2026, 11, 14))
+            payload = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(qa["status"], "passed")
+        self.assertEqual(qa["required_active_feeder_contract"], "GFX26")
+        self.assertTrue(qa["fallback_used"])
+        self.assertEqual(qa["source"], "CME Group official settlements")
+        self.assertIn("GFX26", {item["symbol"] for item in payload["contracts"]})
+        self.assertEqual(payload["contract_qa"], qa)
+
+    def test_dedicated_farmbucks_feeder_chain_supplies_active_front_month(self):
+        import json
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        general_page = """
+        <p>Feeder Cattle</p>
+        <p>GFF27 Jan 2027 335.35 ¢/lb +3.68 +1.11%</p>
+        """
+        dedicated_page = """
+        <p>GFX26 Nov 2026 339.03 ¢/lb +3.35 +1.00%</p>
+        <p>GFF27 Jan 2027 335.35 ¢/lb +3.68 +1.11%</p>
+        """
+
+        def fake_fetch(url):
+            if url == "https://farmbucks.com/futures/livestock":
+                return SimpleNamespace(text=general_page)
+            if url == collector.FARMBUCKS_FEEDER_FUTURES_URL:
+                return SimpleNamespace(text=dedicated_page)
+            raise AssertionError(f"Unexpected URL: {url}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "futures.json"
+            with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                collector, "FUTURES_OUT", output
+            ):
+                qa = collector.fetch_futures(date(2026, 11, 14))
+            payload = json.loads(output.read_text(encoding="utf-8"))
+
+        self.assertEqual(qa["required_active_feeder_contract"], "GFX26")
+        self.assertEqual(qa["source"], "Farmbucks (data credited to DTN/CME)")
+        self.assertFalse(qa["fallback_used"])
+        gfx26 = next(item for item in payload["contracts"] if item["symbol"] == "GFX26")
+        self.assertEqual(gfx26["price_cwt"], 339.03)
+        self.assertEqual(gfx26["source_url"], collector.FARMBUCKS_FEEDER_FUTURES_URL)
+
+    def test_missing_active_contract_from_both_sources_blocks_publication(self):
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        def fake_fetch(url):
+            if "farmbucks.com" in url:
+                return SimpleNamespace(text="<html><body>No feeder chain</body></html>")
+            raise RuntimeError("CME settlement endpoint unavailable")
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "futures.json"
+            with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                collector, "FUTURES_OUT", output
+            ):
+                with self.assertRaisesRegex(RuntimeError, "Futures QA gate blocked publication.*GFX26"):
+                    collector.fetch_futures(date(2026, 11, 14))
+            self.assertFalse(output.exists())
+
+
+
+    def test_cme_fallback_rejects_stale_or_undated_contract_quotes(self):
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        table = """
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>NOV 26</td><td>345.800</td><td>345.800</td><td>337.000</td>
+              <td>337.475</td><td>-8.700</td><td>337.775</td><td>4,677</td><td>9,713</td></tr>
+        </table>
+        """
+
+        for date_markup in ("<p>Trade date Friday, 30 Oct 2026</p>", ""):
+            with self.subTest(date_markup=date_markup):
+                cme_html = date_markup + table
+
+                def fake_fetch(url):
+                    if "farmbucks.com" in url:
+                        return SimpleNamespace(text="<html><body>No feeder chain</body></html>")
+                    if "cmegroup.com" in url:
+                        return SimpleNamespace(text=cme_html)
+                    raise AssertionError(f"Unexpected URL: {url}")
+
+                with tempfile.TemporaryDirectory() as directory:
+                    output = Path(directory) / "futures.json"
+                    with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                        collector, "FUTURES_OUT", output
+                    ):
+                        with self.assertRaisesRegex(
+                            RuntimeError,
+                            "Futures QA gate blocked publication.*GFX26",
+                        ):
+                            collector.fetch_futures(date(2026, 11, 14))
+                    self.assertFalse(output.exists())
+
+    def test_cme_fallback_rejects_settlement_without_volume_or_open_interest(self):
+        import tempfile
+        from datetime import date
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+
+        cme_html = """
+        <p>Trade date Friday, 13 Nov 2026</p>
+        <table>
+          <tr><th>Month</th><th>Open</th><th>High</th><th>Low</th><th>Last</th>
+              <th>Change</th><th>Settle</th><th>Est. Volume</th><th>Prior day OI</th></tr>
+          <tr><td>NOV 26</td><td>-</td><td>-</td><td>-</td><td>-</td>
+              <td>UNCH</td><td>337.775</td><td>0</td><td>0</td></tr>
+        </table>
+        """
+
+        def fake_fetch(url):
+            if "farmbucks.com" in url:
+                return SimpleNamespace(text="<html><body>No feeder chain</body></html>")
+            if "cmegroup.com" in url:
+                return SimpleNamespace(text=cme_html)
+            raise AssertionError(f"Unexpected URL: {url}")
+
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "futures.json"
+            with patch.object(collector, "fetch", side_effect=fake_fetch), patch.object(
+                collector, "FUTURES_OUT", output
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError, "Futures QA gate blocked publication.*GFX26"
+                ):
+                    collector.fetch_futures(date(2026, 11, 14))
+            self.assertFalse(output.exists())
+
+    def test_futures_coverage_is_included_in_qa_report(self):
+        coverage = {
+            "status": "passed",
+            "required_active_feeder_contract": "GFX26",
+            "expiration_date": "2026-11-19",
+        }
+        report = collector.build_qa_report([], [], [], [], {}, coverage)
+        self.assertEqual(report["futures_contract_qa"], coverage)
+
+
+
 if __name__ == "__main__":
     unittest.main()
